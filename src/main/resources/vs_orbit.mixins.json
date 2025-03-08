@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.cn_good_grass.vs_orbit.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "SetStarPos"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

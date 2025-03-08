@@ -1,0 +1,88 @@
+{
+  "planet_data": {
+    "sun": {
+      "object_name": "Sun",
+      "mass": 332946,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "mercury": {
+      "object_name": "Mercury",
+      "mass": 0.055,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "venus": {
+      "object_name": "Venus",
+      "mass": 0.815,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+
+    },
+    "earth": {
+      "object_name": "Earth",
+      "mass": 1.0,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "moon": {
+      "object_name": "Moon",
+      "mass": 0.107,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "mars": {
+      "mass": 0.107,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "jupiter": {
+      "object_name": "Jupiter",
+      "mass": 318,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "europa": {
+      "object_name": "Europa",
+      "mass": 0.008,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "saturn": {
+      "object_name": "Saturn",
+      "mass": 95,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "uranus": {
+      "object_name": "Uranus",
+      "mass": 14.6,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "neptune": {
+      "object_name": "Neptune",
+      "mass": 17.2,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "pluto": {
+      "object_name": "Pluto",
+      "mass": 0.0022,
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+      }
+  }
+}
