@@ -13,7 +13,7 @@ public class VSOrbitMod
     //模组名字
     public static final String MODID = "vs_orbit";
     //日志输出
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public VSOrbitMod()
     {

@@ -1,5 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.core.thread;
 
+import net.cn_good_grass.vs_orbit.VSOrbitMod;
+import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.event.OnWorldLoad;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.event.ParticleUpdate;
@@ -26,6 +28,11 @@ public class CreateThread {
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 50); // 立即开始执行，之后每隔50毫秒执行一次
+        Integer Tick_RunTime = (int) Math.floor(1000.0 / Config.TICK_SPEED.get());
+        if (Tick_RunTime != 0) {
+            timer.scheduleAtFixedRate(task, 0, Tick_RunTime); // 立即开始执行，之后每隔50毫秒执行一次
+        } else {
+            VSOrbitMod.LOGGER.error("Can't create new thread! TickSpeed is zero!");
+        }
     }
 }
