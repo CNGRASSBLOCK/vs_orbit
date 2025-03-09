@@ -5,13 +5,15 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import net.cn_good_grass.vs_orbit.config.Config;
 import static net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables.Gravitation_Core_AllWorld;
 
 @Mod.EventBusSubscriber
 public class OnWorldLoad {
     @SubscribeEvent
     public static void OnWorldLoad(net.minecraftforge.event.level.LevelEvent.Load event) {
-        if (!((Level) event.getLevel()).dimension().location().toString().equals("cosmos:solar_system")) { return; }
+        String WorldID = ((Level) event.getLevel()).dimension().location().toString();
+        if (!Config.WORK_WORLD.get().contains(WorldID)) { return; }
 
         if (false) { //如果有数据就读取
             return;

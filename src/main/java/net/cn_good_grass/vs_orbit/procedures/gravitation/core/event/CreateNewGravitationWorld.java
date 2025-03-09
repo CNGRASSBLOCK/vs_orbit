@@ -51,6 +51,6 @@ public class CreateNewGravitationWorld {
             particle.start = StarJsonObject.getAsJsonObject(StarName).get("particle_state").getAsString();
             newWorld.Gravitation_Core_World.add(particle);
         }
-        GlobalVariables.Gravitation_Core_AllWorld.add(newWorld);//新建引力世界用于处理
+        GlobalVariables.Gravitation_Core_AllWorld.add(newWorld); //新建引力世界用于处理
     }
 }

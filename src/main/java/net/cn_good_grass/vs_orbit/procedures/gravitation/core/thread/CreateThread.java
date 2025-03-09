@@ -19,7 +19,6 @@ public class CreateThread {
         if (GlobalVariables.Gravitation_Core_AllWorld.isEmpty()) { return; }
 
         String NewThreadName = "GravitationThread-" + (GlobalVariables.Gravitation_Core_AllWorld.size() - 1);
-        System.out.println("111111111111111111111" + NewThreadName);
 
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         for (long ThreadId : threadMXBean.getAllThreadIds()) {

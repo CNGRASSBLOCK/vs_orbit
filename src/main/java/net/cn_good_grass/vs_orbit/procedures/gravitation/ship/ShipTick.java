@@ -1,5 +1,6 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.ship;
 
+import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
 import net.cn_good_grass.vs_orbit.modclass.Particle;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables;
@@ -9,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +30,7 @@ public class ShipTick {
         ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation("cosmos:solar_system")));
         if (event.phase == TickEvent.Phase.START) {
             String WorldID = level.dimension().location().toString();
-            if (!WorldID.equals("cosmos:solar_system")) { return; } //不是太空就退出
+            if (!Config.WORK_WORLD.get().contains(WorldID)) { return; }
 
             List<Particle> particleList = null;
             for (GravitationWorld gravitationWorld : GlobalVariables.Gravitation_Core_AllWorld) { if (gravitationWorld.WorldId.equals(WorldID)) { particleList = gravitationWorld.Gravitation_Core_World; } }
