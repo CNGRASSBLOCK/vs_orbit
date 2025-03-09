@@ -1,5 +1,7 @@
 package net.cn_good_grass.vs_orbit.modclass;
 
+import java.math.BigInteger;
+
 public class Particle {
     public Integer id = 0; //ID
     public String name = ""; //名字

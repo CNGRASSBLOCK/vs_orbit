@@ -2,6 +2,8 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.event;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -33,8 +35,7 @@ public class ReadDataPack {
                 try {
                     Resource resource = resourceManager.getResource(advancementLocation).get();
                     try (InputStream inputStream = resource.open()) {
-                        JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject();
-                        System.out.println("!!!!!!!!!!!!!!!!"+jsonObject.toString());
+                        GlobalVariables.StarStateData = JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

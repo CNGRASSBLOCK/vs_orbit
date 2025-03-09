@@ -2,6 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.ship;
 
 import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
 import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.event.OnWorldLoad;
 
 import net.minecraft.core.registries.Registries;
@@ -30,7 +31,7 @@ public class ShipTick {
             if (!WorldID.equals("cosmos:solar_system")) { return; } //不是太空就退出
 
             List<Particle> particleList = null;
-            for (GravitationWorld gravitationWorld : OnWorldLoad.Gravitation_Core_AllWorld) { if (gravitationWorld.WorldId.equals(WorldID)) { particleList = gravitationWorld.Gravitation_Core_World; } }
+            for (GravitationWorld gravitationWorld : GlobalVariables.Gravitation_Core_AllWorld) { if (gravitationWorld.WorldId.equals(WorldID)) { particleList = gravitationWorld.Gravitation_Core_World; } }
             if (particleList == null) { return; }
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
@@ -47,7 +48,7 @@ public class ShipTick {
                     newparticle.x = ship.getTransform().getPositionInWorld().x();
                     newparticle.y = ship.getTransform().getPositionInWorld().y();
                     newparticle.z = ship.getTransform().getPositionInWorld().z();
-                    if (ship instanceof ServerShip serverShip) { newparticle.mass = serverShip.getInertiaData().getMass(); }
+                    if (ship instanceof ServerShip serverShip) { newparticle.mass = (long) serverShip.getInertiaData().getMass(); }
                     newparticle.start = "follow";
                     particleList.add(newparticle);
                 } else {

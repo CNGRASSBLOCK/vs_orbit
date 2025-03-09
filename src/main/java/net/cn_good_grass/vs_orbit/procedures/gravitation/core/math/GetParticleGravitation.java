@@ -36,7 +36,7 @@ public class GetParticleGravitation {
         double planar_distance = Math.sqrt(Math.pow(x_difference, 2) + Math.pow(z_difference, 2)); //获取当前质点与目标质点在X-Z平面之间的之间距离
         double world_distance = Math.sqrt(Math.pow(x_difference, 2) + Math.pow(y_difference, 2) + Math.pow(z_difference, 2)); //获取船只与星体之间距离
 
-        double G = 66760000; //引力常量
+        double G = 6.676; //引力常量
 
         double F = G * ((ship_mass * other_particle.mass) / Math.pow(world_distance, 2)); //万有引力公式 F=G*(m物*m星/r距²)
 
