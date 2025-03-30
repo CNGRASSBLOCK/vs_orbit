@@ -1,0 +1,33 @@
+{
+  "relative_quality" : 1,
+  "planet_data": {
+    "Toliman": {
+      "mass": 1000000.0,
+      "particle_state": "common",
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "Rigil Kentaurus": {
+      "mass": 1000000.0,
+      "particle_state": "common",
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "Proxima": {
+      "mass": 1000000.0,
+      "particle_state": "common",
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    },
+    "Glacio": {
+      "mass": 10.0,
+      "particle_state": "common",
+      "x_start_speed": 0,
+      "y_start_speed": 0,
+      "z_start_speed": 0
+    }
+  }
+}

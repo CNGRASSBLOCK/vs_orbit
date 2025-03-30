@@ -12,7 +12,7 @@ public class Particle {
     public double y = 0;
     public double z = 0;
 
-    public double mass = 0; //质量
+    public long mass = 0; //质量
 
     public double x_speed = 0; //速度
     public double y_speed = 0;

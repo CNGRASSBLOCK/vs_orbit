@@ -2,8 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.event;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables;
-import net.minecraft.nbt.CompoundTag;
+import net.cn_good_grass.vs_orbit.config.Config;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -16,9 +15,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "vs_orbit")
 public class ReadDataPack {
+    public static JsonObject StarStateData = new JsonObject();
+    
     @SubscribeEvent
     public static void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<Object>() {
@@ -29,16 +32,19 @@ public class ReadDataPack {
 
             @Override
             protected void apply(Object object, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-                ResourceLocation advancementLocation = new ResourceLocation("vs_orbit", "vs_orbit_data/solar_system.json");
-
-                // 读取进度数据
-                try {
-                    Resource resource = resourceManager.getResource(advancementLocation).get();
-                    try (InputStream inputStream = resource.open()) {
-                        GlobalVariables.StarStateData = JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject();
+                List<String> GravitationWorlds = new ArrayList<String>(Config.Gravitation_WORK_WORLD.get());
+                for (String FilePos : GravitationWorlds) {
+                    String FileName = FilePos.substring(FilePos.indexOf(":") + 1);
+                    ResourceLocation advancementLocation = new ResourceLocation("vs_orbit", "vs_orbit_data/" + FileName + ".json");
+                    // 读取进度数据
+                    try {
+                        Resource resource = resourceManager.getResource(advancementLocation).get();
+                        try (InputStream inputStream = resource.open()) {
+                            ReadDataPack.StarStateData.add(FilePos, JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });

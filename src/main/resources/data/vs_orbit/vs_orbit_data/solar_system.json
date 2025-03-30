@@ -1,4 +1,5 @@
 {
+  "relative_quality" : 1088252878164,
   "planet_data": {
     "Sun": {
       "mass": 332946,
@@ -10,37 +11,37 @@
     "Mercury": {
       "mass": 0.055,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x_start_speed": 20.5,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": -22
     },
     "Venus": {
       "mass": 0.815,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x_start_speed": 26,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": -11
     },
     "Earth": {
       "mass": 1.0,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x_start_speed": 360,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": -720
     },
     "Moon": {
       "mass": 0.107,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x_start_speed": 270,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": -630
     },
     "Mars": {
       "mass": 0.107,
       "particle_state": "common",
       "x_start_speed": 0,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": -840
     },
     "Jupiter": {
       "mass": 318,

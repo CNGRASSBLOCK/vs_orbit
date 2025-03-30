@@ -1,16 +1,13 @@
-package net.cn_good_grass.vs_orbit.procedures.gravitation.ship;
+package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
 import net.cn_good_grass.vs_orbit.modclass.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.GlobalVariables;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.event.OnWorldLoad;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,22 +24,26 @@ import java.util.List;
 public class ShipTick {
     @SubscribeEvent
     public static void onWorldTick(TickEvent.ServerTickEvent event) { //引力更新基于游戏刻 而不是物理帧
-        ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation("cosmos:solar_system")));
-        if (event.phase == TickEvent.Phase.START) {
-            String WorldID = level.dimension().location().toString();
-            if (!Config.WORK_WORLD.get().contains(WorldID)) { return; }
+        if (!(event.phase == TickEvent.Phase.START)) { return; }
+        if (Config.ValkyrienSkies_ENABLE.get() == false) { return; }
 
-            List<Particle> particleList = null;
-            for (GravitationWorld gravitationWorld : GlobalVariables.Gravitation_Core_AllWorld) { if (gravitationWorld.WorldId.equals(WorldID)) { particleList = gravitationWorld.Gravitation_Core_World; } }
-            if (particleList == null) { return; }
+        for (String WorldIDs : Config.Gravitation_WORK_WORLD.get()) {
+            ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
+            if (level == null) { return; }
+            String WorldID = level.dimension().location().toString();
+
+            List<Particle> particleList = GravitationWorld.getFromWorldID(WorldID).Gravitation_Core_World;
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
+                if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
+
                 long shipId = ship.getId();  //获取船只 感谢SpaceEye的帮助
 
                 Vector3d Gravitation = new Vector3d(0, 0, 0);
 
                 Particle particle = null;
                 for (Particle oneparticle : particleList) { if (oneparticle.name.equals("VSShip-" + shipId)) { particle = oneparticle; } }
+                
                 if (particle == null) {
                     Particle newparticle = new Particle();
                     newparticle.id = particleList.size();
@@ -51,19 +52,26 @@ public class ShipTick {
                     newparticle.y = ship.getTransform().getPositionInWorld().y();
                     newparticle.z = ship.getTransform().getPositionInWorld().z();
                     if (ship instanceof ServerShip serverShip) { newparticle.mass = (long) serverShip.getInertiaData().getMass(); }
-                    newparticle.start = "follow";
+                    if (Config.ValkyrienSkies_MOVEMENT_MODE.get().equals("VS_FOLLOW_PARTICLE")) { newparticle.start = "common"; } else { newparticle.start = "follow"; }
                     particleList.add(newparticle);
+                    continue;
                 } else {
                     Gravitation.x = particle.x_acceleration;
                     Gravitation.y = particle.y_acceleration;
                     Gravitation.z = particle.z_acceleration;
+
+                    particle.x = ship.getTransform().getPositionInWorld().x();
+                    particle.y = ship.getTransform().getPositionInWorld().y();
+                    particle.z = ship.getTransform().getPositionInWorld().z();
                 }
+
+                Vector3d ShipGravitation = new Vector3d(Gravitation.x * particle.mass, Gravitation.y * particle.mass, Gravitation.z * particle.mass);
 
                 LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
                 if (loadedServerShip == null) {continue;}
                 GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
                 if (applier != null) {
-                    applier.applyInvariantForce(Gravitation); //施加力
+                    applier.applyInvariantForce(ShipGravitation); //施加力
                 }
             }
         }

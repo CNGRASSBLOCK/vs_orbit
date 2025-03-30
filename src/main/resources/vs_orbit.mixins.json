@@ -4,7 +4,9 @@
   "package": "net.cn_good_grass.vs_orbit.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SetStarPos"
+    "StarRender",
+    "StarJoin",
+    "TeleportPlayerToSpace"
   ],
   "client": [],
   "injectors": {
