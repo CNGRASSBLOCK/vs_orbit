@@ -1,89 +1,124 @@
 {
-  "relative_quality" : 1088252878164,
   "planet_data": {
     "Sun": {
-      "mass": 332946,
+      "mass": 3.1E+15,
       "particle_state": "fixed",
+      "x": 0,
+      "y": 500,
+      "z": 0,
       "x_start_speed": 0,
       "y_start_speed": 0,
       "z_start_speed": 0
     },
     "Mercury": {
-      "mass": 0.055,
+      "mass": 3.47E+11,
       "particle_state": "common",
-      "x_start_speed": 20.5,
+      "x": -16348,
+      "y": 500,
+      "z": -18063,
+      "x_start_speed": 2.18,
       "y_start_speed": 0,
-      "z_start_speed": -22
+      "z_start_speed": -1.95
     },
     "Venus": {
-      "mass": 0.815,
+      "mass": 3E+12,
       "particle_state": "common",
-      "x_start_speed": 26,
+      "x": -16376,
+      "y": 500,
+      "z": 30089,
+      "x_start_speed": -2.12,
       "y_start_speed": 0,
-      "z_start_speed": -11
+      "z_start_speed": -1.20
     },
     "Earth": {
-      "mass": 1.0,
+      "mass": 4.02E+12,
       "particle_state": "common",
-      "x_start_speed": 360,
+      "x": -45165,
+      "y": 500,
+      "z": -442,
+      "x_start_speed": 0.0164,
       "y_start_speed": 0,
-      "z_start_speed": -720
+      "z_start_speed": -2.16
     },
     "Moon": {
-      "mass": 0.107,
+      "mass": 9.018E10,
       "particle_state": "common",
-      "x_start_speed": 270,
+      "x": -44877,
+      "y": 500,
+      "z": -1563,
+      "x_start_speed": 0.4834,
       "y_start_speed": 0,
-      "z_start_speed": -630
+      "z_start_speed": -2.04
     },
     "Mars": {
-      "mass": 0.107,
+      "mass": 5.85E+11,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 68742,
+      "y": 500,
+      "z": -7562,
+      "x_start_speed": 0.207,
       "y_start_speed": 0,
-      "z_start_speed": -840
+      "z_start_speed": 1.70
     },
     "Jupiter": {
-      "mass": 318,
+      "mass": 9.07E+12,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 85818,
+      "y": 500,
+      "z": -78549,
+      "x_start_speed": 0.900,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 0.983
     },
     "Europa": {
-      "mass": 0.008,
+      "mass": 5.29E+10,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 87663,
+      "y": 500,
+      "z": -81603,
+      "x_start_speed": 1.253,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 1.196
     },
     "Saturn": {
-      "mass": 95,
+      "mass": 2.06E+12,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 135367,
+      "y": 500,
+      "z": -147028,
+      "x_start_speed": 0.748,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 0.689
     },
     "Uranus": {
-      "mass": 14.6,
+      "mass": 2.61E+12,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 137176,
+      "y": 500,
+      "z": -307601,
+      "x_start_speed": 0.715,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 0.319
     },
     "Neptune": {
-      "mass": 17.2,
+      "mass": 2.22E+12,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 238826,
+      "y": 500,
+      "z": -453474,
+      "x_start_speed": 0.562,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 0.296
     },
     "Pluto": {
-      "mass": 0.0022,
+      "mass": 8.7E+10,
       "particle_state": "common",
-      "x_start_speed": 0,
+      "x": 407176,
+      "y": 500,
+      "z": -572545,
+      "x_start_speed": 0.442,
       "y_start_speed": 0,
-      "z_start_speed": 0
+      "z_start_speed": 0.314
     }
   }
 }

@@ -1,8 +1,8 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import com.google.gson.JsonObject;
-import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
-import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +12,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.server.ServerLifecycleEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,7 +25,7 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class WorldOperate {
-    public static List<GravitationWorld> Gravitation_Core_World_Bus = new ArrayList<>();
+    public static List<GravitationPool> Gravitation_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent
     public static void OnWorldLoad(net.minecraftforge.event.level.LevelEvent.Load event) {
@@ -47,9 +46,9 @@ public class WorldOperate {
     public static void CreateNewGravitationWorld(Level World) {
         String WorldId = World.dimension().location().toString();
 
-        for (GravitationWorld oneWorld : WorldOperate.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
+        for (GravitationPool oneWorld : WorldOperate.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
 
-        GravitationWorld newWorld = new GravitationWorld();
+        GravitationPool newWorld = new GravitationPool();
         newWorld.WorldId = WorldId;
 
         CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(World);
@@ -68,17 +67,10 @@ public class WorldOperate {
 
             JsonObject StarJsonObject = ReadDataPack.StarStateData.getAsJsonObject(WorldId).getAsJsonObject("planet_data").deepCopy();
             if (!StarJsonObject.has(StarName)) { continue; }
-            Particle particle = new Particle();
-            particle.id = i;
-            particle.name = "CosmosStar-" + StarName;
-            particle.x = compoundTag.getInt("x");
-            particle.y = compoundTag.getInt("y");
-            particle.z = compoundTag.getInt("z");
-            particle.mass = (long) (StarJsonObject.getAsJsonObject(StarName).get("mass").getAsDouble() * ReadDataPack.StarStateData.getAsJsonObject(WorldId).get("relative_quality").getAsLong());
+            Particle particle = new Particle(i, "CosmosStar-" + StarName, StarJsonObject.getAsJsonObject(StarName).get("particle_state").getAsString(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsBigDecimal(), StarJsonObject.getAsJsonObject(StarName).get("x").getAsDouble(), StarJsonObject.getAsJsonObject(StarName).get("y").getAsDouble(), StarJsonObject.getAsJsonObject(StarName).get("z").getAsDouble());
             particle.x_speed = StarJsonObject.getAsJsonObject(StarName).get("x_start_speed").getAsDouble();
             particle.y_speed = StarJsonObject.getAsJsonObject(StarName).get("y_start_speed").getAsDouble();
             particle.z_speed = StarJsonObject.getAsJsonObject(StarName).get("z_start_speed").getAsDouble();
-            particle.start = StarJsonObject.getAsJsonObject(StarName).get("particle_state").getAsString();
             newWorld.Gravitation_Core_World.add(particle);
         }
         WorldOperate.Gravitation_Core_World_Bus.add(newWorld); //新建引力世界用于处理
@@ -112,8 +104,8 @@ public class WorldOperate {
             bufferedReader.close();
             JsonObject json = new com.google.gson.Gson().fromJson(jsonstringbuilder.toString(), com.google.gson.JsonObject.class);
 
-            GravitationWorld gravitationWorld = GravitationWorld.getFromJsonObject(json);
-            if (gravitationWorld != null) { WorldOperate.Gravitation_Core_World_Bus.add(gravitationWorld); }
+            GravitationPool gravitationPool = GravitationPool.getFromJsonObject(json);
+            if (gravitationPool != null) { WorldOperate.Gravitation_Core_World_Bus.add(gravitationPool); }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,9 +118,9 @@ public class WorldOperate {
 
         String WorldID = ((Level) event.getLevel()).dimension().location().toString();
 
-        GravitationWorld thisGravitationWorld = GravitationWorld.getFromWorldID(WorldID);
+        GravitationPool thisGravitationPool = GravitationPool.getFromWorldID(WorldID);
 
-        JsonObject jsonObject = thisGravitationWorld.toJsonObject();
+        JsonObject jsonObject = thisGravitationPool.toJsonObject();
         if (jsonObject.size() == 0) { return; }
 
         String WorldFile = FMLPaths.GAMEDIR.get().toString() + server.getWorldPath(LevelResource.ROOT);

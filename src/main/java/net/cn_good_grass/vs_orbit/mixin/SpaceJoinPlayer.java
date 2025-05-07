@@ -1,0 +1,67 @@
+package net.cn_good_grass.vs_orbit.mixin;
+
+import com.llamalad7.mixinextras.sugar.Local;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarTick;
+import net.lointain.cosmos.network.CosmosModVariables;
+import net.lointain.cosmos.procedures.AtmosphericCollisionDetectorProcedure;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.joml.primitives.AABBdc;
+import org.joml.primitives.AABBic;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+
+import static net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarTick.getPartialTick;
+
+@Mixin(AtmosphericCollisionDetectorProcedure.class) //妈的这玩意得重写整个方法 不然太石山了
+public class SpaceJoinPlayer {
+    @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1, remap = false)
+//    @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;m_230957_(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1, remap = false)
+    private static String SpaceJoinPlayer(String pCommand, @Local(argsOnly = true) LevelAccessor world, @Local(argsOnly = true) Entity entity, @Local CompoundTag atmospheric_data) {
+        String ReturnCommand = "execute in {travel_to} run tp {uuid} {x} {y} {z}";
+        if (pCommand.contains("tp")) {
+            ReturnCommand = ReturnCommand.replace("{uuid}", pCommand.substring((pCommand.indexOf("tp ") + 3)).substring(0, pCommand.substring((pCommand.indexOf("tp ") + 3)).indexOf(" ")));
+            if (atmospheric_data.contains("travel_to")) ReturnCommand = ReturnCommand.replace("{travel_to}", atmospheric_data.getString("travel_to"));
+
+            CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
+            Tag collision_data_map = worldVars.collision_data_map.get(atmospheric_data.getString("travel_to"));//星球数据
+            if (collision_data_map == null) { return pCommand; }
+            ListTag listtag = (ListTag) collision_data_map;
+            String WorldId = ((Level) world).dimension().location().toString();
+            CompoundTag obj = null;
+            for (Tag tag : listtag) {
+                if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) {
+                    if (compoundTag.getString("travel_to").equals(WorldId)) { obj = compoundTag; }
+                }
+            }
+            if (obj == null) { return pCommand;}
+            Vec3 newPos = StarTick.getPos(atmospheric_data.getString("travel_to"), getPartialTick(world), obj);
+
+            ReturnCommand = ReturnCommand.replace("{x}", "" + newPos.x);
+            ReturnCommand = ReturnCommand.replace("{y}", "" + (newPos.y + (obj.getDouble("scale") / 2)));
+            ReturnCommand = ReturnCommand.replace("{z}", "" + newPos.z);
+
+//            for (Ship ship : VSGameUtilsKt.getAllShips((Level) world)) {
+//                if (!ship.getChunkClaimDimension().equals("minecraft:dimension:" + entity.level().dimension().location())) { continue; }
+//                AABBdc ShipAABB = ship.getWorldAABB();
+//                Vec3 PlayerPos = entity.position();
+//                if (PlayerPos.x >= ShipAABB.minX() && PlayerPos.x <= ShipAABB.maxX() && PlayerPos.y >= ShipAABB.minY() && PlayerPos.y <= ShipAABB.maxY() && PlayerPos.z >= ShipAABB.minZ() && PlayerPos.z <= ShipAABB.maxZ()) {
+//                    return "";
+//                }
+//            }
+
+            return ReturnCommand;
+        }
+        return pCommand;
+    }
+}

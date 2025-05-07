@@ -29,7 +29,7 @@ public class StarRender {
             at = @At(value = "INVOKE", ordinal = 22, shift = At.Shift.AFTER, target = "net/minecraft/world/phys/Vec3.<init>(DDD)V"), remap = false)
     private static void RotatePlanet(Event event, LevelAccessor world, Entity entity, double partialTick, double ticks, CallbackInfo ci, @Local(ordinal = 1) LocalRef<Vec3> pos, @Local(ordinal = 0) CompoundTag Target_object) {
         if (!Target_object.getString("object_name").equals("")) {
-            pos.set(StarTick.GetPos(world, entity.level().dimension().location().toString(), partialTick, pos.get(), Target_object));
+            pos.set(StarTick.getPos(entity.level().dimension().location().toString(), partialTick, Target_object));
         }
     }
     //防止渲染层出错的

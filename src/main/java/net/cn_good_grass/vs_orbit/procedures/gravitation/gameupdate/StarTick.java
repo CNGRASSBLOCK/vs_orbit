@@ -2,10 +2,9 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
-import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
 import net.cn_good_grass.vs_orbit.network.VariablesUpdate;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.WorldOperate;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
 import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
@@ -29,35 +28,35 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class StarTick {
-    public static Vec3 GetPos(LevelAccessor world, String dimension, double partialTick, Vec3 pos, CompoundTag StarTag) { //星球更新
+    public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag) { //星球更新
         String WorldID = dimension;
 
-        GravitationWorld NewGravitationWorld = null;
-        for (GravitationWorld gravitationWorld : VariablesUpdate.New_Gravitation_Core_World_Bus) {
-            if (gravitationWorld.WorldId.equals(WorldID)) {
-                NewGravitationWorld = gravitationWorld;
+        GravitationPool newGravitationPool = null;
+        for (GravitationPool gravitationPool : VariablesUpdate.New_Gravitation_Core_World_Bus) {
+            if (gravitationPool.WorldId.equals(WorldID)) {
+                newGravitationPool = gravitationPool;
                 break;
             }
         }
-        GravitationWorld OldGravitationWorld = null;
-        for (GravitationWorld gravitationWorld : VariablesUpdate.Old_Gravitation_Core_World_Bus) {
-            if (gravitationWorld.WorldId.equals(WorldID)) {
-                OldGravitationWorld = gravitationWorld;
+        GravitationPool oldGravitationPool = null;
+        for (GravitationPool gravitationPool : VariablesUpdate.Old_Gravitation_Core_World_Bus) {
+            if (gravitationPool.WorldId.equals(WorldID)) {
+                oldGravitationPool = gravitationPool;
                 break;
             }
         }
 
-        if (NewGravitationWorld == null || OldGravitationWorld == null) { return new Vec3(0, 0, 0); }
-        if (NewGravitationWorld.Gravitation_Core_World.size() != OldGravitationWorld.Gravitation_Core_World.size()) { return new Vec3(0, 0, 0); }
+        if (newGravitationPool == null || oldGravitationPool == null) { return new Vec3(0, 0, 0); }
+        if (newGravitationPool.Gravitation_Core_World.size() != oldGravitationPool.Gravitation_Core_World.size()) { return new Vec3(0, 0, 0); }
 
         String StarID = StarTag.getString("object_name");
         if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
         String ParticleID = "CosmosStar-" + StarID;
         Vector3d New_Pos = new Vector3d(0, 0, 0);
         Vector3d Old_Pos = new Vector3d(0, 0, 0);
-        for (int i = 0; i < NewGravitationWorld.Gravitation_Core_World.size(); i++) {
-            Particle NewParticle = NewGravitationWorld.Gravitation_Core_World.get(i);
-            Particle OldPatricle = OldGravitationWorld.Gravitation_Core_World.get(i);
+        for (int i = 0; i < newGravitationPool.Gravitation_Core_World.size(); i++) {
+            Particle NewParticle = newGravitationPool.Gravitation_Core_World.get(i);
+            Particle OldPatricle = oldGravitationPool.Gravitation_Core_World.get(i);
             if (NewParticle.name.equals(ParticleID) && OldPatricle.name.equals(ParticleID)) {
                 New_Pos = new Vector3d(NewParticle.x, NewParticle.y, NewParticle.z);
                 Old_Pos = new Vector3d(OldPatricle.x, OldPatricle.y, OldPatricle.z);
@@ -73,7 +72,7 @@ public class StarTick {
         List<Object> sorted_order = new ArrayList<>();
         for (int iter = 0; iter < map.size(); iter++) {
             CompoundTag mint = (CompoundTag) map.get(iter);
-            Vec3 start_pos = GetPos(world, entity.level().dimension().location().toString(), partialTick, new Vec3(((DoubleTag) mint.get("x")).getAsDouble(), ((DoubleTag) mint.get("y")).getAsDouble(), ((DoubleTag) mint.get("z")).getAsDouble()), mint);
+            Vec3 start_pos = getPos(entity.level().dimension().location().toString(), partialTick, mint);
             if (mint.contains("function") && mint.get("function").getAsString().equals("ring")) {
                 Vec3 ring_pos = switch (mint.get("type").getAsString()) {
                     case "ring1" -> new Vec3(-((DoubleTag) mint.get("radius")).getAsDouble(), 0.0F, 0.0F);
@@ -93,8 +92,18 @@ public class StarTick {
     public static Tag recalculateLight(CompoundTag instance, String pKey, Operation<Tag> original, LevelAccessor world, Entity entity, double partialTick) {
         if (!pKey.equals("light_data") && !pKey.equals("alpha_data") && !pKey.equals("i_alpha_data")) return original.call(instance, pKey);
         ListTag light_source_list = (ListTag) CosmosModVariables.WorldVariables.get(world).light_source_map.get(entity.level().dimension().location().toString());
+        if (light_source_list != null) {
+            for (int i = 0; i < light_source_list.size(); i++) {
+                Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, light_source_list.getCompound(i));
+                CompoundTag compoundTag = light_source_list.getCompound(i).copy();
+                compoundTag.putDouble("x", objPos.x);
+                compoundTag.putDouble("y", objPos.y);
+                compoundTag.putDouble("z", objPos.z);
+                light_source_list.set(i, compoundTag);
+            }
+        }
         ListTag opaque_object_list = (ListTag) CosmosModVariables.WorldVariables.get(world).opaque_object_map.get(entity.level().dimension().location().toString());
-        Vec3 objPos = GetPos(world, entity.level().dimension().location().toString(), partialTick, new Vec3(((DoubleTag) instance.get("x")).getAsDouble(), ((DoubleTag) instance.get("y")).getAsDouble(), ((DoubleTag) instance.get("z")).getAsDouble()), instance);
+        Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, instance);
         double scale;
         Vec3 objScale = Vec3.ZERO;
         if (!instance.get("function").getAsString().equals("ring")) {

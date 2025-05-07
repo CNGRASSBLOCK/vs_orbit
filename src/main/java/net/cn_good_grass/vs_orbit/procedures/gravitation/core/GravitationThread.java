@@ -2,8 +2,8 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
-import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.joml.Vector3d;
@@ -16,6 +16,7 @@ import java.util.TimerTask;
 public class GravitationThread {
     public static double core_tick_speed = Config.Core_TICK_SPEED.get();
     public static double core_tick_time = Config.Core_TICK_TIME.get();
+    public static boolean pause = false;
 
     public static void CreateThread() {
         if (WorldOperate.Gravitation_Core_World_Bus.isEmpty()) { return; }
@@ -25,8 +26,8 @@ public class GravitationThread {
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         for (long ThreadId : threadMXBean.getAllThreadIds()) {
             if (threadMXBean.getThreadInfo(ThreadId).getThreadName().equals(NewThreadName)) {
-                VSOrbitMod.LOGGER.error("[VSOrbit] [Core] Can't create new thread! There is a thread with the same name in the thread pool!");
-                return;
+                VSOrbitMod.LOGGER.error("[VS_Orbit] [Core] Can't create new thread! There is a thread with the same name in the thread pool!");
+                continue;
             }
         }
 
@@ -34,17 +35,18 @@ public class GravitationThread {
 
         TimerTask task = new TimerTask() {
             public void run() {
-                boolean run = true;
+                boolean run = !pause;
                 if (ServerLifecycleHooks.getCurrentServer() != null) { if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) { if (Minecraft.getInstance().isPaused()) { run = false; } } }
 
                 if (run) {
                     String ThreadNamme = Thread.currentThread().getName();
                     Integer WorldListPos = Integer.parseInt(ThreadNamme.substring(18));
-                    GravitationWorld gravitationWorld = WorldOperate.Gravitation_Core_World_Bus.get(WorldListPos); //获取世界
+                    if (WorldOperate.Gravitation_Core_World_Bus.size() <= WorldListPos + 1) { this.cancel(); }
+                    GravitationPool gravitationPool = WorldOperate.Gravitation_Core_World_Bus.get(WorldListPos); //获取世界
                     //下面是各种事件更新
-                    AccelerationUpdate(gravitationWorld); //更新质点加速度
-                    SpeedUpdates(gravitationWorld); //更新质点速度
-                    LocationUpdates(gravitationWorld); //更新质点位置
+                    AccelerationUpdate(gravitationPool); //更新质点加速度
+                    SpeedUpdates(gravitationPool); //更新质点速度
+                    LocationUpdates(gravitationPool); //更新质点位置
                 }
             }
         };
@@ -53,11 +55,11 @@ public class GravitationThread {
         if (Tick_RunTime != 0) {
             timer.scheduleAtFixedRate(task, 0, Tick_RunTime); // 立即开始执行，之后每隔50毫秒执行一次
         } else {
-            VSOrbitMod.LOGGER.error("[VSOrbit] [Core] Can't create new thread! TickSpeed is zero!");
+            VSOrbitMod.LOGGER.error("[VS_Orbit] [Core] Can't create new thread! TickSpeed is zero!");
         }
     }
 
-    public static void AccelerationUpdate(GravitationWorld World) {
+    public static void AccelerationUpdate(GravitationPool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.Gravitation_Core_World) {
@@ -72,7 +74,7 @@ public class GravitationThread {
     }
 
 
-    public static void SpeedUpdates(GravitationWorld World) {
+    public static void SpeedUpdates(GravitationPool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.Gravitation_Core_World) {
@@ -84,7 +86,7 @@ public class GravitationThread {
         }
     }
 
-    public static void LocationUpdates(GravitationWorld World) {
+    public static void LocationUpdates(GravitationPool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.Gravitation_Core_World) {

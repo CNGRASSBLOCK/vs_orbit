@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "vs_orbit:block/jump_engine_controller/jump_engine_controller_down",
+    "up": "vs_orbit:block/jump_engine_controller/jump_engine_controller_up",
+    "north": "vs_orbit:block/jump_engine_controller/jump_engine_controller_north",
+    "east": "vs_orbit:block/jump_engine_controller/jump_engine_controller_west",
+    "south": "vs_orbit:block/jump_engine_controller/jump_engine_controller_north",
+    "west": "vs_orbit:block/jump_engine_controller/jump_engine_controller_west",
+    "particle": "vs_orbit:block/jump_engine_controller/jump_engine_controller_north"
+  }
+  }

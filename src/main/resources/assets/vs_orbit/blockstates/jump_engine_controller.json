@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 90,
+      "y": 0
+    },
+    "facing=east": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 0,
+      "y": 0
+    },
+    "facing=down": {
+      "model": "vs_orbit:block/jump_engine_controller/jump_engine_controller",
+      "x": 180,
+      "y": 0
+    }
+  }
+}

@@ -1,13 +1,19 @@
 package net.cn_good_grass.vs_orbit;
 
 import com.mojang.logging.LogUtils;
+import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
+import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
+import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
+import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
+import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.WorldOperate;
-//import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -31,6 +37,13 @@ public class VSOrbitMod
     {
         //注册事件
         MinecraftForge.EVENT_BUS.register(new WorldOperate()); //注册引力更新事件
+        //注册各种杂七杂八的
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        VSOrbitModBlocks.register(eventBus);
+        VSOrbitModBlockEntities.register(eventBus);
+        VSOrbitModItems.register(eventBus);
+        VSOrbitModEntities.REGISTRY.register(eventBus);
+        VSOrbitModMenus.REGISTRY.register(eventBus);
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {

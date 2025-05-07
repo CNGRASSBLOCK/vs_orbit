@@ -3,8 +3,8 @@ package net.cn_good_grass.vs_orbit.cilent.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.cn_good_grass.vs_orbit.config.CilentConfig;
-import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
-import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -21,7 +21,7 @@ import org.joml.Vector3f;
 public class DisplayParticleData {
     @SubscribeEvent
     public static void renderModels(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {;
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES && Minecraft.getInstance().options.renderDebug) {;
             RenderSystem.disableDepthTest();
             RenderSystem.setShaderFogStart(2147463647);
             RenderSystem.setShaderFogEnd(2147463647);
@@ -29,9 +29,9 @@ public class DisplayParticleData {
             Minecraft minecraft = Minecraft.getInstance();
             String WorldID = ((Level) minecraft.level).dimension().location().toString();
 
-            GravitationWorld thisGravitationWorld = GravitationWorld.getFromWorldID(WorldID);
+            GravitationPool thisGravitationPool = GravitationPool.getFromWorldID(WorldID);
 
-            for (Particle particle : thisGravitationWorld.Gravitation_Core_World) {
+            for (Particle particle : thisGravitationPool.Gravitation_Core_World) {
                 Vec3 speed_line_center = new Vec3(particle.x, particle.y, particle.z);
                 Vec3 speed_line_end = new Vec3(particle.x + (particle.x_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.y + (particle.y_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.z + (particle.z_speed * CilentConfig.SPEED_SHOW_SCALING.get()));
 

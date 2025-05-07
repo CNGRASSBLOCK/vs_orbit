@@ -1,24 +1,25 @@
-package net.cn_good_grass.vs_orbit.modclass;
+package net.cn_good_grass.vs_orbit.procedures.gravitation.classes;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.WorldOperate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GravitationWorld {
+public class GravitationPool {
     public String WorldId = "";
     public List<Particle> Gravitation_Core_World = new ArrayList<>();
 
-    public static GravitationWorld getFromWorldID(String worldID){
-        GravitationWorld thisGravitationWorld = new GravitationWorld();
-        for (GravitationWorld gravitationWorld : WorldOperate.Gravitation_Core_World_Bus) {
-            if (gravitationWorld.WorldId.equals(worldID)) {
-                thisGravitationWorld = gravitationWorld;
+    public static GravitationPool getFromWorldID(String worldID){
+        GravitationPool thisGravitationPool = new GravitationPool();
+        for (GravitationPool gravitationPool : WorldOperate.Gravitation_Core_World_Bus) {
+            if (gravitationPool.WorldId.equals(worldID)) {
+                thisGravitationPool = gravitationPool;
                 break;
             }
         }
-        return thisGravitationWorld;
+        return thisGravitationPool;
     }
 
     public JsonObject toJsonObject() {
@@ -55,8 +56,8 @@ public class GravitationWorld {
         return main_json;
     }
 
-    public static GravitationWorld getFromJsonObject(JsonObject json) {
-        GravitationWorld newWorld = new GravitationWorld();
+    public static GravitationPool getFromJsonObject(JsonObject json) {
+        GravitationPool newWorld = new GravitationPool();
 
         if (json.has("WorldID")) { newWorld.WorldId = json.get("WorldID").getAsString(); } else { return null; }
 
@@ -64,14 +65,21 @@ public class GravitationWorld {
             if (key.equals("WorldID")) { continue; }
             JsonObject particle_json = json.getAsJsonObject(key);
 
-            Particle particle = new Particle();
-            particle.name = key;
-            if (particle_json.has("id")) { particle.id = particle_json.get("id").getAsInt(); }
-            if (particle_json.has("start")) { particle.start = particle_json.get("start").getAsString(); }
-            if (particle_json.has("x")) { particle.x = particle_json.get("x").getAsDouble(); }
-            if (particle_json.has("y")) { particle.y = particle_json.get("y").getAsDouble(); }
-            if (particle_json.has("z")) { particle.z = particle_json.get("z").getAsDouble(); }
-            if (particle_json.has("mass")) { particle.mass = particle_json.get("mass").getAsLong(); }
+            int id = 0;
+            String start = "common";
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            BigDecimal mass = new BigDecimal(0);
+            if (particle_json.has("id")) { id = particle_json.get("id").getAsInt(); }
+            if (particle_json.has("start")) { start = particle_json.get("start").getAsString(); }
+            if (particle_json.has("x")) { x = particle_json.get("x").getAsDouble(); }
+            if (particle_json.has("y")) { y = particle_json.get("y").getAsDouble(); }
+            if (particle_json.has("z")) { z = particle_json.get("z").getAsDouble(); }
+            if (particle_json.has("mass")) { mass = particle_json.get("mass").getAsBigDecimal(); }
+
+            Particle particle = new Particle(id, key, start, mass, x, y, z);
+
             if (particle_json.has("x_speed")) { particle.x_speed = particle_json.get("x_speed").getAsDouble(); }
             if (particle_json.has("y_speed")) { particle.y_speed = particle_json.get("y_speed").getAsDouble(); }
             if (particle_json.has("z_speed")) { particle.z_speed = particle_json.get("z_speed").getAsDouble(); }

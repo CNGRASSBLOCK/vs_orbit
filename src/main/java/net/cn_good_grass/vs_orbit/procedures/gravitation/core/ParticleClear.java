@@ -1,8 +1,8 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.modclass.GravitationWorld;
-import net.cn_good_grass.vs_orbit.modclass.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,9 +26,9 @@ public class ParticleClear {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) { return; }
 
-            GravitationWorld thisGravitationWorld = GravitationWorld.getFromWorldID(WorldIDs);
+            GravitationPool thisGravitationPool = GravitationPool.getFromWorldID(WorldIDs);
 
-            thisGravitationWorld.Gravitation_Core_World = ClearParticleForVSShip(level, thisGravitationWorld.Gravitation_Core_World, WorldIDs);
+            thisGravitationPool.Gravitation_Core_World = ClearParticleForVSShip(level, thisGravitationPool.Gravitation_Core_World, WorldIDs);
         }
     }
 
