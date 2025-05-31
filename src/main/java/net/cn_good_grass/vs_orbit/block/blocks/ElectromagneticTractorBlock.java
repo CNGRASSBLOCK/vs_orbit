@@ -7,22 +7,23 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ElectromagneticTractorBlock extends Block {
+public class ElectromagneticTractorBlock extends Block{
     public ElectromagneticTractorBlock() {
         super(Properties.of()
                 .strength(5f, 75f) // 硬度（挖掘时间）、爆炸抗性
                 .sound(SoundType.STONE) // 音效类型
                 .requiresCorrectToolForDrops() // 需要正确工具采集
                 .lightLevel(state -> 8)
-                .noOcclusion()
         );
     }
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
+    public static final BooleanProperty ROTATE = BooleanProperty.create("rotate");
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); builder.add(ROTATE); }
     public BlockState rotate(BlockState state, Rotation rot) { return state.setValue(FACING, rot.rotate(state.getValue(FACING))); }
     public BlockState mirror(BlockState state, Mirror mirrorIn) { return state.rotate(mirrorIn.getRotation(state.getValue(FACING))); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {

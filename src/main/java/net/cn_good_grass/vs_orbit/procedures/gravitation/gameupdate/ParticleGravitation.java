@@ -1,27 +1,28 @@
-package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
+package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Force;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import org.joml.Vector3d;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ParticleGravitation {
-    public static Vector3d GetParticleGravitationForAllParticle(GravitationPool World, Particle this_particle) {
-        if (this_particle == null || World == null) { return new Vector3d(0, 0, 0); } // 防止崩溃
+    public static void UpDateParticleGravitationForAllParticle(GravitationPool World, Particle this_particle) {
+        if (this_particle == null || World == null) return; // 防止崩溃
 
         Vector3d ParticleGravitation = new Vector3d(0, 0, 0); //计算质点总引力
-        for (Particle other_particle : World.Gravitation_Core_World) {
-            if (other_particle.equals(this_particle)) { continue; }
+        for (Particle other_particle : World.getGravitationCoreWorld()) {
+            if (other_particle.equals(this_particle)) continue;
             Vector3d OneParticleGravitation = GetParticleGravitationForOneParticle(this_particle, other_particle);
             ParticleGravitation.x += OneParticleGravitation.x;
             ParticleGravitation.y += OneParticleGravitation.y;
             ParticleGravitation.z += OneParticleGravitation.z;
         }
 
-        return ParticleGravitation; //返回
+        this_particle.addForce(new Force("Gravitation", BigDecimal.valueOf(ParticleGravitation.x).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.y).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.z).multiply(this_particle.mass), 1));
     }
 
     public static Vector3d GetParticleGravitationForOneParticle(Particle this_particle, Particle other_particle) {

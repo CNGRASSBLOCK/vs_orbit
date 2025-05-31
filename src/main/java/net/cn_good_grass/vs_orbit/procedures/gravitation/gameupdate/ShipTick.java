@@ -1,8 +1,8 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -33,7 +33,7 @@ public class ShipTick {
             if (level == null) { return; }
             String WorldID = level.dimension().location().toString();
 
-            List<Particle> particleList = GravitationPool.getFromWorldID(WorldID).Gravitation_Core_World;
+            List<Particle> particleList = GravitationPool.getFromWorldID(WorldID).getGravitationCoreWorld();
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
                 if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
@@ -53,26 +53,20 @@ public class ShipTick {
 
                     Particle newparticle = new Particle(particleList.size(), "VSShip-" + shipId, start, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
 
-                    particleList.add(newparticle);
+                    GravitationPool.getFromWorldID(WorldID).addParticle(newparticle);
                     continue;
                 } else {
-                    Gravitation.x = particle.x_acceleration;
-                    Gravitation.y = particle.y_acceleration;
-                    Gravitation.z = particle.z_acceleration;
+                    Gravitation = particle.getAllForce().toVector3d();
 
                     particle.x = ship.getTransform().getPositionInWorld().x();
                     particle.y = ship.getTransform().getPositionInWorld().y();
                     particle.z = ship.getTransform().getPositionInWorld().z();
                 }
-
-                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get(), Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get(), Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get());
-
+                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3, Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3, Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3);
                 LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
-                if (loadedServerShip == null) {continue;}
+                if (loadedServerShip == null) { continue; }
                 GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
-                if (applier != null) {
-                    applier.applyInvariantForce(ShipGravitation); //施加力
-                }
+                if (applier != null) applier.applyInvariantForce(ShipGravitation); //施加力
             }
         }
     }

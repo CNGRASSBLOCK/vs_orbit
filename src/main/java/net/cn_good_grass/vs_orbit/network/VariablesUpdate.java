@@ -1,9 +1,9 @@
 package net.cn_good_grass.vs_orbit.network;
 
 import com.google.gson.JsonParser;
-import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngineFire;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.WorldOperate;
+import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine.PlanetEngineFire;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.TickEvent;
@@ -27,7 +27,7 @@ public class VariablesUpdate {
         if (event.side.isServer()) {
             //引力数据
             StringBuilder DataPack = new StringBuilder();
-            for (GravitationPool gravitationPool : WorldOperate.Gravitation_Core_World_Bus) {
+            for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
                 if (!DataPack.isEmpty()) {
                     DataPack.append("【分隔符】");
                 }
@@ -77,7 +77,7 @@ public class VariablesUpdate {
 
                 String pos = string.split("，")[0].replace("{","").replace("}","");
                 BlockPos blockPos = new BlockPos(Integer.parseInt(pos.split(",")[0]), Integer.parseInt(pos.split(",")[1]), Integer.parseInt(pos.split(",")[2]));
-                PlanetEngineFire planetEngineFire = new PlanetEngineFire(blockPos, Integer.parseInt(string.split("，")[1]), Integer.parseInt(string.split("，")[2]));
+                PlanetEngineFire planetEngineFire = new PlanetEngineFire(blockPos, string.split("，")[1], Integer.parseInt(string.split("，")[2]), Integer.parseInt(string.split("，")[3]));
                 PlanetEngineFire.fires_cilent.add(planetEngineFire);
             }
         }

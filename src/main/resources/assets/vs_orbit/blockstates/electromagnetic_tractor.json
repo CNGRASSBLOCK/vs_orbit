@@ -1,34 +1,56 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
-      "x": 90,
-      "y": 0
+    "facing=north,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor",
+      "x": 90
     },
-    "facing=east": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
+    "facing=east,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor",
       "x": 90,
       "y": 90
     },
-    "facing=south": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
+    "facing=south,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor",
       "x": 90,
       "y": 180
     },
-    "facing=west": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
+    "facing=west,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor",
       "x": 90,
       "y": 270
     },
-    "facing=up": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
-      "x": 0,
-      "y": 0
+    "facing=up,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor"
     },
-    "facing=down": {
-      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_l",
-      "x": 180,
-      "y": 0
+    "facing=down,rotate=false": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor",
+      "x": 180
+    },
+    "facing=north,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate",
+      "x": 90
+    },
+    "facing=east,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate"
+    },
+    "facing=down,rotate=true": {
+      "model": "vs_orbit:block/electromagnetic_tractor/electromagnetic_tractor_rotate",
+      "x": 180
     }
   }
 }

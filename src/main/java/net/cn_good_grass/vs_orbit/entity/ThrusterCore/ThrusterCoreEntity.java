@@ -36,14 +36,13 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ThrusterCoreEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(ThrusterCoreEntity.class, EntityDataSerializers.STRING);
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-	public String animationprocedure = "empty";
 
 	public ThrusterCoreEntity(PlayMessages.SpawnEntity packet, Level world) { this(VSOrbitModEntities.THRUSTER_CORE.get(), world); }
 
 	public ThrusterCoreEntity(EntityType<ThrusterCoreEntity> type, Level world) {
 		super(type, world);
 		setNoAi(true);
-		this.setAnimation("spend");
+		//this.setAnimation("spend");
 		this.noPhysics = true;
 		this.setNoGravity(true);
 		this.noCulling = true;
@@ -88,14 +87,16 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 	@Override
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		compound.putString("Texture", this.getTexture());
+		compound.putString("Texture", this.entityData.get(TEXTURE));
+		compound.putString("Animation", this.entityData.get(ANIMATION));
 		compound.putFloat("scare", this.getScare());
 		compound.putIntArray("engine_pos", new ArrayList<>(List.of(this.entityData.get(engine_pos).getX(), this.entityData.get(engine_pos).getY(), this.entityData.get(engine_pos).getZ())));
 	}
 	@Override
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture")) this.setTexture(compound.getString("Texture"));
+		if (compound.contains("Texture")) this.entityData.set(TEXTURE, compound.getString("Texture"));
+		if (compound.contains("Animation")) this.entityData.set(ANIMATION, compound.getString("Animation"));
 		if (compound.contains("scare")) this.setScare(compound.getFloat("scare"));
 		if (compound.contains("engine_pos") && compound.getIntArray("scare").length == 3)  this.entityData.set(engine_pos, new BlockPos(compound.getIntArray("scare")[0], compound.getIntArray("scare")[1], compound.getIntArray("scare")[2]));
 	}
@@ -113,31 +114,15 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 		this.entityData.define(TEXTURE, "main");
 	}
 
-	public void setTexture(String texture) { this.entityData.set(TEXTURE, texture); }
-	public String getTexture() { return this.entityData.get(TEXTURE); }
-
 	private PlayState movementPredicate(AnimationState event) {
-		if (this.animationprocedure.equals("empty")) {
-			return event.setAndContinue(RawAnimation.begin().thenLoop("spend"));
-		}
+		if (this.entityData.get(ANIMATION).isEmpty()) return event.setAndContinue(RawAnimation.begin().thenLoop("spend"));
 		return PlayState.STOP;
 	}
 
 	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
-			}
-		} else if (animationprocedure.equals("empty")) {
-			return PlayState.STOP;
-		}
+		event.getController().setAnimation(RawAnimation.begin().thenPlay(this.entityData.get(ANIMATION)));
 		return PlayState.CONTINUE;
 	}
-
-	public String getSyncedAnimation() { return this.entityData.get(ANIMATION); }
-	public void setAnimation(String animation) { this.entityData.set(ANIMATION, animation); }
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {

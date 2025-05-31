@@ -5,6 +5,7 @@ import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.cilent.gui.JumpEngineControllerGUIScreen;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -46,7 +47,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 		this.entity = inv.player;
 		this.world = inv.player.level();
 		this.internal = new ItemStackHandler(0);
-		BlockPos pos = null;
+		BlockPos pos;
 		if (extraData != null) {
 			pos = extraData.readBlockPos();
 			this.x = pos.getX();
@@ -91,6 +92,14 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			this.textstate = readTextState(buffer);
 		}
 
+		public JumpEngineControllerGUIOtherMessage(int mode, int x, int y, int z, HashMap<String, String> textstate) {
+			this.mode = mode;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.textstate = textstate;
+		}
+
 		public static void buffer(JumpEngineControllerGUIOtherMessage message, FriendlyByteBuf buffer) {
 			buffer.writeInt(message.mode);
 			buffer.writeInt(message.x);
@@ -122,16 +131,18 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 				guistate.put(key, value);
 			}
 			// security measure to prevent arbitrary chunk generation
-			if (!world.hasChunkAt(new BlockPos(x, y, z)))
-				return;
+			if (!world.hasChunkAt(new BlockPos(x, y, z))) return;
 			if (mode == 0) {
+				JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
+				if (blockEntity == null) return;
+				try { blockEntity.setting.putDouble("force", Double.valueOf(((EditBox) guistate.get("vs_orbit:power_force")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.setting.putDouble("pos_x", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_x")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.setting.putDouble("pos_y", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_y")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.setting.putDouble("pos_z", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_z")).getValue())); } catch (NumberFormatException e) {}
 			}
 		}
 
-		@SubscribeEvent
-		public static void registerMessage(FMLCommonSetupEvent event) {
-			VSOrbitMod.addNetworkMessage(JumpEngineControllerGUIOtherMessage.class, JumpEngineControllerGUIOtherMessage::buffer, JumpEngineControllerGUIOtherMessage::new, JumpEngineControllerGUIOtherMessage::handler);
-		}
+		@SubscribeEvent public static void registerMessage(FMLCommonSetupEvent event) { VSOrbitMod.addNetworkMessage(JumpEngineControllerGUIOtherMessage.class, JumpEngineControllerGUIOtherMessage::buffer, JumpEngineControllerGUIOtherMessage::new, JumpEngineControllerGUIOtherMessage::handler); }
 
 		public static void writeTextState(HashMap<String, String> map, FriendlyByteBuf buffer) {
 			buffer.writeInt(map.size());

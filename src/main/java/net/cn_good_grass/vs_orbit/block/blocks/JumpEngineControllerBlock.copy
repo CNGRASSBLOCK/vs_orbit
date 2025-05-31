@@ -2,12 +2,12 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
-import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine.PlanetEngineFire;
+import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngineFire;
+import net.cn_good_grass.vs_orbit.classes.EulerAngles;
 import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipAction;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,7 +18,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,27 +33,20 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.joml.Quaterniond;
-import org.joml.Quaterniondc;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.GameTickForceApplier;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Force.decomposeForce;
-
-public class JumpEngineControllerBlock extends Block implements EntityBlock {
-    public JumpEngineControllerBlock() {
+public class JumpEngineControllerBlockcopy extends Block implements EntityBlock {
+    public JumpEngineControllerBlockcopy() {
         super(Properties.of()
                 .strength(5f, 90f) // 硬度（挖掘时间）、爆炸抗性
                 .sound(SoundType.STONE) // 音效类型
@@ -101,8 +93,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
-        if (!(world instanceof ServerLevel)) return InteractionResult.CONSUME;
-
+        if (!(world instanceof ServerLevel)) return InteractionResult.PASS;
         super.use(blockstate, world, pos, entity, hand, hit);
 
         if (entity instanceof ServerPlayer serverPlayer) {
@@ -114,7 +105,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
             }, pos);
         }
 
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {return true; }
@@ -163,19 +154,19 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
             if (!face_end.get(3)) if (ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") && world.getBlockState(blockPos).getValue(BlockStateProperties.FACING).equals(facing_0.getOpposite()) && !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) radius.set(3, radius.get(3) + 1); else face_end.set(3, true);
         }
         blockEntity.structure_radius = Collections.min(radius);
-        if (blockEntity.structure_radius < 3) { blockEntity.structure_state = "small"; return; }
+        if (blockEntity.structure_radius <= 3) { blockEntity.structure_state = "small"; return; }
         //检测周围方向向前
         List<Vector3d> vector3d = new ArrayList<>(List.of(new Vector3d(face_pos_offset.get(0)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(1)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(2)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(3)).mul(blockEntity.structure_radius + 1)));
         for (int i = 1;i < blockEntity.structure_radius + 2;i++) {
             Vector3d vector3d_main = new Vector3d(facing_0.getOpposite().getStepX(), facing_0.getOpposite().getStepY(), facing_0.getOpposite().getStepZ()).mul(i);
             BlockPos blockPos = new BlockPos((int) (pos.getX() + vector3d.get(0).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(0).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(0).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") && !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(1).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(1).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(1).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") && !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(2).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(2).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(2).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") && !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(3).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(3).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(3).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") && !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
         }
 
         Vector3d center_pos = new Vector3d(new Vector3d(pos.getX(), pos.getY(), pos.getZ())).add(new Vector3d(facing_0.getOpposite().getStepX(), facing_0.getOpposite().getStepY(), facing_0.getOpposite().getStepZ()).mul(radius.get(0)));
@@ -189,7 +180,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (!blockEntity.structure_state.equals("right")) { return; }
         if (blockEntity.mode.equals("planet_engine")) {
             //行星发动机模式
-            PlanetEngineFire planetEngineFire = new PlanetEngineFire(pos.relative(Direction.UP, 5), world.dimension().location().toString(), 23, 0);
+            PlanetEngineFire planetEngineFire = new PlanetEngineFire(pos.relative(Direction.UP, 5), 23, 0);
             int index = PlanetEngineFire.indexOf(planetEngineFire);
             if (blockEntity.red_stone_power > 0) {
                 if (PlanetEngineFire.has(planetEngineFire)) {
@@ -247,48 +238,16 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         ServerShip ship = VSGameUtilsKt.getShipManagingPos(world, pos);
         if (ship == null) return;
 
-        Entity entity = world.getEntity(blockEntity.display_entity_uuid);
-        if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
-
         if (blockEntity.structure_state.equals("right") && blockEntity.red_stone_power > 0) {
             if (blockEntity.mode.equals("power")) {
-                Quaterniondc ShipQuaternion = ship.getTransform().getShipToWorldRotation();
-                Quaterniondc ForceQuaternion = ShipQuaternion.add((Quaterniondc) blockstate.getValue(BlockStateProperties.FACING).getRotation(), new Quaterniond());
-
-                if (blockEntity.animation_tick <= 100) {
-                    thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged");
-                    blockEntity.animation_tick ++;
-                } else if (blockEntity.animation_tick <= 120) {
-                    thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "work");
-                    blockEntity.animation_tick ++;
-                } else {
-                    double force = blockEntity.setting.getDouble("force");
-                    Vector3d forceVector = decomposeForce(force, ForceQuaternion);
-
-                    LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(world).getLoadedShips().getById(ship.getId());
-                    if (loadedServerShip == null) return;
-                    GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
-                    if (applier != null) applier.applyInvariantForce(forceVector);
-                }
+                EulerAngles eulerAngles = new EulerAngles(ship.getTransform().getShipToWorldRotation());
             } else if (blockEntity.mode.equals("jump") && !blockEntity.red_stone_power_do) {
-                if (blockEntity.animation_tick <= 200) {
-                    thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged_high");
-                    blockEntity.animation_tick ++;
-                } else if (blockEntity.animation_tick <= 220) {
-                    thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "work");
-                    blockEntity.animation_tick ++;
-                } else {
-                    ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(world);
-                    ShipAction.teleportShip(shipWorld, ship, new ShipTeleportDataImpl(new Vector3d(blockEntity.setting.getDouble("pos_x"), blockEntity.setting.getDouble("pos_y"), blockEntity.setting.getDouble("pos_z")), ship.getTransform().getShipToWorldRotation(), new Vector3d(), new Vector3d(), ship.getChunkClaimDimension(), null));
-                    blockEntity.red_stone_power_do = true;
-                    blockEntity.animation_tick = 0;
-                    thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
-                }
+                ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(world);
+                ShipAction.teleportShip(shipWorld, ship, new ShipTeleportDataImpl(new Vector3d(blockEntity.setting.getDouble("pos_x"), blockEntity.setting.getDouble("pos_y"), blockEntity.setting.getDouble("pos_z")), ship.getTransform().getShipToWorldRotation(), new Vector3d(), new Vector3d(), ship.getChunkClaimDimension(), null));
+                blockEntity.red_stone_power_do = true;
             } else if (blockEntity.mode.equals("planet_engine")) {}
         } else {
             blockEntity.red_stone_power_do = false;
-            blockEntity.animation_tick = 0;
-            thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
         }
     }
 }

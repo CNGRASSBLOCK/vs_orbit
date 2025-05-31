@@ -1,7 +1,8 @@
-package net.cn_good_grass.vs_orbit.procedures.gravitation.classes;
+package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard;
 
 import com.google.gson.JsonObject;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.WorldOperate;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,11 +10,11 @@ import java.util.List;
 
 public class GravitationPool {
     public String WorldId = "";
-    public List<Particle> Gravitation_Core_World = new ArrayList<>();
+    private List<Particle> Gravitation_Core_World = new ArrayList<>();
 
     public static GravitationPool getFromWorldID(String worldID){
         GravitationPool thisGravitationPool = new GravitationPool();
-        for (GravitationPool gravitationPool : WorldOperate.Gravitation_Core_World_Bus) {
+        for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
             if (gravitationPool.WorldId.equals(worldID)) {
                 thisGravitationPool = gravitationPool;
                 break;
@@ -45,10 +46,6 @@ public class GravitationPool {
             particle_json.addProperty("x_speed", particle.x_speed);
             particle_json.addProperty("y_speed", particle.y_speed);
             particle_json.addProperty("z_speed", particle.z_speed);
-
-            particle_json.addProperty("x_acceleration", particle.x_acceleration);
-            particle_json.addProperty("y_acceleration", particle.y_acceleration);
-            particle_json.addProperty("z_acceleration", particle.z_acceleration);
 
             main_json.add(particle.name, particle_json);
         }
@@ -83,13 +80,38 @@ public class GravitationPool {
             if (particle_json.has("x_speed")) { particle.x_speed = particle_json.get("x_speed").getAsDouble(); }
             if (particle_json.has("y_speed")) { particle.y_speed = particle_json.get("y_speed").getAsDouble(); }
             if (particle_json.has("z_speed")) { particle.z_speed = particle_json.get("z_speed").getAsDouble(); }
-            if (particle_json.has("x_acceleration")) { particle.x_acceleration = particle_json.get("x_acceleration").getAsDouble(); }
-            if (particle_json.has("y_acceleration")) { particle.y_acceleration = particle_json.get("y_acceleration").getAsDouble(); }
-            if (particle_json.has("z_acceleration")) { particle.z_acceleration = particle_json.get("z_acceleration").getAsDouble(); }
 
             newWorld.Gravitation_Core_World.add(particle);
         }
 
         return newWorld;
+    }
+
+    public boolean addParticle(Particle particle) {
+        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == particle.id) return false;
+        Gravitation_Core_World.add(particle);
+        return true;
+    }
+
+    public boolean removeParticle(int id) {
+        Gravitation_Core_World.removeIf(particle1 -> particle1.id == id);
+        return true;
+    }
+
+    public Particle getParticle(int id) {
+        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == id) return particle1;
+        return null;
+    }
+
+    public boolean setParticle(Particle particle) {
+        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == particle.id) {
+            Gravitation_Core_World.set(Gravitation_Core_World.indexOf(particle1), particle);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Particle> getGravitationCoreWorld() {
+        return new ArrayList<>(Gravitation_Core_World);
     }
 }

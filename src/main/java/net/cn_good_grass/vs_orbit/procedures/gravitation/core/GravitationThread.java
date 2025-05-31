@@ -2,8 +2,9 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.ParticleGravitation;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.joml.Vector3d;
@@ -19,9 +20,7 @@ public class GravitationThread {
     public static boolean pause = false;
 
     public static void CreateThread() {
-        if (WorldOperate.Gravitation_Core_World_Bus.isEmpty()) { return; }
-
-        String NewThreadName = "GravitationThread-" + (WorldOperate.Gravitation_Core_World_Bus.size() - 1);
+        String NewThreadName = "GravitationThread";
 
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         for (long ThreadId : threadMXBean.getAllThreadIds()) {
@@ -39,19 +38,17 @@ public class GravitationThread {
                 if (ServerLifecycleHooks.getCurrentServer() != null) { if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) { if (Minecraft.getInstance().isPaused()) { run = false; } } }
 
                 if (run) {
-                    String ThreadNamme = Thread.currentThread().getName();
-                    Integer WorldListPos = Integer.parseInt(ThreadNamme.substring(18));
-                    if (WorldOperate.Gravitation_Core_World_Bus.size() <= WorldListPos + 1) { this.cancel(); }
-                    GravitationPool gravitationPool = WorldOperate.Gravitation_Core_World_Bus.get(WorldListPos); //获取世界
-                    //下面是各种事件更新
-                    AccelerationUpdate(gravitationPool); //更新质点加速度
-                    SpeedUpdates(gravitationPool); //更新质点速度
-                    LocationUpdates(gravitationPool); //更新质点位置
+                    for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
+                        //下各种事件更新
+                        ForceUpdate(gravitationPool); //更新质点加速度
+                        SpeedUpdates(gravitationPool); //更新质点速度
+                        LocationUpdates(gravitationPool); //更新质点位置
+                    }
                 }
             }
         };
 
-        Integer Tick_RunTime = (int) Math.floor(1000.0 / core_tick_speed);
+        int Tick_RunTime = (int) Math.floor(1000.0 / core_tick_speed);
         if (Tick_RunTime != 0) {
             timer.scheduleAtFixedRate(task, 0, Tick_RunTime); // 立即开始执行，之后每隔50毫秒执行一次
         } else {
@@ -59,42 +56,42 @@ public class GravitationThread {
         }
     }
 
-    public static void AccelerationUpdate(GravitationPool World) {
+
+
+    public static void ForceUpdate(GravitationPool World) {
         if (World == null) { return; }
 
-        for (Particle particle : World.Gravitation_Core_World) {
-            Vector3d Gravitation = ParticleGravitation.GetParticleGravitationForAllParticle(World, particle); //获取加速度
-
-            if (particle.start.equals("fixed")) { continue; } //如果质点不应该参与运动就不更新
-
-            particle.x_acceleration = Gravitation.x; //更新加速度
-            particle.y_acceleration = Gravitation.y;
-            particle.z_acceleration = Gravitation.z;
+        for (Particle particle : World.getGravitationCoreWorld()) {
+            ParticleGravitation.UpDateParticleGravitationForAllParticle(World, particle);
+            particle.forceTimeUpdata(core_tick_time);
         }
     }
-
 
     public static void SpeedUpdates(GravitationPool World) {
         if (World == null) { return; }
 
-        for (Particle particle : World.Gravitation_Core_World) {
-            Vector3d Gravitation = new Vector3d(particle.x_acceleration, particle.y_acceleration, particle.z_acceleration); //获取加速度
+        for (Particle particle : World.getGravitationCoreWorld()) {
+            Vector3d Gravitation = particle.getAcceleration();
 
             particle.x_speed += core_tick_time * Gravitation.x; //更新速度
             particle.y_speed += core_tick_time * Gravitation.y;
             particle.z_speed += core_tick_time * Gravitation.z;
+
+            World.setParticle(particle);
         }
     }
 
     public static void LocationUpdates(GravitationPool World) {
         if (World == null) { return; }
 
-        for (Particle particle : World.Gravitation_Core_World) {
+        for (Particle particle : World.getGravitationCoreWorld()) {
             if (!particle.start.equals("common")) { continue; } //如果质点不应该参与运动就不更新
 
             particle.x += core_tick_time * particle.x_speed; //更新位置
             particle.y += core_tick_time * particle.y_speed;
             particle.z += core_tick_time * particle.z_speed;
+
+            World.setParticle(particle);
         }
     }
 }

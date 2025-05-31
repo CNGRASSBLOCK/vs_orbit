@@ -25,8 +25,7 @@ import static net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarT
 
 @Mixin(AtmosphericCollisionDetectorProcedure.class) //妈的这玩意得重写整个方法 不然太石山了
 public class SpaceJoinPlayer {
-    @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1, remap = false)
-//    @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;m_230957_(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1, remap = false)
+    @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1)
     private static String SpaceJoinPlayer(String pCommand, @Local(argsOnly = true) LevelAccessor world, @Local(argsOnly = true) Entity entity, @Local CompoundTag atmospheric_data) {
         String ReturnCommand = "execute in {travel_to} run tp {uuid} {x} {y} {z}";
         if (pCommand.contains("tp")) {

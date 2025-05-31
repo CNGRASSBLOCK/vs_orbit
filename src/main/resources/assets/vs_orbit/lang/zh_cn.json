@@ -6,7 +6,7 @@
   "gui.vs_orbit.jump_engine_controller_gui.state": "状态 :",
   "gui.vs_orbit.jump_engine_controller_gui.mode": "模式 :",
   "gui.vs_orbit.jump_engine_controller_gui.info.pos": "坐标:",
-  "gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode" : "§6切换",
+  "gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode" : "§c切换",
 
   "gui.vs_orbit.jump_engine_controller_gui.state.structure_error": "§c结构错误",
   "gui.vs_orbit.jump_engine_controller_gui.state.wait": "§e待机",

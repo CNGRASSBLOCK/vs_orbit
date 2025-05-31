@@ -18,7 +18,7 @@ import static net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarT
 
 @Mixin(AtmosphericCollision.class) //妈的这玩意得重写整个方法 不然太石山了
 public class SpaceJoinShip {
-    @Redirect(method={"atmosphericCollisionTick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getDouble(Ljava/lang/String;)D"), remap = false)
+    @Redirect(method={"atmosphericCollisionTick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getDouble(Ljava/lang/String;)D"))
     private static double SpaceJoinShip(CompoundTag atmospheric_data, String key, @Local(argsOnly = true) LevelAccessor world) {
         if (!key.contains("origin")) return atmospheric_data.getDouble(key);
 

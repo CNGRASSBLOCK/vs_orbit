@@ -2,8 +2,8 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.cn_good_grass.vs_orbit.network.VariablesUpdate;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
@@ -47,16 +47,16 @@ public class StarTick {
         }
 
         if (newGravitationPool == null || oldGravitationPool == null) { return new Vec3(0, 0, 0); }
-        if (newGravitationPool.Gravitation_Core_World.size() != oldGravitationPool.Gravitation_Core_World.size()) { return new Vec3(0, 0, 0); }
+        if (newGravitationPool.getGravitationCoreWorld().size() != oldGravitationPool.getGravitationCoreWorld().size()) { return new Vec3(0, 0, 0); }
 
         String StarID = StarTag.getString("object_name");
         if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
         String ParticleID = "CosmosStar-" + StarID;
         Vector3d New_Pos = new Vector3d(0, 0, 0);
         Vector3d Old_Pos = new Vector3d(0, 0, 0);
-        for (int i = 0; i < newGravitationPool.Gravitation_Core_World.size(); i++) {
-            Particle NewParticle = newGravitationPool.Gravitation_Core_World.get(i);
-            Particle OldPatricle = oldGravitationPool.Gravitation_Core_World.get(i);
+        for (int i = 0; i < newGravitationPool.getGravitationCoreWorld().size(); i++) {
+            Particle NewParticle = newGravitationPool.getGravitationCoreWorld().get(i);
+            Particle OldPatricle = oldGravitationPool.getGravitationCoreWorld().get(i);
             if (NewParticle.name.equals(ParticleID) && OldPatricle.name.equals(ParticleID)) {
                 New_Pos = new Vector3d(NewParticle.x, NewParticle.y, NewParticle.z);
                 Old_Pos = new Vector3d(OldPatricle.x, OldPatricle.y, OldPatricle.z);
