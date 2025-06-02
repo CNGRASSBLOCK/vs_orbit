@@ -36,6 +36,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
+import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
@@ -169,11 +170,11 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         for (int i = 1;i < blockEntity.structure_radius + 2;i++) {
             Vector3d vector3d_main = new Vector3d(facing_0.getOpposite().getStepX(), facing_0.getOpposite().getStepY(), facing_0.getOpposite().getStepZ()).mul(i);
             BlockPos blockPos = new BlockPos((int) (pos.getX() + vector3d.get(0).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(0).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(0).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(1).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(1).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(1).z + vector3d_main.z));
             if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(2).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(2).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(2).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(3).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(3).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(3).z + vector3d_main.z));
             if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
         }

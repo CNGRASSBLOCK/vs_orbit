@@ -40,14 +40,14 @@ public class ShipTick {
 
                 long shipId = ship.getId();  //获取船只 感谢SpaceEye的帮助
 
-                Vector3d Gravitation = new Vector3d(0, 0, 0);
+                Vector3d Gravitation;
 
                 Particle particle = null;
                 for (Particle oneparticle : particleList) { if (oneparticle.name.equals("VSShip-" + shipId)) { particle = oneparticle; } }
                 
                 if (particle == null) {
                     BigDecimal mass = new BigDecimal(0);
-                    String start = "common";
+                    String start;
                     if (Config.ValkyrienSkies_MOVEMENT_MODE.get().equals("VS_FOLLOW_PARTICLE")) { start = "common"; } else { start = "common"; }
                     if (ship instanceof ServerShip serverShip) { mass = new BigDecimal(serverShip.getInertiaData().getMass()); }
 
