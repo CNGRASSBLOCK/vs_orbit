@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -26,19 +26,19 @@ public class ParticleClear {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) return;
 
-            ClearParticleForVSShip(level, GravitationPool.getFromWorldID(WorldIDs));
+            ClearParticleForVSShip(level, ParticlePool.getFromWorldID(WorldIDs));
         }
     }
 
-    public static void ClearParticleForVSShip(ServerLevel level, GravitationPool gravitationPool) {
+    public static void ClearParticleForVSShip(ServerLevel level, ParticlePool particlePool) {
         List<Long> shipIds = new ArrayList<>();
-        for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + gravitationPool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
+        for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + particlePool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
 
-        for (Particle particle : gravitationPool.getGravitationCoreWorld()) {
+        for (Particle particle : particlePool.getGravitationCoreWorld()) {
             if (!particle.name.contains("VSShip-")) continue;
 
             long ShipId = Long.valueOf(particle.name.substring(7));
-            if (!shipIds.contains(ShipId)) gravitationPool.removeParticle(particle.id);
+            if (!shipIds.contains(ShipId)) particlePool.removeParticle(particle.id);
         }
     }
 }

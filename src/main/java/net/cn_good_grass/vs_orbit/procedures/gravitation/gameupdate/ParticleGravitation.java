@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Force;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import org.joml.Vector3d;
 
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ParticleGravitation {
-    public static void UpDateParticleGravitationForAllParticle(GravitationPool World, Particle this_particle) {
+    public static void UpDateParticleGravitationForAllParticle(ParticlePool World, Particle this_particle) {
         if (this_particle == null || World == null) return; // 防止崩溃
 
         Vector3d ParticleGravitation = new Vector3d(0, 0, 0); //计算质点总引力

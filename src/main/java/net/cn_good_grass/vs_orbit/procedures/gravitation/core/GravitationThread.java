@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.ParticleGravitation;
 import net.minecraft.client.Minecraft;
@@ -14,7 +14,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GravitationThread {
+public abstract class GravitationThread {
     public static double core_tick_speed = Config.Core_TICK_SPEED.get();
     public static double core_tick_time = Config.Core_TICK_TIME.get();
     public static boolean pause = false;
@@ -38,7 +38,7 @@ public class GravitationThread {
                 if (ServerLifecycleHooks.getCurrentServer() != null) { if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) { if (Minecraft.getInstance().isPaused()) { run = false; } } }
 
                 if (run) {
-                    for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
+                    for (ParticlePool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
                         //下各种事件更新
                         ForceUpdate(gravitationPool); //更新质点加速度
                         SpeedUpdates(gravitationPool); //更新质点速度
@@ -58,7 +58,7 @@ public class GravitationThread {
 
 
 
-    public static void ForceUpdate(GravitationPool World) {
+    public static void ForceUpdate(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {
@@ -67,7 +67,7 @@ public class GravitationThread {
         }
     }
 
-    public static void SpeedUpdates(GravitationPool World) {
+    public static void SpeedUpdates(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {
@@ -81,7 +81,7 @@ public class GravitationThread {
         }
     }
 
-    public static void LocationUpdates(GravitationPool World) {
+    public static void LocationUpdates(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {

@@ -8,19 +8,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GravitationPool {
+public class ParticlePool {
     public String WorldId = "";
-    private List<Particle> Gravitation_Core_World = new ArrayList<>();
+    private List<Particle> ParticlePool = new ArrayList<>();
 
-    public static GravitationPool getFromWorldID(String worldID){
-        GravitationPool thisGravitationPool = new GravitationPool();
-        for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
-            if (gravitationPool.WorldId.equals(worldID)) {
-                thisGravitationPool = gravitationPool;
+    public static ParticlePool getFromWorldID(String worldID){
+        ParticlePool thisParticlePool = new ParticlePool();
+        for (ParticlePool particlePool : ThreadStart.Gravitation_Core_World_Bus) {
+            if (particlePool.WorldId.equals(worldID)) {
+                thisParticlePool = particlePool;
                 break;
             }
         }
-        return thisGravitationPool;
+        return thisParticlePool;
     }
 
     public JsonObject toJsonObject() {
@@ -30,7 +30,7 @@ public class GravitationPool {
 
         main_json.addProperty("WorldID", this.WorldId);
 
-        for (Particle particle : this.Gravitation_Core_World) {
+        for (Particle particle : this.ParticlePool) {
             JsonObject particle_json = new JsonObject();
 
             particle_json.addProperty("id", particle.id);
@@ -53,8 +53,8 @@ public class GravitationPool {
         return main_json;
     }
 
-    public static GravitationPool getFromJsonObject(JsonObject json) {
-        GravitationPool newWorld = new GravitationPool();
+    public static ParticlePool getFromJsonObject(JsonObject json) {
+        ParticlePool newWorld = new ParticlePool();
 
         if (json.has("WorldID")) { newWorld.WorldId = json.get("WorldID").getAsString(); } else { return null; }
 
@@ -81,37 +81,37 @@ public class GravitationPool {
             if (particle_json.has("y_speed")) { particle.y_speed = particle_json.get("y_speed").getAsDouble(); }
             if (particle_json.has("z_speed")) { particle.z_speed = particle_json.get("z_speed").getAsDouble(); }
 
-            newWorld.Gravitation_Core_World.add(particle);
+            newWorld.ParticlePool.add(particle);
         }
 
         return newWorld;
     }
 
     public boolean addParticle(Particle particle) {
-        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == particle.id) return false;
-        Gravitation_Core_World.add(particle);
+        for (Particle particle1 : ParticlePool) if (particle1.id == particle.id) return false;
+        ParticlePool.add(particle);
         return true;
     }
 
     public boolean removeParticle(int id) {
-        Gravitation_Core_World.removeIf(particle1 -> particle1.id == id);
+        ParticlePool.removeIf(particle1 -> particle1.id == id);
         return true;
     }
 
     public Particle getParticle(int id) {
-        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == id) return particle1;
+        for (Particle particle1 : ParticlePool) if (particle1.id == id) return particle1;
         return null;
     }
 
     public boolean setParticle(Particle particle) {
-        for (Particle particle1 : Gravitation_Core_World) if (particle1.id == particle.id) {
-            Gravitation_Core_World.set(Gravitation_Core_World.indexOf(particle1), particle);
+        for (Particle particle1 : ParticlePool) if (particle1.id == particle.id) {
+            ParticlePool.set(ParticlePool.indexOf(particle1), particle);
             return true;
         }
         return false;
     }
 
     public List<Particle> getGravitationCoreWorld() {
-        return new ArrayList<>(Gravitation_Core_World);
+        return new ArrayList<>(ParticlePool);
     }
 }

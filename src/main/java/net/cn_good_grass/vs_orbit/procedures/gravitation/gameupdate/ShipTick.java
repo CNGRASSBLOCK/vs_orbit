@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 
 import net.minecraft.core.registries.Registries;
@@ -33,7 +33,7 @@ public class ShipTick {
             if (level == null) { return; }
             String WorldID = level.dimension().location().toString();
 
-            List<Particle> particleList = GravitationPool.getFromWorldID(WorldID).getGravitationCoreWorld();
+            List<Particle> particleList = ParticlePool.getFromWorldID(WorldID).getGravitationCoreWorld();
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
                 if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
@@ -53,7 +53,7 @@ public class ShipTick {
 
                     Particle newparticle = new Particle(particleList.size(), "VSShip-" + shipId, start, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
 
-                    GravitationPool.getFromWorldID(WorldID).addParticle(newparticle);
+                    ParticlePool.getFromWorldID(WorldID).addParticle(newparticle);
                     continue;
                 } else {
                     Gravitation = particle.getAllForce().toVector3d();

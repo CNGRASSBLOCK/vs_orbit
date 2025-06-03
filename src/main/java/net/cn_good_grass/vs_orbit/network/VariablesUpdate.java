@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.network;
 
 import com.google.gson.JsonParser;
 import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine.PlanetEngineFire;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -15,8 +15,8 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class VariablesUpdate {
-    public static List<GravitationPool> New_Gravitation_Core_World_Bus = new ArrayList<>();
-    public static List<GravitationPool> Old_Gravitation_Core_World_Bus = new ArrayList<>();
+    public static List<ParticlePool> New_Gravitation_Core_World_Bus = new ArrayList<>();
+    public static List<ParticlePool> Old_Gravitation_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -27,11 +27,11 @@ public class VariablesUpdate {
         if (event.side.isServer()) {
             //引力数据
             StringBuilder DataPack = new StringBuilder();
-            for (GravitationPool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
+            for (ParticlePool particlePool : ThreadStart.Gravitation_Core_World_Bus) {
                 if (!DataPack.isEmpty()) {
                     DataPack.append("【分隔符】");
                 }
-                DataPack.append(gravitationPool.toJsonObject().toString());
+                DataPack.append(particlePool.toJsonObject().toString());
             }
 
             final String FinalDataPack = DataPack.toString();
@@ -57,14 +57,14 @@ public class VariablesUpdate {
             //引力数据
             Old_Gravitation_Core_World_Bus = new ArrayList<>(New_Gravitation_Core_World_Bus);
 
-            List<GravitationPool> Gravitation_Core_World_Bus = new ArrayList<>();
+            List<ParticlePool> Gravitation_Core_World_Bus = new ArrayList<>();
 
             List<String> DataPackList = new ArrayList<>(List.of((entity.getCapability(GravitationCoreNetWork.PLAYER_VARIABLES_CAPABILITY, null).orElse(new GravitationCoreNetWork.PlayerVariables())).GlobalVariables.split("【分隔符】")));
             for (String string : DataPackList) {
                 if (string.isEmpty()) { continue; }
 
-                GravitationPool gravitationPool = GravitationPool.getFromJsonObject(JsonParser.parseString(string).getAsJsonObject());
-                Gravitation_Core_World_Bus.add(gravitationPool);
+                ParticlePool particlePool = ParticlePool.getFromJsonObject(JsonParser.parseString(string).getAsJsonObject());
+                Gravitation_Core_World_Bus.add(particlePool);
             }
 
             New_Gravitation_Core_World_Bus = Gravitation_Core_World_Bus;

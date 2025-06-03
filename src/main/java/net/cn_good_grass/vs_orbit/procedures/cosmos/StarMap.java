@@ -1,20 +1,13 @@
 package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
-import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
-import net.lointain.cosmos.network.CosmosModVariables;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.minecraft.world.level.Level;
 import org.joml.Vector2d;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class StarMap {
     public class StarMapData {
@@ -29,8 +22,8 @@ public class StarMap {
 
     public ArrayList<StarMapData> getStarMap(Level world) {
         List<Vector2d> StarList = new ArrayList<>();
-        GravitationPool gravitationPool = GravitationPool.getFromWorldID(world.dimension().location().toString());
-        for(Particle particle : gravitationPool.getGravitationCoreWorld()) if (particle.name.contains("CosmosStar-")) StarList.add(new Vector2d(particle.x, particle.z));
+        ParticlePool particlePool = ParticlePool.getFromWorldID(world.dimension().location().toString());
+        for(Particle particle : particlePool.getGravitationCoreWorld()) if (particle.name.contains("CosmosStar-")) StarList.add(new Vector2d(particle.x, particle.z));
 
         double[] circle = calculateMinimumBoundingCircle(StarList);
 

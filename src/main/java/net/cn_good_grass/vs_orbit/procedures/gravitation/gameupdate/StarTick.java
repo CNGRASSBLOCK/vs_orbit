@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.cn_good_grass.vs_orbit.network.VariablesUpdate;
 import net.lointain.cosmos.network.CosmosModVariables;
@@ -31,32 +31,32 @@ public class StarTick {
     public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag) { //星球更新
         String WorldID = dimension;
 
-        GravitationPool newGravitationPool = null;
-        for (GravitationPool gravitationPool : VariablesUpdate.New_Gravitation_Core_World_Bus) {
-            if (gravitationPool.WorldId.equals(WorldID)) {
-                newGravitationPool = gravitationPool;
+        ParticlePool newParticlePool = null;
+        for (ParticlePool particlePool : VariablesUpdate.New_Gravitation_Core_World_Bus) {
+            if (particlePool.WorldId.equals(WorldID)) {
+                newParticlePool = particlePool;
                 break;
             }
         }
-        GravitationPool oldGravitationPool = null;
-        for (GravitationPool gravitationPool : VariablesUpdate.Old_Gravitation_Core_World_Bus) {
-            if (gravitationPool.WorldId.equals(WorldID)) {
-                oldGravitationPool = gravitationPool;
+        ParticlePool oldParticlePool = null;
+        for (ParticlePool particlePool : VariablesUpdate.Old_Gravitation_Core_World_Bus) {
+            if (particlePool.WorldId.equals(WorldID)) {
+                oldParticlePool = particlePool;
                 break;
             }
         }
 
-        if (newGravitationPool == null || oldGravitationPool == null) { return new Vec3(0, 0, 0); }
-        if (newGravitationPool.getGravitationCoreWorld().size() != oldGravitationPool.getGravitationCoreWorld().size()) { return new Vec3(0, 0, 0); }
+        if (newParticlePool == null || oldParticlePool == null) { return new Vec3(0, 0, 0); }
+        if (newParticlePool.getGravitationCoreWorld().size() != oldParticlePool.getGravitationCoreWorld().size()) { return new Vec3(0, 0, 0); }
 
         String StarID = StarTag.getString("object_name");
         if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
         String ParticleID = "CosmosStar-" + StarID;
         Vector3d New_Pos = new Vector3d(0, 0, 0);
         Vector3d Old_Pos = new Vector3d(0, 0, 0);
-        for (int i = 0; i < newGravitationPool.getGravitationCoreWorld().size(); i++) {
-            Particle NewParticle = newGravitationPool.getGravitationCoreWorld().get(i);
-            Particle OldPatricle = oldGravitationPool.getGravitationCoreWorld().get(i);
+        for (int i = 0; i < newParticlePool.getGravitationCoreWorld().size(); i++) {
+            Particle NewParticle = newParticlePool.getGravitationCoreWorld().get(i);
+            Particle OldPatricle = oldParticlePool.getGravitationCoreWorld().get(i);
             if (NewParticle.name.equals(ParticleID) && OldPatricle.name.equals(ParticleID)) {
                 New_Pos = new Vector3d(NewParticle.x, NewParticle.y, NewParticle.z);
                 Old_Pos = new Vector3d(OldPatricle.x, OldPatricle.y, OldPatricle.z);

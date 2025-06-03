@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
 import com.google.gson.JsonObject;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
 import net.lointain.cosmos.network.CosmosModVariables;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ThreadStart {
-    public static List<GravitationPool> Gravitation_Core_World_Bus = new ArrayList<>();
+    public static List<ParticlePool> Gravitation_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent public static void OnServerStart(ServerStartedEvent event) { GravitationThread.CreateThread(); }
 
@@ -50,9 +50,9 @@ public class ThreadStart {
 
         String WorldID = ((Level) event.getLevel()).dimension().location().toString();
 
-        GravitationPool thisGravitationPool = GravitationPool.getFromWorldID(WorldID);
+        ParticlePool thisParticlePool = ParticlePool.getFromWorldID(WorldID);
 
-        JsonObject jsonObject = thisGravitationPool.toJsonObject();
+        JsonObject jsonObject = thisParticlePool.toJsonObject();
         if (jsonObject.size() == 0) { return; }
 
         String WorldFile = FMLPaths.GAMEDIR.get().toString() + server.getWorldPath(LevelResource.ROOT);
@@ -84,9 +84,9 @@ public class ThreadStart {
     public static void CreateNewGravitationWorld(Level World) {
         String WorldId = World.dimension().location().toString();
 
-        for (GravitationPool oneWorld : ThreadStart.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
+        for (ParticlePool oneWorld : ThreadStart.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
 
-        GravitationPool newWorld = new GravitationPool();
+        ParticlePool newWorld = new ParticlePool();
         newWorld.WorldId = WorldId;
 
         CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(World);
@@ -142,8 +142,8 @@ public class ThreadStart {
             bufferedReader.close();
             JsonObject json = new com.google.gson.Gson().fromJson(jsonstringbuilder.toString(), com.google.gson.JsonObject.class);
 
-            GravitationPool gravitationPool = GravitationPool.getFromJsonObject(json);
-            if (gravitationPool != null) { ThreadStart.Gravitation_Core_World_Bus.add(gravitationPool); }
+            ParticlePool particlePool = ParticlePool.getFromJsonObject(json);
+            if (particlePool != null) { ThreadStart.Gravitation_Core_World_Bus.add(particlePool); }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.cilent.render.Particle;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.cn_good_grass.vs_orbit.config.CilentConfig;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.GravitationPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +26,7 @@ public class DisplayLine {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.level == null) return;
 
-            for (Particle particle : GravitationPool.getFromWorldID(minecraft.level.dimension().location().toString()).getGravitationCoreWorld()) {
+            for (Particle particle : ParticlePool.getFromWorldID(minecraft.level.dimension().location().toString()).getGravitationCoreWorld()) {
                 renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.x_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.y + (particle.y_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.z + (particle.z_speed * CilentConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
                 renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.y + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.z + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
             }
