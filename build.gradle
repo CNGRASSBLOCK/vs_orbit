@@ -90,8 +90,11 @@ dependencies {
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
 
-    //implementation fg.deobf("com.lowdragmc.shimmer:Shimmer-forge:1.20.1:0.2.4")
-    //implementation fg.deobf(files("libs/yesstevemodel-forge-1.20-2.2.2.jar")) //想加结果炸了
+    //runtimeOnly fg.deobf(files("libs/rubidium-extra-0.5.4.4+mc1.20.1-build.131.jar"))
+    //runtimeOnly fg.deobf(files("libs/oculus-mc1.20.1-1.8.0.jar")) { exclude group: 'org.spongepowered', module: 'mixin' }
+    //runtimeOnly fg.deobf(files("libs/embeddium-0.3.31+mc1.20.1.jar")) { exclude group: 'org.spongepowered', module: 'mixin' }
+    //runtimeOnly files("libs/Shimmer-forge-1.20.1-0.2.4.jar")
+    //runtimeOnly fg.deobf(files("libs/yesstevemodel-forge-1.20-2.2.2.jar")) //炸了
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))

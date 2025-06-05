@@ -34,10 +34,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.joml.Quaterniond;
-import org.joml.Quaterniondc;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
+import org.joml.*;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
@@ -254,7 +251,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (blockEntity.structure_state.equals("right") && blockEntity.red_stone_power > 0) {
             if (blockEntity.mode.equals("power")) {
                 Quaterniondc ShipQuaternion = ship.getTransform().getShipToWorldRotation();
-                Quaterniondc ForceQuaternion = ShipQuaternion.add((Quaterniondc) blockstate.getValue(BlockStateProperties.FACING).getRotation(), new Quaterniond());
+                Quaterniondc ForceQuaternion = ShipQuaternion.add(new Quaterniond(blockstate.getValue(BlockStateProperties.FACING).getRotation()), new Quaterniond()).add(new Quaterniond(blockstate.getValue(BlockStateProperties.FACING).getRotation()));
 
                 if (blockEntity.animation_tick <= 100) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged");
