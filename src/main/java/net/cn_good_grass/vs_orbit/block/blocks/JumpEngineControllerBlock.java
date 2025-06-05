@@ -7,11 +7,16 @@ import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipAction;
+import net.jcm.vsch.blocks.custom.ThrusterBlock;
+import net.jcm.vsch.ship.ThrusterData;
+import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -42,6 +47,7 @@ import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.GameTickForceApplier;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -77,6 +83,22 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         super.onPlace(blockstate, world, pos, oldState, moving);
         if (!(world instanceof ServerLevel)) return;
         world.scheduleTick(pos, this, 1);
+
+        VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+        if (ships == null) return;
+
+        ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION));
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!(level instanceof ServerLevel)) return;
+
+        VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+        if (ships == null) return;
+        ships.removeThruster(pos);
+
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     public static Integer computequeues = 0;
@@ -250,9 +272,6 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
 
         if (blockEntity.structure_state.equals("right") && blockEntity.red_stone_power > 0) {
             if (blockEntity.mode.equals("power")) {
-                Quaterniondc ShipQuaternion = ship.getTransform().getShipToWorldRotation();
-                Quaterniondc ForceQuaternion = ShipQuaternion.add(new Quaterniond(blockstate.getValue(BlockStateProperties.FACING).getRotation()), new Quaterniond()).add(new Quaterniond(blockstate.getValue(BlockStateProperties.FACING).getRotation()));
-
                 if (blockEntity.animation_tick <= 100) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged");
                     blockEntity.animation_tick ++;
@@ -261,12 +280,10 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick ++;
                 } else {
                     double force = blockEntity.setting.getDouble("force");
-                    Vector3d forceVector = decomposeForce(force, ForceQuaternion);
-
-                    LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(world).getLoadedShips().getById(ship.getId());
-                    if (loadedServerShip == null) return;
-                    GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
-                    if (applier != null) applier.applyInvariantForce(forceVector);
+                    VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+                    if (ships == null) return;
+                    ThrusterData thruster = ships.getThrusterAtPos(pos);
+                    if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else if (thruster.throttle != (float) force) thruster.throttle = (float) force;
                 }
             } else if (blockEntity.mode.equals("jump") && !blockEntity.red_stone_power_do) {
                 if (blockEntity.animation_tick <= 200) {
@@ -287,6 +304,10 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
             blockEntity.red_stone_power_do = false;
             blockEntity.animation_tick = 0;
             thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
+            VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+            if (ships == null) return;
+            ThrusterData thruster = ships.getThrusterAtPos(pos);
+            if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else thruster.throttle = 0;
         }
     }
 }
