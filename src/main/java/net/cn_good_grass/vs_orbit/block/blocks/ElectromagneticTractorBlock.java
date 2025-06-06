@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ElectromagneticTractorBlock extends Block{
+public class  ElectromagneticTractorBlock extends Block{
     public ElectromagneticTractorBlock() {
         super(Properties.of()
                 .strength(5f, 75f) // 硬度（挖掘时间）、爆炸抗性

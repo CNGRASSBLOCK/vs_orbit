@@ -84,16 +84,16 @@ public class ShipAction {
         CosmosMod.queueServerWork(1, () -> serverShipWorldCore.teleportShip(serverShip, shipTeleportData));
 
         CosmosMod.queueServerWork(2, () -> {
-            serverShip.setStatic(false);
-            OldWorld.setChunkForced((int) serverShip.getTransform().getPositionInWorld().x(), (int) serverShip.getTransform().getPositionInWorld().z(), false);
-            NewWorld.setChunkForced((int) shipTeleportData.getNewPos().x(), (int) shipTeleportData.getNewPos().z(), false);
-        });
-
-        CosmosMod.queueServerWork(3, () -> {
             for (Entity entity : Entities) {
                 entity.teleportTo(NewWorld, EntitiesToPos.get(entity.getUUID()).x, EntitiesToPos.get(entity.getUUID()).y, EntitiesToPos.get(entity.getUUID()).z, Set.of(RelativeMovement.Y_ROT, RelativeMovement.X_ROT), entity.getYRot(), entity.getXRot());
                 if (entity instanceof ServerPlayer player) player.setGameMode(PlayerGameMode.get(entity.getUUID()));
             }
+        });
+
+        CosmosMod.queueServerWork(3, () -> {
+            serverShip.setStatic(false);
+            OldWorld.setChunkForced((int) serverShip.getTransform().getPositionInWorld().x(), (int) serverShip.getTransform().getPositionInWorld().z(), false);
+            NewWorld.setChunkForced((int) shipTeleportData.getNewPos().x(), (int) shipTeleportData.getNewPos().z(), false);
         });
     }
 }
