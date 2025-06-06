@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import net.lointain.cosmos.procedures.RayrendererProcedure;
 
 import static net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarTick.getPartialTick;
 

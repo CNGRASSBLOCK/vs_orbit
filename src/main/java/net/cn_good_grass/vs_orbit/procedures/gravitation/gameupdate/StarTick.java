@@ -11,13 +11,18 @@ import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
 import net.lointain.cosmos.procedures.JsontomapconverterProcedure;
 import net.lointain.cosmos.procedures.SimpleOcclusionProviderProcedure;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,11 +50,16 @@ public class StarTick {
                 break;
             }
         }
+        if (newParticlePool == null || oldParticlePool == null) return new Vec3(0, 0, 0);
+        if (newParticlePool.getGravitationCoreWorld().size() != oldParticlePool.getGravitationCoreWorld().size()) return new Vec3(0, 0, 0);
 
-        if (newParticlePool == null || oldParticlePool == null) { return new Vec3(0, 0, 0); }
-        if (newParticlePool.getGravitationCoreWorld().size() != oldParticlePool.getGravitationCoreWorld().size()) { return new Vec3(0, 0, 0); }
+        String StarID;
+        if (StarTag.getString("function").contains("ring")) {
+            StarID = getStarIdFromRing(dimension, StarTag);
+        } else {
+            StarID = StarTag.getString("object_name");
+        }
 
-        String StarID = StarTag.getString("object_name");
         if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
         String ParticleID = "CosmosStar-" + StarID;
         Vector3d New_Pos = new Vector3d(0, 0, 0);
@@ -174,5 +184,31 @@ public class StarTick {
     @OnlyIn(Dist.CLIENT)
     private static float getClientPartialTick() {
         return Minecraft.getInstance().getPartialTick();
+    }
+
+    public static String getStarIdFromRing(String dimension, CompoundTag RingTag) {
+        if (!RingTag.getString("function").equals("ring")) return "";
+
+        Minecraft minecraft = Minecraft.getInstance();
+        ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimension));
+        if (!(minecraft.level != null && minecraft.level.dimension() == dimensionKey)) return "";
+        ClientLevel world = minecraft.level;
+        CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
+
+        if (!worldVars.collision_data_map.contains(dimension)) return "";
+        Tag collision_data_map = worldVars.collision_data_map.get(dimension); //星球数据
+        Tag light_source_map = worldVars.light_source_map.get(dimension); //恒星数据
+        ListTag listtag = new ListTag();
+        if (collision_data_map instanceof ListTag listTag) { listtag.addAll(listTag.copy()); }
+        if (light_source_map instanceof ListTag listTag) { listtag.addAll(listTag.copy()); }
+        if (listtag.isEmpty()) return "";
+
+        for (int i = 0 ; i < listtag.size() ; i++) {
+            CompoundTag compoundTag = listtag.getCompound(i);
+            Vec3 pos = new Vec3(compoundTag.getDouble("x"), compoundTag.getDouble("y"), compoundTag.getDouble("z"));
+            Vec3 thispos = new Vec3(RingTag.getDouble("x"), RingTag.getDouble("y"), RingTag.getDouble("z"));
+            if (pos.equals(thispos)) return compoundTag.getString("object_name");
+        }
+        return "";
     }
 }
