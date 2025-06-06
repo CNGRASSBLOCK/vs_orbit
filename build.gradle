@@ -84,7 +84,7 @@ dependencies {
     implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
 
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    implementation fg.deobf("curse.maven:starlance-1130106:6186703")
+    implementation fg.deobf("curse.maven:starlance-1130106:6419355")
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.2')
     implementation 'thedarkcolour:kotlinforforge:4.10.0'
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }

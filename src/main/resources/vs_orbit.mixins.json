@@ -6,7 +6,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "SpaceJoinPlayer",
-    "SpaceJoinShip"
+    "SpaceJoinShip",
+    "ShipStarCollision"
   ],
   "client": [
     "StarRender"
