@@ -46,16 +46,16 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.state = tag.getString("state"); // 从NBT读取
-        this.mode = tag.getString("mode");
-        this.setting.merge((CompoundTag) tag.get("setting"));
-        this.red_stone_power = tag.getInt("red_stone_power");
-        this.red_stone_power_do = tag.getBoolean("red_stone_power_do");
-        this.structure_state = tag.getString("structure_state");
-        this.structure_radius = tag.getInt("structure_radius");
-        this.display_entity_uuid = tag.getUUID("display_entity_uuid");
-        this.structure_center_pos = new BlockPos(tag.getIntArray("structure_center_pos")[0], tag.getIntArray("structure_center_pos")[1], tag.getIntArray("structure_center_pos")[2]);
-        this.animation_tick = tag.getInt("animation_tick");
+        if (tag.contains("state")) this.state = tag.getString("state"); // 从NBT读取
+        if (tag.contains("mode")) this.mode = tag.getString("mode");
+        if (tag.contains("setting")) this.setting.merge((CompoundTag) tag.get("setting"));
+        if (tag.contains("red_stone_power")) this.red_stone_power = tag.getInt("red_stone_power");
+        if (tag.contains("red_stone_power_do")) this.red_stone_power_do = tag.getBoolean("red_stone_power_do");
+        if (tag.contains("structure_state")) this.structure_state = tag.getString("structure_state");
+        if (tag.contains("structure_radius")) this.structure_radius = tag.getInt("structure_radius");
+        if (tag.contains("display_entity_uuid")) this.display_entity_uuid = tag.getUUID("display_entity_uuid");
+        if (tag.contains("structure_center_pos")) this.structure_center_pos = new BlockPos(tag.getIntArray("structure_center_pos")[0], tag.getIntArray("structure_center_pos")[1], tag.getIntArray("structure_center_pos")[2]);
+        if (tag.contains("animation_tick")) this.animation_tick = tag.getInt("animation_tick");
     }
 
     @Override
@@ -83,6 +83,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("pos_x", 0);
             this.putDouble("pos_y", 0);
             this.putDouble("pos_z", 0);
+            this.putString("pos_world", "minecraft:overworld");
         }
     }
 }

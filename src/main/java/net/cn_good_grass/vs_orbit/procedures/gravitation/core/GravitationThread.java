@@ -23,12 +23,7 @@ public abstract class GravitationThread {
         String NewThreadName = "GravitationThread";
 
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-        for (long ThreadId : threadMXBean.getAllThreadIds()) {
-            if (threadMXBean.getThreadInfo(ThreadId).getThreadName().equals(NewThreadName)) {
-                VSOrbitMod.LOGGER.error("[VS_Orbit] [Core] Can't create new thread! There is a thread with the same name in the thread pool!");
-                continue;
-            }
-        }
+        for (long ThreadId : threadMXBean.getAllThreadIds()) if (threadMXBean.getThreadInfo(ThreadId).getThreadName().equals(NewThreadName)) VSOrbitMod.LOGGER.error("[VS_Orbit] [Core] Can't create new thread! There is a thread with the same name in the thread pool!");
 
         Timer timer = new Timer(NewThreadName);
 

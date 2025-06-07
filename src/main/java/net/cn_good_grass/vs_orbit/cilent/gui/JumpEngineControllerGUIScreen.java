@@ -50,6 +50,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_x.render(guiGraphics, mouseX, mouseY, partialTicks);
 			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_y.render(guiGraphics, mouseX, mouseY, partialTicks);
 			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_z.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_world.render(guiGraphics, mouseX, mouseY, partialTicks);
 		}
 		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}
@@ -87,6 +88,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.x"), this.leftPos + 9, this.topPos + 48, 0xFFFFFFFF, false);
 		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.y"), this.leftPos + 9, this.topPos + 60, 0xFFFFFFFF, false);
 		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.z"), this.leftPos + 9, this.topPos + 72, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.world"), this.leftPos + 9, this.topPos + 84, 0xFFFFFFFF, false);
 		//信息
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
@@ -99,33 +101,33 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (jumpEngineControllerBlockEntity.mode.equals("power")) {
 			{
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 125, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 125, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 115, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 115, 7.5, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 115, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 115, 7.5, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 105, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 105, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 95, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 95, 7.5, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 95, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 95, 7.5, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 85, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 85, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 75, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 75, 7.5, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 75, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 75, 7.5, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 65, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 65, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 55, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 55, 7.5, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 55, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 55, 7.5, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 45, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 45, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 35, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 35, 7.5, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 35, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 35, 7.5, 5, 0xFF008000);
 			}
 			{
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 130, this.leftPos + this.imageWidth - 129, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 116, this.leftPos + this.imageWidth - 115, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 116, this.leftPos + this.imageWidth - 115, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 102, this.leftPos + this.imageWidth - 101, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 88, this.leftPos + this.imageWidth - 87, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 88, this.leftPos + this.imageWidth - 87, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 74, this.leftPos + this.imageWidth - 73, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 60, this.leftPos + this.imageWidth - 59, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 60, this.leftPos + this.imageWidth - 59, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 46, this.leftPos + this.imageWidth - 45, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 31, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 31, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 116, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 17, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 102, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 126, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 102, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 126, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 88, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 112, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 98, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 98, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 60, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 84, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 46, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 70, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 46, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 70, 10, 5, 0xFF008000);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 32, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 56, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 18, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 42, 10, 5, 0xFF008000);
+				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 18, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 42, 10, 5, 0xFF008000);
 			}
 			{
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 87, this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 77, 7.5, 5, 0xFF00FFFF);
@@ -158,6 +160,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (pos_x.isFocused()) return pos_x.keyPressed(key, b, c);
 		if (pos_y.isFocused()) return pos_y.keyPressed(key, b, c);
 		if (pos_z.isFocused()) return pos_z.keyPressed(key, b, c);
+		if (pos_world.isFocused()) return pos_world.keyPressed(key, b, c);
 		return super.keyPressed(key, b, c);
 	}
 
@@ -168,10 +171,12 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		pos_x.tick();
 		pos_y.tick();
 		pos_z.tick();
+		pos_world.tick();
 		textstate.put("textin:power_force", power_force.getValue());
 		textstate.put("textin:pos_x", pos_x.getValue());
 		textstate.put("textin:pos_y", pos_y.getValue());
 		textstate.put("textin:pos_z", pos_z.getValue());
+		textstate.put("textin:pos_world", pos_world.getValue());
 		VSOrbitMod.PACKET_HANDLER.sendToServer(new JumpEngineControllerGUIMenu.JumpEngineControllerGUIOtherMessage(0, x, y, z, textstate));
 		JumpEngineControllerGUIMenu.JumpEngineControllerGUIOtherMessage.handleOtherAction(entity, 0, x, y, z, textstate);
 	}
@@ -182,11 +187,13 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		String pos_x_Value = pos_x.getValue();
 		String pos_y_Value = pos_y.getValue();
 		String pos_z_Value = pos_z.getValue();
+		String pos_world_Value = pos_world.getValue();
 		super.resize(minecraft, width, height);
 		power_force.setValue(power_force_Value);
 		pos_x.setValue(pos_x_Value);
 		pos_y.setValue(pos_y_Value);
 		pos_z.setValue(pos_z_Value);
+		pos_world.setValue(pos_world_Value);
 	}
 
 	@Override protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {}
@@ -196,6 +203,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 	EditBox pos_x;
 	EditBox pos_y;
 	EditBox pos_z;
+	EditBox pos_world;
 
 	@Override
 	public void init() {
@@ -275,6 +283,22 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		pos_z.setMaxLength(16);
 		guistate.put("vs_orbit:pos_z", pos_z);
 		this.addWidget(this.pos_z);
+
+		pos_world = new EditBox(this.font, this.leftPos + this.imageWidth - 223, this.topPos + 84, 84 , 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world")) {
+			@Override public void insertText(String text) {
+				super.insertText(text);
+				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());else setSuggestion(null);
+			}
+			@Override public void moveCursorTo(int pos) {
+				super.moveCursorTo(pos);
+				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());else setSuggestion(null);
+			}
+		};
+		pos_world.setValue(jumpEngineControllerBlockEntity.setting.getString("pos_world"));
+		pos_world.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());
+		pos_world.setMaxLength(32768);
+		guistate.put("vs_orbit:pos_world", pos_world);
+		this.addWidget(this.pos_world);
 	}
 
 	public static class DrawGuiGraphics {

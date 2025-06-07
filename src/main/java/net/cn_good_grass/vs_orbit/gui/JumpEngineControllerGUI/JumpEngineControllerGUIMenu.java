@@ -139,6 +139,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 				try { blockEntity.setting.putDouble("pos_x", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_x")).getValue())); } catch (NumberFormatException e) {}
 				try { blockEntity.setting.putDouble("pos_y", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_y")).getValue())); } catch (NumberFormatException e) {}
 				try { blockEntity.setting.putDouble("pos_z", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_z")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.setting.putDouble("pos_world", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_world")).getValue())); } catch (NumberFormatException e) {}
 			}
 		}
 

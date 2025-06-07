@@ -14,8 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -294,7 +296,9 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick ++;
                 } else {
                     ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(world);
-                    ShipAction.teleportShip(shipWorld, ship, new ShipTeleportDataImpl(new Vector3d(blockEntity.setting.getDouble("pos_x"), blockEntity.setting.getDouble("pos_y"), blockEntity.setting.getDouble("pos_z")), ship.getTransform().getShipToWorldRotation(), new Vector3d(), new Vector3d(), ship.getChunkClaimDimension(), null));
+                    ServerLevel dimension = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(blockEntity.setting.getString("pos_world"))));
+                    if (dimension == null) return;
+                    ShipAction.teleportShip(shipWorld, ship, new ShipTeleportDataImpl(new Vector3d(blockEntity.setting.getDouble("pos_x"), blockEntity.setting.getDouble("pos_y"), blockEntity.setting.getDouble("pos_z")), ship.getTransform().getShipToWorldRotation(), new Vector3d(), new Vector3d(), "minecraft:dimension:" + blockEntity.setting.getString("pos_world"), null));
                     blockEntity.red_stone_power_do = true;
                     blockEntity.animation_tick = 0;
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");

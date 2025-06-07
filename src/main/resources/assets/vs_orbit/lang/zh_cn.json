@@ -17,6 +17,7 @@
   "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x": "",
   "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y": "",
   "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z": "",
+  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world": "",
 
   "gui.vs_orbit.jump_engine_controller_gui.mode.power": "§e动力",
   "gui.vs_orbit.jump_engine_controller_gui.mode.power.force": "力 :",
@@ -25,6 +26,7 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.x": "X :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.y": "Y :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.z": "Z :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.jump.world": "维度ID :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine": "§3行星§b发动机",
 
   "message.vs_orbit.core.pause": "设置成功",
