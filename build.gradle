@@ -67,6 +67,16 @@ repositories {
         url = "https://maven.valkyrienskies.org" }
     maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     maven { url "https://maven.firstdarkdev.xyz/snapshots" }
+    maven { name = "Squiddev maven cct"
+        url = "https://maven.squiddev.cc/"
+        content { includeGroup("cc.tweaked")
+            includeModule("org.squiddev", "Cobalt") } }
+    maven {name = "create maven"
+        url = "https://maven.tterrag.com/"
+        content {
+            includeGroup("com.simibubi.create")
+            includeGroup("com.jozufozu.flywheel")
+            includeGroup("com.tterrag.registrate") } }
 
     mavenCentral()
 }
@@ -89,6 +99,7 @@ dependencies {
     implementation 'thedarkcolour:kotlinforforge:4.10.0'
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
 
     //runtimeOnly fg.deobf(files("libs/rubidium-extra-0.5.4.4+mc1.20.1-build.131.jar"))
     //runtimeOnly fg.deobf(files("libs/oculus-mc1.20.1-1.8.0.jar")) { exclude group: 'org.spongepowered', module: 'mixin' }

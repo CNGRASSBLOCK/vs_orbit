@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-public class ThreadStart {
+public class GravitationWorld {
     public static List<ParticlePool> Gravitation_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent public static void OnServerStart(ServerStartedEvent event) { GravitationThread.CreateThread(); }
@@ -84,7 +84,7 @@ public class ThreadStart {
     public static void CreateNewGravitationWorld(Level World) {
         String WorldId = World.dimension().location().toString();
 
-        for (ParticlePool oneWorld : ThreadStart.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
+        for (ParticlePool oneWorld : GravitationWorld.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
 
         ParticlePool newWorld = new ParticlePool();
         newWorld.WorldId = WorldId;
@@ -111,7 +111,7 @@ public class ThreadStart {
             particle.z_speed = StarJsonObject.getAsJsonObject(StarName).get("z_start_speed").getAsDouble();
             newWorld.addParticle(particle);
         }
-        ThreadStart.Gravitation_Core_World_Bus.add(newWorld); //新建引力世界用于处理
+        GravitationWorld.Gravitation_Core_World_Bus.add(newWorld); //新建引力世界用于处理
     }
 
     public static boolean HasData(net.minecraftforge.event.level.LevelEvent.Load event, String WorldID) {
@@ -143,7 +143,7 @@ public class ThreadStart {
             JsonObject json = new com.google.gson.Gson().fromJson(jsonstringbuilder.toString(), com.google.gson.JsonObject.class);
 
             ParticlePool particlePool = ParticlePool.getFromJsonObject(json);
-            if (particlePool != null) { ThreadStart.Gravitation_Core_World_Bus.add(particlePool); }
+            if (particlePool != null) { GravitationWorld.Gravitation_Core_World_Bus.add(particlePool); }
         } catch (IOException e) {
             e.printStackTrace();
         }

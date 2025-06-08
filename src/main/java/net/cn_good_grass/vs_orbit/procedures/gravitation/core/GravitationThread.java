@@ -33,7 +33,7 @@ public abstract class GravitationThread {
                 if (ServerLifecycleHooks.getCurrentServer() != null) { if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) { if (Minecraft.getInstance().isPaused()) { run = false; } } }
 
                 if (run) {
-                    for (ParticlePool gravitationPool : ThreadStart.Gravitation_Core_World_Bus) {
+                    for (ParticlePool gravitationPool : GravitationWorld.Gravitation_Core_World_Bus) {
                         //下各种事件更新
                         ForceUpdate(gravitationPool); //更新质点加速度
                         SpeedUpdates(gravitationPool); //更新质点速度
@@ -53,7 +53,7 @@ public abstract class GravitationThread {
 
 
 
-    public static void ForceUpdate(ParticlePool World) {
+    private static void ForceUpdate(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {
@@ -62,7 +62,7 @@ public abstract class GravitationThread {
         }
     }
 
-    public static void SpeedUpdates(ParticlePool World) {
+    private static void SpeedUpdates(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {
@@ -76,7 +76,7 @@ public abstract class GravitationThread {
         }
     }
 
-    public static void LocationUpdates(ParticlePool World) {
+    private static void LocationUpdates(ParticlePool World) {
         if (World == null) { return; }
 
         for (Particle particle : World.getGravitationCoreWorld()) {

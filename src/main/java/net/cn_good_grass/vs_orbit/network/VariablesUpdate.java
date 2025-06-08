@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.network;
 import com.google.gson.JsonParser;
 import net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine.PlanetEngineFire;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.GravitationWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.TickEvent;
@@ -27,7 +27,7 @@ public class VariablesUpdate {
         if (event.side.isServer()) {
             //引力数据
             StringBuilder DataPack = new StringBuilder();
-            for (ParticlePool particlePool : ThreadStart.Gravitation_Core_World_Bus) {
+            for (ParticlePool particlePool : GravitationWorld.Gravitation_Core_World_Bus) {
                 if (!DataPack.isEmpty()) {
                     DataPack.append("【分隔符】");
                 }

@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.GravitationWorld;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class ParticlePool {
 
     public static ParticlePool getFromWorldID(String worldID){
         ParticlePool thisParticlePool = new ParticlePool();
-        for (ParticlePool particlePool : ThreadStart.Gravitation_Core_World_Bus) {
+        for (ParticlePool particlePool : GravitationWorld.Gravitation_Core_World_Bus) {
             if (particlePool.WorldId.equals(worldID)) {
                 thisParticlePool = particlePool;
                 break;

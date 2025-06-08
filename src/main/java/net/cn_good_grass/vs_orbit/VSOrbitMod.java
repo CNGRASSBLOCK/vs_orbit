@@ -6,7 +6,7 @@ import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ThreadStart;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.GravitationWorld;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,7 +44,9 @@ public class VSOrbitMod
     public VSOrbitMod()
     {
         //注册事件
-        MinecraftForge.EVENT_BUS.register(new ThreadStart()); //注册引力更新事件
+        MinecraftForge.EVENT_BUS.register(new GravitationWorld()); //注册引力更新事件
+//        MinecraftForge.EVENT_BUS.register(new OnPlayerRender());
+//        MinecraftForge.EVENT_BUS.register(new OnPlayerTick());
         //注册各种杂七杂八的
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         VSOrbitModBlocks.register(eventBus);

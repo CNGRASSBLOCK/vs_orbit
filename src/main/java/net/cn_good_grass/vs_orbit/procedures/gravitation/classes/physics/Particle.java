@@ -1,5 +1,6 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics;
 
+import net.minecraft.nbt.CompoundTag;
 import org.joml.Vector3d;
 
 import java.lang.Object;
@@ -26,6 +27,8 @@ public class Particle {
     public double z_speed = 0;
 
     private List<Force> forces = new ArrayList<>();
+
+    public CompoundTag Tag = new CompoundTag();
 
     @Override public String toString() { return "{name:\"%s\",id:%d,pos(%s,%s,%s)}".formatted(name, id, x, y, z); }
     @Override public boolean equals(Object obj) { if (obj == null) return false; return Objects.equals(id, ((Particle) obj).id) && Objects.equals(name, ((Particle) obj).name) && Objects.equals(start, ((Particle) obj).start) && Objects.equals(mass, ((Particle) obj).mass); }
