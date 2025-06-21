@@ -1,214 +1,81 @@
-package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
-
-import com.google.gson.JsonObject;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.network.VariablesUpdate;
-import net.lointain.cosmos.network.CosmosModVariables;
-import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
-import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
-import net.lointain.cosmos.procedures.JsontomapconverterProcedure;
-import net.lointain.cosmos.procedures.SimpleOcclusionProviderProcedure;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.DoubleTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Vector3d;
-
-import java.text.DecimalFormat;
-import java.util.*;
-
-public class StarTick {
-    public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag) { //星球更新
-        String WorldID = dimension;
-
-        ParticlePool newParticlePool = null;
-        for (ParticlePool particlePool : VariablesUpdate.New_Gravitation_Core_World_Bus) {
-            if (particlePool.WorldId.equals(WorldID)) {
-                newParticlePool = particlePool;
-                break;
-            }
-        }
-        ParticlePool oldParticlePool = null;
-        for (ParticlePool particlePool : VariablesUpdate.Old_Gravitation_Core_World_Bus) {
-            if (particlePool.WorldId.equals(WorldID)) {
-                oldParticlePool = particlePool;
-                break;
-            }
-        }
-        if (newParticlePool == null || oldParticlePool == null) return new Vec3(0, 0, 0);
-        if (newParticlePool.getGravitationCoreWorld().size() != oldParticlePool.getGravitationCoreWorld().size()) return new Vec3(0, 0, 0);
-
-        String StarID;
-        if (StarTag.getString("function").contains("ring")) {
-            StarID = getStarIdFromRing(dimension, StarTag);
-        } else {
-            StarID = StarTag.getString("object_name");
-        }
-
-        if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
-        String ParticleID = "CosmosStar-" + StarID;
-        Vector3d New_Pos = new Vector3d(0, 0, 0);
-        Vector3d Old_Pos = new Vector3d(0, 0, 0);
-        for (int i = 0; i < newParticlePool.getGravitationCoreWorld().size(); i++) {
-            Particle NewParticle = newParticlePool.getGravitationCoreWorld().get(i);
-            Particle OldPatricle = oldParticlePool.getGravitationCoreWorld().get(i);
-            if (NewParticle.name.equals(ParticleID) && OldPatricle.name.equals(ParticleID)) {
-                New_Pos = new Vector3d(NewParticle.x, NewParticle.y, NewParticle.z);
-                Old_Pos = new Vector3d(OldPatricle.x, OldPatricle.y, OldPatricle.z);
-            }
-        }
-        return new Vec3(Mth.lerp(partialTick, Old_Pos.x, New_Pos.x), Mth.lerp(partialTick, Old_Pos.y, New_Pos.y), Mth.lerp(partialTick, Old_Pos.z, New_Pos.z));
-    }
-
-    public static List<Object> changeOrder(LevelAccessor world, Entity entity, double partialTick, ListTag map, double order, String dimension, Vec3 position) {
-        if (map == null || dimension == null || position == null)
-            return new ArrayList<>();
-        Map<Object, Object> starting_map = new HashMap<>();
-        List<Object> sorted_order = new ArrayList<>();
-        for (int iter = 0; iter < map.size(); iter++) {
-            CompoundTag mint = (CompoundTag) map.get(iter);
-            Vec3 start_pos = getPos(entity.level().dimension().location().toString(), partialTick, mint);
-            if (mint.contains("function") && mint.get("function").getAsString().equals("ring")) {
-                Vec3 ring_pos = switch (mint.get("type").getAsString()) {
-                    case "ring1" -> new Vec3(-((DoubleTag) mint.get("radius")).getAsDouble(), 0.0F, 0.0F);
-                    case "ring2" -> new Vec3(((DoubleTag) mint.get("radius")).getAsDouble(), 0.0F, 0.0F);
-                    case "ring3" -> new Vec3(0.0F, 0.0F, -((DoubleTag) mint.get("radius")).getAsDouble());
-                    default -> new Vec3(0.0F, 0.0F, ((DoubleTag) mint.get("radius")).getAsDouble());
-                };
-                start_pos = start_pos.add(ring_pos.zRot(0.017453293F * (float)(((DoubleTag) mint.get("roll")).getAsDouble())).xRot(-0.017453293F * (float)((DoubleTag) mint.get("pitch")).getAsDouble()).yRot(0.017453293F * (float)(-((DoubleTag) mint.get("yaw")).getAsDouble())));
-            }
-            starting_map.put(position.distanceTo(start_pos), iter);
-        }
-        for (Object _listValueIterator : starting_map.keySet().stream().sorted().toList()) sorted_order.add(starting_map.get(_listValueIterator));
-        if (order == (double)-1.0F) Collections.reverse(sorted_order);
-        return sorted_order;
-    }
-
-    public static Tag recalculateLight(CompoundTag instance, String pKey, Operation<Tag> original, LevelAccessor world, Entity entity, double partialTick) {
-        if (!pKey.equals("light_data") && !pKey.equals("alpha_data") && !pKey.equals("i_alpha_data")) return original.call(instance, pKey);
-        ListTag light_source_list = (ListTag) CosmosModVariables.WorldVariables.get(world).light_source_map.get(entity.level().dimension().location().toString());
-        if (light_source_list != null) {
-            for (int i = 0; i < light_source_list.size(); i++) {
-                Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, light_source_list.getCompound(i));
-                CompoundTag compoundTag = light_source_list.getCompound(i).copy();
-                compoundTag.putDouble("x", objPos.x);
-                compoundTag.putDouble("y", objPos.y);
-                compoundTag.putDouble("z", objPos.z);
-                light_source_list.set(i, compoundTag);
-            }
-        }
-        ListTag opaque_object_list = (ListTag) CosmosModVariables.WorldVariables.get(world).opaque_object_map.get(entity.level().dimension().location().toString());
-        Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, instance);
-        double scale;
-        Vec3 objScale = Vec3.ZERO;
-        if (!instance.get("function").getAsString().equals("ring")) {
-            scale = ((DoubleTag) instance.get("scale")).getAsDouble();
-            objScale = new Vec3(scale, scale, scale);
-        }
-        Vec3 objRot = new Vec3(((DoubleTag) instance.get("pitch")).getAsDouble(), ((DoubleTag) instance.get("yaw")).getAsDouble(), ((DoubleTag) instance.get("roll")).getAsDouble());
-        int i = 0;
-        switch (pKey) {
-            case "light_data":
-                JsonObject light_data = new JsonObject();
-                if (instance.get("function").getAsString().equals("ring")) {
-                    for (int seq = 0; seq < 4; seq++) {
-                        float ring_rot = switch (instance.get("type").getAsString()) {
-                            case "ring1" -> 0.0F;
-                            case "ring2" -> 180.0F;
-                            case "ring3" -> 270.0F;
-                            default -> 90.0F;
-                        };
-                        float ring_scale = (float) ((DoubleTag) instance.get("scale_radius")).getAsDouble();
-                        light_data.addProperty((new DecimalFormat("##.##")).format(seq * 4), SimpleOcclusionProviderProcedure.execute(light_source_list, objRot.x(), objRot.z(), ring_scale*0.25, objRot.y(), objPos, seq == 1 ? objPos.add((new Vec3(-0.5F, 0.0F, 0.0F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 2 ? objPos.add((new Vec3(-0.25F, 0.0F, 0.0F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 3 ? objPos.add((new Vec3(-0.25F, 0.0F, 0.0F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : objPos.add((new Vec3(-0.5F, 0.0F, 0.0F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y())))))));
-                        light_data.addProperty((new DecimalFormat("##.##")).format(1 + seq * 4), SimpleOcclusionProviderProcedure.execute(light_source_list, objRot.x(), objRot.z(), ring_scale*0.25, objRot.y(), objPos, seq == 1 ? objPos.add((new Vec3(-0.5F, 0.0F, -0.5F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 2 ? objPos.add((new Vec3(-0.25F, 0.0F, 0.25F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 3 ? objPos.add((new Vec3(-0.25F, 0.0F, 0.25F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : objPos.add((new Vec3(-0.5F, 0.0F, -0.5F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y())))))));
-                        light_data.addProperty((new DecimalFormat("##.##")).format(2 + seq * 4), SimpleOcclusionProviderProcedure.execute(light_source_list, objRot.x(), objRot.z(), ring_scale*0.25, objRot.y(), objPos, seq == 1 ? objPos.add((new Vec3(-0.25F, 0.0F, -0.25F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 2 ? objPos.add((new Vec3(-0.5F, 0.0F, 0.5F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 3 ? objPos.add((new Vec3(-0.5F, 0.0F, 0.5F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : objPos.add((new Vec3(-0.25F, 0.0F, -0.25F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y())))))));
-                        light_data.addProperty((new DecimalFormat("##.##")).format(3 + seq * 4), SimpleOcclusionProviderProcedure.execute(light_source_list, objRot.x(), objRot.z(), ring_scale*0.25, objRot.y(), objPos, seq == 1 ? objPos.add((new Vec3(-0.25F, 0.0F, 0.0F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 2 ? objPos.add((new Vec3(-0.5F, 0.0F, 0.0F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : (seq == 3 ? objPos.add((new Vec3(-0.5F, 0.0F, 0.0F)).xRot(-(float)Math.PI).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y()))) : objPos.add((new Vec3(-0.25F, 0.0F, 0.0F)).yRot(0.017453293F * ring_rot).scale(ring_scale).zRot(-0.017453292F * (float)(-objRot.z())).xRot(-0.017453292F * (float)objRot.x()).yRot(0.017453293F * (float)(-objRot.y())))))));
-                    }
-                    return JsontomapconverterProcedure.execute(light_data);
-                }
-                for (Direction directioniterator : Direction.values()) {
-                    Vec3 direction_vector = new Vec3(directioniterator.step());
-                    light_data.addProperty((new DecimalFormat("##.##")).format(i * (double)4.0F), BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "color", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, -0.5F))));
-                    light_data.addProperty((new DecimalFormat("##.##")).format((double)1.0F + i * (double)4.0F), BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "color", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, 0.5F))));
-                    light_data.addProperty((new DecimalFormat("##.##")).format((double)2.0F + i * (double)4.0F), BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "color", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, 0.5F))));
-                    light_data.addProperty((new DecimalFormat("##.##")).format((double)3.0F + i * (double)4.0F), BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "color", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, -0.5F))));
-                    i++;
-                }
-                return JsontomapconverterProcedure.execute(light_data);
-            case "alpha_data":
-                JsonObject transparency_data = new JsonObject();
-                for (Direction directioniterator : Direction.values()) {
-                    Vec3 direction_vector = new Vec3(directioniterator.step());
-                    transparency_data.addProperty((new DecimalFormat("##.##")).format(i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, -0.5F))) >>> 24);
-                    transparency_data.addProperty((new DecimalFormat("##.##")).format((double)1.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, 0.5F))) >>> 24);
-                    transparency_data.addProperty((new DecimalFormat("##.##")).format((double)2.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, 0.5F))) >>> 24);
-                    transparency_data.addProperty((new DecimalFormat("##.##")).format((double)3.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, -0.5F))) >>> 24);
-                    i++;
-                }
-                return JsontomapconverterProcedure.execute(transparency_data);
-            case "i_alpha_data":
-                JsonObject i_alpha_data = new JsonObject();
-                for (Direction directioniterator : Direction.values()) {
-                    Vec3 direction_vector = new Vec3(directioniterator.step());
-                    i_alpha_data.addProperty((new DecimalFormat("##.##")).format(i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "i_alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, -0.5F))) >>> 24);
-                    i_alpha_data.addProperty((new DecimalFormat("##.##")).format((double)1.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "i_alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(-0.5F, 0.5F, 0.5F))) >>> 24);
-                    i_alpha_data.addProperty((new DecimalFormat("##.##")).format((double)2.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "i_alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, 0.5F))) >>> 24);
-                    i_alpha_data.addProperty((new DecimalFormat("##.##")).format((double)3.0F + i * (double)4.0F), (int)BrightnessProviderProcedure.execute(light_source_list, opaque_object_list, -1.0F, "i_alpha", "none", direction_vector, objPos, objRot, objScale, CubeVertexOrientorProcedure.execute(directioniterator, 0.0F, new Vec3(0.5F, 0.5F, -0.5F))) >>> 24);
-                    i++;
-                }
-                return JsontomapconverterProcedure.execute(i_alpha_data);
-            default:
-                return original.call(instance, pKey);
-        }
-    }
-    //杂七杂八的
-    public static float getPartialTick(LevelAccessor world) {
-        return world.isClientSide() ? getClientPartialTick() : 0;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private static float getClientPartialTick() {
-        return Minecraft.getInstance().getPartialTick();
-    }
-
-    public static String getStarIdFromRing(String dimension, CompoundTag RingTag) {
-        if (!RingTag.getString("function").equals("ring")) return "";
-
-        Minecraft minecraft = Minecraft.getInstance();
-        ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimension));
-        if (!(minecraft.level != null && minecraft.level.dimension() == dimensionKey)) return "";
-        ClientLevel world = minecraft.level;
-        CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-
-        if (!worldVars.collision_data_map.contains(dimension)) return "";
-        Tag collision_data_map = worldVars.collision_data_map.get(dimension); //星球数据
-        Tag light_source_map = worldVars.light_source_map.get(dimension); //恒星数据
-        ListTag listtag = new ListTag();
-        if (collision_data_map instanceof ListTag listTag) { listtag.addAll(listTag.copy()); }
-        if (light_source_map instanceof ListTag listTag) { listtag.addAll(listTag.copy()); }
-        if (listtag.isEmpty()) return "";
-
-        for (int i = 0 ; i < listtag.size() ; i++) {
-            CompoundTag compoundTag = listtag.getCompound(i);
-            Vec3 pos = new Vec3(compoundTag.getDouble("x"), compoundTag.getDouble("y"), compoundTag.getDouble("z"));
-            Vec3 thispos = new Vec3(RingTag.getDouble("x"), RingTag.getDouble("y"), RingTag.getDouble("z"));
-            if (pos.equals(thispos)) return compoundTag.getString("object_name");
-        }
-        return "";
-    }
-}
+//package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
+//
+//import com.google.gson.JsonObject;
+//import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+//import net.cn_good_grass.vs_orbit.config.Config;
+//import net.cn_good_grass.vs_orbit.network.packet.SyncParticlePoolPacket;
+//import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
+//import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+//import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
+//import net.lointain.cosmos.network.CosmosModVariables;
+//import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
+//import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
+//import net.lointain.cosmos.procedures.JsontomapconverterProcedure;
+//import net.lointain.cosmos.procedures.SimpleOcclusionProviderProcedure;
+//import net.minecraft.client.Minecraft;
+//import net.minecraft.client.multiplayer.ClientLevel;
+//import net.minecraft.core.Direction;
+//import net.minecraft.core.registries.Registries;
+//import net.minecraft.nbt.CompoundTag;
+//import net.minecraft.nbt.DoubleTag;
+//import net.minecraft.nbt.ListTag;
+//import net.minecraft.nbt.Tag;
+//import net.minecraft.resources.ResourceKey;
+//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.server.level.ServerLevel;
+//import net.minecraft.util.Mth;
+//import net.minecraft.world.entity.Entity;
+//import net.minecraft.world.level.Level;
+//import net.minecraft.world.level.LevelAccessor;
+//import net.minecraft.world.phys.Vec3;
+//import net.minecraftforge.api.distmarker.Dist;
+//import net.minecraftforge.api.distmarker.OnlyIn;
+//import net.minecraftforge.event.TickEvent;
+//import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.common.Mod;
+//import org.joml.Vector3d;
+//
+//import java.text.DecimalFormat;
+//import java.util.*;
+//
+//
+//@Mod.EventBusSubscriber
+//public class StarTick {
+//    @SubscribeEvent
+//    public static void onWorldTick(TickEvent.ServerTickEvent event) {
+//        for (String WorldIDs : Config.Gravitation_WORK_WORLD.get()) {
+//            ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
+//            if (level == null) return;
+//
+//            ListTag StarData = StarAPI.getAllStarData(level);
+//
+//            for (Tag thisTag : StarData) {
+//                CompoundTag thisData = (CompoundTag) thisTag;
+//                if (thisData.contains("core_color")) continue;
+//                Vec3 thisPos = StarAPI.getPos(level.dimension().location().toString(), 1, thisData);
+//                for (Tag otherTag : StarData) {
+//                    CompoundTag otherData = (CompoundTag) otherTag;
+//                    if (otherData.contains("core_color")) continue;
+//                    Vec3 otherPos = StarAPI.getPos(level.dimension().location().toString(), 1, otherData);
+//
+//                    if (thisPos.distanceTo(otherPos) < (thisData.getDouble("scale") + otherData.getDouble("scale"))) { //俩个东西撞一起了
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    public static Vec3[] getPlaneXY(Vec3 A, Vec3 B) {
+//        Vector3d pointA = new Vector3d(A.x, A.y, A.z);
+//        Vector3d pointB = new Vector3d(B.x, B.y, B.z);
+//        Vector3d midpoint = new Vector3d(pointA).add(pointB).mul(0.5);
+//        Vector3d normal = new Vector3d(new Vector3d(pointB).sub(pointA)).normalize();
+//        Vector3d basisX;
+//        if (Math.abs(normal.x) > 0.0001 || Math.abs(normal.y) > 0.0001) basisX = new Vector3d(-normal.y, normal.x, 0).normalize(); else basisX = new Vector3d(1, 0, 0);
+//        Vector3d basisY = new Vector3d();
+//        normal.cross(basisX, basisY).normalize();
+//
+//        return new Vec3[]{new Vec3(basisX.x, basisX.y, basisX.z), new Vec3(basisY.x, basisY.y, basisY.z)};
+//    }
+//}

@@ -9,12 +9,14 @@ import org.joml.Vector3d;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static java.lang.Double.NaN;
+
 public class ParticleGravitation {
     public static void UpDateParticleGravitationForAllParticle(ParticlePool World, Particle this_particle) {
         if (this_particle == null || World == null) return; // 防止崩溃
 
         Vector3d ParticleGravitation = new Vector3d(0, 0, 0); //计算质点总引力
-        for (Particle other_particle : World.getGravitationCoreWorld()) {
+        for (Particle other_particle : World.getAllParticle()) {
             if (other_particle.equals(this_particle)) continue;
             Vector3d OneParticleGravitation = GetParticleGravitationForOneParticle(this_particle, other_particle);
             ParticleGravitation.x += OneParticleGravitation.x;
@@ -22,7 +24,7 @@ public class ParticleGravitation {
             ParticleGravitation.z += OneParticleGravitation.z;
         }
 
-        this_particle.addForce(new Force("Gravitation", BigDecimal.valueOf(ParticleGravitation.x).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.y).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.z).multiply(this_particle.mass), 1));
+        this_particle.addForce(new Force("Gravitation", BigDecimal.valueOf(ParticleGravitation.x).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.y).multiply(this_particle.mass), BigDecimal.valueOf(ParticleGravitation.z).multiply(this_particle.mass), NaN));
     }
 
     public static Vector3d GetParticleGravitationForOneParticle(Particle this_particle, Particle other_particle) {
@@ -37,7 +39,7 @@ public class ParticleGravitation {
 
         double G = Config.Gravitation_GRAVITATIONAL_CONSTANT.get(); //引力常量
 
-        BigDecimal A = new BigDecimal(G).multiply(other_particle.mass).divide(BigDecimal.valueOf(Math.pow(world_distance, 2)), 16, RoundingMode.HALF_UP); //万有引力公式(变式 A=G*(m星/r距²)
+        BigDecimal A = new BigDecimal(G).multiply(other_particle.mass).divide(BigDecimal.valueOf(Math.pow(world_distance, 2)), 32, RoundingMode.HALF_UP); //万有引力公式(变式 A=G*(m星/r距²)
 
         double planar_x_range = Math.atan2(y_difference, planar_distance);
         double world_x_range = Math.atan2(z_difference, x_difference);

@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarTick;
+import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.jcm.vsch.event.AtmosphericCollision;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.minecraft.nbt.CompoundTag;
@@ -12,9 +12,8 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import net.lointain.cosmos.procedures.RayrendererProcedure;
 
-import static net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.StarTick.getPartialTick;
+import static net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI.getPartialTick;
 
 @Mixin(AtmosphericCollision.class)
 public class SpaceJoinShip {
@@ -34,7 +33,7 @@ public class SpaceJoinShip {
             }
         }
         if (obj == null) { return atmospheric_data.getDouble(key);}
-        Vec3 newPos = StarTick.getPos(atmospheric_data.getString("travel_to"), getPartialTick(level), obj);
+        Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), getPartialTick(level), obj);
 
         if (key.contains("x")) {
             return newPos.x;

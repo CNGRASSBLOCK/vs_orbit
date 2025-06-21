@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.gui;
+package net.cn_good_grass.vs_orbit.cilent.gui.jump_engine_controller;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
@@ -100,36 +100,6 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		DrawGuiGraphics drawGuiGraphics = new DrawGuiGraphics(guiGraphics);
 		if (jumpEngineControllerBlockEntity.mode.equals("power")) {
 			{
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 125, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 125, 7.5, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 115, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 115, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 105, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 105, 7.5, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 95, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 95, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 85, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 85, 7.5, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 75, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 75, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 65, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 65, 7.5, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 55, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 55, 7.5, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 45, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 45, 7.5, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 35, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 35, 7.5, 5, 0xFF008000);
-			}
-			{
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 130, this.leftPos + this.imageWidth - 129, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 116, this.leftPos + this.imageWidth - 115, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 102, this.leftPos + this.imageWidth - 101, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 88, this.leftPos + this.imageWidth - 87, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 74, this.leftPos + this.imageWidth - 73, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 60, this.leftPos + this.imageWidth - 59, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 46, this.leftPos + this.imageWidth - 45, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 130, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 31, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 116, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 17, this.topPos + this.imageHeight - 131, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 102, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 126, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 88, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 112, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 98, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 60, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 84, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 46, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 70, 10, 5, 0xFF008000);
-				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 32, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 56, 10, 5, 0xFF008000);
-				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 18, this.topPos + this.imageHeight - 32, this.leftPos + this.imageWidth - 8, this.topPos + this.imageHeight - 42, 10, 5, 0xFF008000);
-			}
-			{
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 87, this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 77, 7.5, 5, 0xFF00FFFF);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 87, this.leftPos + this.imageWidth - 64, this.topPos + this.imageHeight - 87, 7.5, 5, 0xFF00FFFF);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 64, this.topPos + this.imageHeight - 77, this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 77, 7.5, 5, 0xFF00FFFF);
@@ -208,10 +178,11 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 	@Override
 	public void init() {
 		BlockEntity blockEntity = world.getBlockEntity(new BlockPos(x, y, z));
-		if (!(blockEntity instanceof JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity)) return;
-		super.init();
+		JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity;
+		if (blockEntity instanceof JumpEngineControllerBlockEntity) jumpEngineControllerBlockEntity = (JumpEngineControllerBlockEntity) blockEntity; else jumpEngineControllerBlockEntity = null;
+        super.init();
 		button_toggle_mode = new ImageButton(this.leftPos + this.imageWidth - 42, this.topPos + 16, 35, 13, 0, 0, 13, new ResourceLocation("vs_orbit:textures/screens/jump_engine_controller_gui/button.png"), 35, 26, e -> {
-			if (jumpEngineControllerBlockEntity.mode.equals("power") || jumpEngineControllerBlockEntity.mode.equals("jump")) {
+			if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals("power") || jumpEngineControllerBlockEntity.mode.equals("jump")) {
 				VSOrbitMod.PACKET_HANDLER.sendToServer(new JumpEngineControllerGUIButton(0, x, y, z, textstate));
 				JumpEngineControllerGUIButton.handleButtonAction(entity, 0, x, y, z, textstate);
 			}
@@ -231,7 +202,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 			}
 		};
 		power_force.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.power_force").getString());
-		power_force.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("force")));
+		if (jumpEngineControllerBlockEntity != null) power_force.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("force")));
 		power_force.setMaxLength(16);
 		guistate.put("vs_orbit:power_force", power_force);
 		this.addWidget(this.power_force);
@@ -246,7 +217,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x").getString());else setSuggestion(null);
 			}
 		};
-		pos_x.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_x")));
+		if (jumpEngineControllerBlockEntity != null) pos_x.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_x")));
 		pos_x.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x").getString());
 		pos_x.setMaxLength(16);
 		guistate.put("vs_orbit:pos_x", pos_x);
@@ -262,7 +233,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y").getString());else setSuggestion(null);
 			}
 		};
-		pos_y.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_y")));
+		if (jumpEngineControllerBlockEntity != null) pos_y.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_y")));
 		pos_y.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y").getString());
 		pos_y.setMaxLength(16);
 		guistate.put("vs_orbit:pos_y", pos_y);
@@ -278,7 +249,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z").getString());else setSuggestion(null);
 			}
 		};
-		pos_z.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_z")));
+		if (jumpEngineControllerBlockEntity != null) pos_z.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_z")));
 		pos_z.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z").getString());
 		pos_z.setMaxLength(16);
 		guistate.put("vs_orbit:pos_z", pos_z);
@@ -294,7 +265,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());else setSuggestion(null);
 			}
 		};
-		pos_world.setValue(jumpEngineControllerBlockEntity.setting.getString("pos_world"));
+		if (jumpEngineControllerBlockEntity != null) pos_world.setValue(jumpEngineControllerBlockEntity.setting.getString("pos_world"));
 		pos_world.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());
 		pos_world.setMaxLength(32768);
 		guistate.put("vs_orbit:pos_world", pos_world);

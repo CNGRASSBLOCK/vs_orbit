@@ -1,7 +1,9 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics;
 
+import com.google.gson.JsonObject;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
+import org.stringtemplate.v4.ST;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -19,10 +21,7 @@ public class Force {
         this.time = time;
     }
 
-    @Override
-    public String toString() {
-        return "{name:\"%s\",x:%s,y:%s,z:%s,time:%s}".formatted(this.name, this.x, this.y, this.z, this.time);
-    }
+    @Override public String toString() { return "{name:\"%s\",x:%s,y:%s,z:%s,time:%s}".formatted(this.name, this.x, this.y, this.z, this.time); }
 
     public void add(Force other) {
         this.x = this.x.add(other.x);
@@ -36,8 +35,7 @@ public class Force {
         return Objects.equals(name, force.name);
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return Objects.hashCode(name);
     }
 

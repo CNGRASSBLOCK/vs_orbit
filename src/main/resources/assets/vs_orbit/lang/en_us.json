@@ -1,6 +1,9 @@
 {
   "block.vs_orbit.jump_engine_controller": "Jump Engine Controller",
+  "block.vs_orbit.mass_generator": "Mass Generator",
   "block.vs_orbit.electromagnetic_tractor": "Electromagnetic Tractor",
+
+
 
   "gui.vs_orbit.jump_engine_controller_gui.title": "Jump Engine",
   "gui.vs_orbit.jump_engine_controller_gui.state": "State :",
@@ -29,6 +32,17 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.world": "WorldID :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine": "§3Planet §bEngine",
 
-  "message.vs_orbit.core.pause": "Setup was successful",
-  "message.vs_orbit.core.speed_set": "Setup was successful"
+
+
+  "gui.vs_orbit.mass_generator_gui.title": "Mass Generator",
+
+
+
+  "message.vs_orbit.core.pause": "§aSetup was successful",
+  "message.vs_orbit.core.empty_name": "§c质点名为空！",
+  "message.vs_orbit.core.no_particle": "§c质点不存在！",
+  "message.vs_orbit.core.speed_set": "§aSetup was successful",
+  "message.vs_orbit.core.particle_tp": "§a传送成功！",
+  "message.vs_orbit.core.particle_setspeed": "§aSetup was successful！",
+  "message.vs_orbit.core.particle_addforce": "§aAdd was successful！"
 }

@@ -23,7 +23,7 @@ public class StarMap {
     public ArrayList<StarMapData> getStarMap(Level world) {
         List<Vector2d> StarList = new ArrayList<>();
         ParticlePool particlePool = ParticlePool.getFromWorldID(world.dimension().location().toString());
-        for(Particle particle : particlePool.getGravitationCoreWorld()) if (particle.name.contains("CosmosStar-")) StarList.add(new Vector2d(particle.x, particle.z));
+        for(Particle particle : particlePool.getAllParticle()) if (particle.name.contains("CosmosStar-")) StarList.add(new Vector2d(particle.x, particle.z));
 
         double[] circle = calculateMinimumBoundingCircle(StarList);
 

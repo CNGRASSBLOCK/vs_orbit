@@ -1,9 +1,8 @@
-package net.cn_good_grass.vs_orbit.cilent.gui;
+package net.cn_good_grass.vs_orbit.cilent.gui.jump_engine_controller;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

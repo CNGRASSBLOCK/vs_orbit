@@ -2,7 +2,9 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.GravitationWorld;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ParticleWorld;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.ParticleGravitation;
+import org.joml.Vector3d;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,11 +12,11 @@ import java.util.List;
 
 public class ParticlePool {
     public String WorldId = "";
-    private List<Particle> ParticlePool = new ArrayList<>();
+    private final List<Particle> ParticlePool = new ArrayList<>();
 
     public static ParticlePool getFromWorldID(String worldID){
         ParticlePool thisParticlePool = new ParticlePool();
-        for (ParticlePool particlePool : GravitationWorld.Gravitation_Core_World_Bus) {
+        for (ParticlePool particlePool : ParticleWorld.Gravitation_Core_World_Bus) {
             if (particlePool.WorldId.equals(worldID)) {
                 thisParticlePool = particlePool;
                 break;
@@ -45,7 +47,7 @@ public class ParticlePool {
 
             particle_json.addProperty("x_speed", particle.x_speed);
             particle_json.addProperty("y_speed", particle.y_speed);
-            particle_json.addProperty("z_speed", particle.z_speed);
+            particle_json.addProperty("z_speed", particle.z_speed);;
 
             main_json.add(particle.name, particle_json);
         }
@@ -87,6 +89,8 @@ public class ParticlePool {
         return newWorld;
     }
 
+    public List<Particle> getAllParticle() { return ParticlePool; }
+
     public boolean addParticle(Particle particle) {
         for (Particle particle1 : ParticlePool) if (particle1.id == particle.id) return false;
         ParticlePool.add(particle);
@@ -98,8 +102,18 @@ public class ParticlePool {
         return true;
     }
 
+    public boolean removeParticle(String name) {
+        ParticlePool.removeIf(particle1 -> particle1.name.equals(name));
+        return true;
+    }
+
     public Particle getParticle(int id) {
         for (Particle particle1 : ParticlePool) if (particle1.id == id) return particle1;
+        return null;
+    }
+
+    public Particle getParticle(String name) {
+        for (Particle particle1 : ParticlePool) if (particle1.name.equals(name)) return particle1;
         return null;
     }
 
@@ -111,7 +125,34 @@ public class ParticlePool {
         return false;
     }
 
-    public List<Particle> getGravitationCoreWorld() {
-        return new ArrayList<>(ParticlePool);
+    public int size() { return ParticlePool.size(); }
+
+
+
+    public void ForceUpdate(double time) {
+        for (Particle particle : ParticlePool) {
+            ParticleGravitation.UpDateParticleGravitationForAllParticle(this, particle);
+            particle.forceTimeUpdata(time);
+        }
+    }
+
+    public void SpeedUpdates(double time) {
+        for (Particle particle : ParticlePool) {
+            Vector3d Acceleration = particle.getAcceleration();
+
+            particle.x_speed += time * Acceleration.x; //更新速度
+            particle.y_speed += time * Acceleration.y;
+            particle.z_speed += time * Acceleration.z;
+        }
+    }
+
+    public void LocationUpdates(double time) {
+        for (Particle particle : ParticlePool) {
+            if (!particle.start.equals("common")) { continue; } //如果质点不应该参与运动就不更新
+
+            particle.x += time * particle.x_speed; //更新位置
+            particle.y += time * particle.y_speed;
+            particle.z += time * particle.z_speed;
+        }
     }
 }

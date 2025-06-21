@@ -1,8 +1,8 @@
 
-package net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI;
+package net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
-import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
+import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
@@ -24,11 +24,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
+public class MassGeneratorGUIMenu extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
 	public final static HashMap<String, Object> guistate = new HashMap<>();
 	public final Level world;
 	public final Player entity;
@@ -41,8 +42,8 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 	private Entity boundEntity = null;
 	private BlockEntity boundBlockEntity = null;
 
-	public JumpEngineControllerGUIMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-		super(VSOrbitModMenus.JumpEngineControllerGUI.get(), id);
+	public MassGeneratorGUIMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
+		super(VSOrbitModMenus.MassGeneratorGUI.get(), id);
 		this.entity = inv.player;
 		this.world = inv.player.level();
 		this.internal = new ItemStackHandler(0);
@@ -79,11 +80,11 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class JumpEngineControllerGUIOtherMessage {
+	public static class MassGeneratorGUIOtherMessage {
 		private final int mode, x, y, z;
 		private HashMap<String, String> textstate;
 
-		public JumpEngineControllerGUIOtherMessage(FriendlyByteBuf buffer) {
+		public MassGeneratorGUIOtherMessage(FriendlyByteBuf buffer) {
 			this.mode = buffer.readInt();
 			this.x = buffer.readInt();
 			this.y = buffer.readInt();
@@ -91,7 +92,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			this.textstate = readTextState(buffer);
 		}
 
-		public JumpEngineControllerGUIOtherMessage(int mode, int x, int y, int z, HashMap<String, String> textstate) {
+		public MassGeneratorGUIOtherMessage(int mode, int x, int y, int z, HashMap<String, String> textstate) {
 			this.mode = mode;
 			this.x = x;
 			this.y = y;
@@ -99,7 +100,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			this.textstate = textstate;
 		}
 
-		public static void buffer(JumpEngineControllerGUIOtherMessage message, FriendlyByteBuf buffer) {
+		public static void buffer(MassGeneratorGUIOtherMessage message, FriendlyByteBuf buffer) {
 			buffer.writeInt(message.mode);
 			buffer.writeInt(message.x);
 			buffer.writeInt(message.y);
@@ -107,7 +108,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			writeTextState(message.textstate, buffer);
 		}
 
-		public static void handler(JumpEngineControllerGUIOtherMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+		public static void handler(MassGeneratorGUIOtherMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
 			NetworkEvent.Context context = contextSupplier.get();
 			context.enqueueWork(() -> {
 				Player entity = context.getSender();
@@ -123,7 +124,7 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 
 		public static void handleOtherAction(Player entity, int mode, int x, int y, int z, HashMap<String, String> textstate) {
 			Level world = entity.level();
-			HashMap guistate = JumpEngineControllerGUIMenu.guistate;
+			HashMap guistate = MassGeneratorGUIMenu.guistate;
 			for (Map.Entry<String, String> entry : textstate.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
@@ -132,17 +133,13 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			// security measure to prevent arbitrary chunk generation
 			if (!world.hasChunkAt(new BlockPos(x, y, z))) return;
 			if (mode == 0) {
-				JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
+				MassGeneratorBlockEntity blockEntity = (MassGeneratorBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
 				if (blockEntity == null) return;
-				try { blockEntity.setting.putDouble("force", Double.valueOf(((EditBox) guistate.get("vs_orbit:power_force")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_x", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_x")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_y", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_y")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_z", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_z")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_world", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_world")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.mass = new BigDecimal(((EditBox) guistate.get("vs_orbit:mass")).getValue()); } catch (NumberFormatException ignored) {}
 			}
 		}
 
-		@SubscribeEvent public static void registerMessage(FMLCommonSetupEvent event) { VSOrbitMod.addNetworkMessage(JumpEngineControllerGUIOtherMessage.class, JumpEngineControllerGUIOtherMessage::buffer, JumpEngineControllerGUIOtherMessage::new, JumpEngineControllerGUIOtherMessage::handler); }
+		@SubscribeEvent public static void registerMessage(FMLCommonSetupEvent event) { VSOrbitMod.addNetworkMessage(MassGeneratorGUIOtherMessage.class, MassGeneratorGUIOtherMessage::buffer, MassGeneratorGUIOtherMessage::new, MassGeneratorGUIOtherMessage::handler); }
 
 		public static void writeTextState(HashMap<String, String> map, FriendlyByteBuf buffer) {
 			buffer.writeInt(map.size());

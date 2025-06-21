@@ -7,6 +7,7 @@ import java.lang.Object;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class Particle {
     public double y_speed = 0;
     public double z_speed = 0;
 
-    private List<Force> forces = new ArrayList<>();
+    private final List<Force> forces = new ArrayList<>();
 
     public CompoundTag Tag = new CompoundTag();
 
@@ -48,7 +49,7 @@ public class Particle {
         if (forces == null) return false;
         if (forces.contains(force)) {
             forces.set(forces.indexOf(force), force);
-            return true;
+            return false;
         }
         return forces.add(force);
     }
@@ -58,23 +59,28 @@ public class Particle {
         return forces.remove(force);
     }
 
+    public void removeAllForce() { forces.clear(); }
+
     public Force getAllForce(){
-        Force allForce = new Force("name", new BigDecimal(0), new BigDecimal(0), new BigDecimal(0), 0);
-        for (Force force : forces) {
-            allForce.add(force);
-        }
+        Force allForce = new Force("all-force", new BigDecimal(0), new BigDecimal(0), new BigDecimal(0), 0);
+        for (Force force : forces) allForce.add(force);
         return allForce;
     }
 
-    public void forceTimeUpdata(double time){
-        for (Force force : forces) {
-            if (force.time <= 0) forces.remove(force);
-            force.time -= time;
+
+    public void forceTimeUpdata(double time) {
+        synchronized (forces) { // 加锁，防止并发修改
+            Iterator<Force> iterator = forces.iterator();
+            while (iterator.hasNext()) {
+                Force force = iterator.next();
+                force.time -= time;
+                if (force.time < 0) iterator.remove();
+            }
         }
     }
 
     public Vector3d getAcceleration(){
         if (this.mass.doubleValue() == 0) return new Vector3d(0, 0, 0);
-        return new Vector3d((this.getAllForce().x.divide(this.mass, 16, RoundingMode.HALF_UP)).doubleValue(), (this.getAllForce().y.divide(this.mass, 16, RoundingMode.HALF_UP)).doubleValue(), (this.getAllForce().z.divide(this.mass, 16, RoundingMode.HALF_UP)).doubleValue()); //获取加速度
+        return new Vector3d((this.getAllForce().x.divide(this.mass, 32, RoundingMode.HALF_UP)).doubleValue(), (this.getAllForce().y.divide(this.mass, 64, RoundingMode.HALF_UP)).doubleValue(), (this.getAllForce().z.divide(this.mass, 64, RoundingMode.HALF_UP)).doubleValue()); //获取加速度
     }
 }

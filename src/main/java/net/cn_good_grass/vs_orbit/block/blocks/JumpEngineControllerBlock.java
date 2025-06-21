@@ -7,13 +7,10 @@ import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipAction;
-import net.jcm.vsch.blocks.custom.ThrusterBlock;
 import net.jcm.vsch.ship.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -42,22 +39,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.*;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.GameTickForceApplier;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Force.decomposeForce;
 
 public class JumpEngineControllerBlock extends Block implements EntityBlock {
     public JumpEngineControllerBlock() {
@@ -77,8 +69,6 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
     public BlockState mirror(BlockState state, Mirror mirrorIn) { return state.rotate(mirrorIn.getRotation(state.getValue(FACING))); }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new JumpEngineControllerBlockEntity(pos, state); }
-
-    public float getThrottle(BlockState state, int signal) { return 10000f; }
 
     @Override
     public void onPlace(BlockState blockstate, Level world, BlockPos pos, BlockState oldState, boolean moving) {
@@ -127,19 +117,17 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
 
         super.use(blockstate, world, pos, entity, hand, hit);
 
-        if (entity instanceof ServerPlayer serverPlayer) {
-            NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+        if (entity instanceof ServerPlayer serverPlayer) { NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
                 @Override public Component getDisplayName() {
                     return Component.literal("JumpEngineControllerGUI");
                 }
                 @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new JumpEngineControllerGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos)); }
-            }, pos);
-        }
+            }, pos); }
 
         return InteractionResult.CONSUME;
     }
 
-    @Override public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {return true; }
+    @Override public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction direction) { return true; }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {

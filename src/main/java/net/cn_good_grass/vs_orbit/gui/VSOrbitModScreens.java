@@ -4,7 +4,8 @@
  */
 package net.cn_good_grass.vs_orbit.gui;
 
-import net.cn_good_grass.vs_orbit.cilent.gui.JumpEngineControllerGUIScreen;
+import net.cn_good_grass.vs_orbit.cilent.gui.jump_engine_controller.JumpEngineControllerGUIScreen;
+import net.cn_good_grass.vs_orbit.cilent.gui.mass_generator.MassGeneratorGUIScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +18,7 @@ public class VSOrbitModScreens {
 	public static void clientLoad(FMLClientSetupEvent event) {
 		event.enqueueWork(() -> {
 			MenuScreens.register(VSOrbitModMenus.JumpEngineControllerGUI.get(), JumpEngineControllerGUIScreen::new);
+			MenuScreens.register(VSOrbitModMenus.MassGeneratorGUI.get(), MassGeneratorGUIScreen::new);
 		});
 	}
 }

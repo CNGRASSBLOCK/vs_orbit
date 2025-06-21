@@ -34,7 +34,7 @@ public class ParticleClear {
         List<Long> shipIds = new ArrayList<>();
         for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + particlePool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
 
-        for (Particle particle : particlePool.getGravitationCoreWorld()) {
+        for (Particle particle : particlePool.getAllParticle()) {
             if (!particle.name.contains("VSShip-")) continue;
 
             long ShipId = Long.valueOf(particle.name.substring(7));

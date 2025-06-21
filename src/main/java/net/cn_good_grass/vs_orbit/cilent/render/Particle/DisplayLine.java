@@ -26,7 +26,8 @@ public class DisplayLine {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.level == null) return;
 
-            for (Particle particle : ParticlePool.getFromWorldID(minecraft.level.dimension().location().toString()).getGravitationCoreWorld()) {
+            for (Particle particle : ParticlePool.getFromWorldID(minecraft.level.dimension().location().toString()).getAllParticle()) {
+                if (particle == null) continue;
                 renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.x_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.y + (particle.y_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.z + (particle.z_speed * CilentConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
                 renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.y + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.z + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
             }

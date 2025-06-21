@@ -4,6 +4,7 @@ import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
 
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ParticleThread;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -19,12 +20,11 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.GameTickForceApplier;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ShipTick {
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.ServerTickEvent event) { //引力更新基于游戏刻 而不是物理帧
+    public static void onServerTick(TickEvent.ServerTickEvent event) { //引力更新基于游戏刻 而不是物理帧
         if (!(event.phase == TickEvent.Phase.START)) { return; }
         if (!Config.ValkyrienSkies_ENABLE.get()) { return; }
 
@@ -33,7 +33,7 @@ public class ShipTick {
             if (level == null) { return; }
             String WorldID = level.dimension().location().toString();
 
-            List<Particle> particleList = ParticlePool.getFromWorldID(WorldID).getGravitationCoreWorld();
+            ParticlePool particlePool = ParticlePool.getFromWorldID(WorldID);
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
                 if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
@@ -42,16 +42,15 @@ public class ShipTick {
 
                 Vector3d Gravitation;
 
-                Particle particle = null;
-                for (Particle oneparticle : particleList) { if (oneparticle.name.equals("VSShip-" + shipId)) { particle = oneparticle; } }
+                Particle particle = particlePool.getParticle("VSShip-" + shipId);
                 
                 if (particle == null) {
                     BigDecimal mass = new BigDecimal(0);
                     String start;
                     if (Config.ValkyrienSkies_MOVEMENT_MODE.get().equals("VS_FOLLOW_PARTICLE")) { start = "common"; } else { start = "common"; }
-                    if (ship instanceof ServerShip serverShip) { mass = new BigDecimal(serverShip.getInertiaData().getMass()); }
+                    if (ship instanceof ServerShip serverShip) { mass = BigDecimal.valueOf(serverShip.getInertiaData().getMass()); }
 
-                    Particle newparticle = new Particle(particleList.size(), "VSShip-" + shipId, start, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
+                    Particle newparticle = new Particle(particlePool.size(), "VSShip-" + shipId, start, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
 
                     ParticlePool.getFromWorldID(WorldID).addParticle(newparticle);
                     continue;
@@ -61,8 +60,13 @@ public class ShipTick {
                     particle.x = ship.getTransform().getPositionInWorld().x();
                     particle.y = ship.getTransform().getPositionInWorld().y();
                     particle.z = ship.getTransform().getPositionInWorld().z();
+
+                    if (!(ship instanceof ServerShip serverShip)) return;
+                    BigDecimal mass = BigDecimal.valueOf(serverShip.getInertiaData().getMass());
+                    for (String key : particle.Tag.getCompound("add_mass").getAllKeys()) mass = mass.add(new BigDecimal(particle.Tag.getCompound("add_mass").getLong(key)));
+                    particle.mass = mass;
                 }
-                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3, Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3, Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3);
+                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()));
                 LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
                 if (loadedServerShip == null) { continue; }
                 GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
