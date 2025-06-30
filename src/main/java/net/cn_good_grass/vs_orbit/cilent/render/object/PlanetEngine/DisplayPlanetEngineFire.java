@@ -1,11 +1,10 @@
-package net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine;
+package net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +17,16 @@ import static java.lang.Math.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DisplayPlanetEngineFire {
-    private static void main() {
+    private static void renderShapes(RenderLevelStageEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        ClientLevel level = minecraft.level;
+        if (level == null) return;
+        poseStack = event.getPoseStack();
+        projectionMatrix = event.getProjectionMatrix();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         for (PlanetEngineFire fire : PlanetEngineFire.fires_cilent) {
@@ -46,8 +54,6 @@ public class DisplayPlanetEngineFire {
             }
         }
     }
-
-
 
     private static BufferBuilder bufferBuilder = null;
     private static VertexBuffer vertexBuffer = null;
@@ -167,24 +173,6 @@ public class DisplayPlanetEngineFire {
             RenderSystem.enableCull();
             RenderSystem.depthMask(true);
             currentStage = 0;
-        }
-    }
-
-    private static void renderShapes(RenderLevelStageEvent event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        ClientLevel level = minecraft.level;
-        Entity entity = minecraft.gameRenderer.getMainCamera().getEntity();
-        if (level != null && entity != null) {
-            poseStack = event.getPoseStack();
-            projectionMatrix = event.getProjectionMatrix();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            main();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.disableBlend();
-            RenderSystem.enableDepthTest();
         }
     }
 }

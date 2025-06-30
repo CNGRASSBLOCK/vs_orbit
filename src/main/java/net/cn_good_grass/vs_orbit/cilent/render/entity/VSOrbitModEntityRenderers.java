@@ -1,6 +1,6 @@
-package net.cn_good_grass.vs_orbit.cilent.entity;
+package net.cn_good_grass.vs_orbit.cilent.render.entity;
 
-import net.cn_good_grass.vs_orbit.cilent.entity.ThrusterCore.ThrusterCoreRenderer;
+import net.cn_good_grass.vs_orbit.cilent.render.entity.ThrusterCore.ThrusterCoreRenderer;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

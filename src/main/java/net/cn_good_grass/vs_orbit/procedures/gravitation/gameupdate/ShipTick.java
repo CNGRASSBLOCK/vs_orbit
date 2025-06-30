@@ -1,10 +1,10 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
 
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ParticleThread;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.AstronomicalThread;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +33,7 @@ public class ShipTick {
             if (level == null) { return; }
             String WorldID = level.dimension().location().toString();
 
-            ParticlePool particlePool = ParticlePool.getFromWorldID(WorldID);
+            AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldID);
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
                 if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
@@ -42,31 +42,29 @@ public class ShipTick {
 
                 Vector3d Gravitation;
 
-                Particle particle = particlePool.getParticle("VSShip-" + shipId);
+                Astronomical astronomical = astronomicalPool.getAstronomical("VSShip-" + shipId);
                 
-                if (particle == null) {
-                    BigDecimal mass = new BigDecimal(0);
-                    String start;
-                    if (Config.ValkyrienSkies_MOVEMENT_MODE.get().equals("VS_FOLLOW_PARTICLE")) { start = "common"; } else { start = "common"; }
-                    if (ship instanceof ServerShip serverShip) { mass = BigDecimal.valueOf(serverShip.getInertiaData().getMass()); }
+                if (astronomical == null) {
+                    double mass = 0;
+                    if (ship instanceof ServerShip serverShip) { mass = serverShip.getInertiaData().getMass(); }
 
-                    Particle newparticle = new Particle(particlePool.size(), "VSShip-" + shipId, start, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
+                    Astronomical newastronomical = new Astronomical(astronomicalPool.size(), "VSShip-" + shipId, "valkyrienskies:ship", true, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
 
-                    ParticlePool.getFromWorldID(WorldID).addParticle(newparticle);
+                    AstronomicalPool.getFromWorldID(WorldID).addAstronomical(newastronomical);
                     continue;
                 } else {
-                    Gravitation = particle.getAllForce().toVector3d();
+                    Gravitation = astronomical.getAllForce().toVector3d();
 
-                    particle.x = ship.getTransform().getPositionInWorld().x();
-                    particle.y = ship.getTransform().getPositionInWorld().y();
-                    particle.z = ship.getTransform().getPositionInWorld().z();
+                    astronomical.x = ship.getTransform().getPositionInWorld().x();
+                    astronomical.y = ship.getTransform().getPositionInWorld().y();
+                    astronomical.z = ship.getTransform().getPositionInWorld().z();
 
                     if (!(ship instanceof ServerShip serverShip)) return;
-                    BigDecimal mass = BigDecimal.valueOf(serverShip.getInertiaData().getMass());
-                    for (String key : particle.Tag.getCompound("add_mass").getAllKeys()) mass = mass.add(new BigDecimal(particle.Tag.getCompound("add_mass").getLong(key)));
-                    particle.mass = mass;
+                    double mass = serverShip.getInertiaData().getMass();
+                    for (String key : astronomical.Tag.getCompound("add_mass").getAllKeys()) mass += astronomical.Tag.getCompound("add_mass").getLong(key);
+                    astronomical.mass = mass;
                 }
-                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (ParticleThread.core_tick_time / Config.Core_TICK_TIME.get()));
+                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
                 LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
                 if (loadedServerShip == null) { continue; }
                 GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);

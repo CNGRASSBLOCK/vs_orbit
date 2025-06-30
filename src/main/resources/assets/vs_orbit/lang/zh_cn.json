@@ -3,6 +3,8 @@
   "block.vs_orbit.mass_generator": "质量发生器",
   "block.vs_orbit.electromagnetic_tractor": "电磁牵引器",
 
+  "itemGroup.vs_orbit.main_tab": "瓦尔基里:轨道学",
+
 
 
   "gui.vs_orbit.jump_engine_controller_gui.title": "跃迁引擎",
@@ -35,16 +37,26 @@
 
 
   "gui.vs_orbit.mass_generator_gui.title": "质量发生器",
+  "gui.vs_orbit.mass_generator_gui.mass": "质量 :",
   "gui.vs_orbit.mass_generator_gui.info.pos": "坐标:",
 
   "gui.vs_orbit.mass_generator_gui.editbox.mass": "千克",
 
 
-  "message.vs_orbit.core.pause": "§a设置成功！",
+
+  "message.vs_orbit.core.info.state" : "============[VS Orbit][Core]============",
+  "message.vs_orbit.core.info.target_tick" : "目标刻：",
+  "message.vs_orbit.core.info.actual_tick" : "实际刻：",
+  "message.vs_orbit.core.info.size" : "模拟量总数：",
+  "message.vs_orbit.core.info.world_size" : "当前维度模拟量总数：",
+  "message.vs_orbit.core.info.end" : "======================================",
+  "message.vs_orbit.core.state": "§a设置成功：",
+  "message.vs_orbit.core.state.run": "§a运行",
+  "message.vs_orbit.core.state.pause": "§c暂停",
   "message.vs_orbit.core.empty_name": "§c质点名为空！",
-  "message.vs_orbit.core.no_particle": "§c质点不存在！",
+  "message.vs_orbit.core.no_astronomical_object": "§c质点不存在！",
   "message.vs_orbit.core.speed_set": "§a设置成功！",
-  "message.vs_orbit.core.particle_tp": "§a传送成功！",
-  "message.vs_orbit.core.particle_setspeed": "§a设置成功！",
-  "message.vs_orbit.core.particle_addforce": "§a添加成功！"
+  "message.vs_orbit.core.astronomical_object_tp": "§a传送成功！",
+  "message.vs_orbit.core.astronomical_object_setspeed": "§a设置成功！",
+  "message.vs_orbit.core.astronomical_object_addforce": "§a添加成功！"
 }

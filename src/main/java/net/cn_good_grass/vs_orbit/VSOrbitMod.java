@@ -5,9 +5,10 @@ import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
+import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ParticleWorld;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerStart;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,16 +44,16 @@ public class VSOrbitMod
         VSOrbitModBlocks.register(eventBus);
         VSOrbitModBlockEntities.register(eventBus);
         VSOrbitModItems.register(eventBus);
+        VSOrbitModCreativeTab.register(eventBus);
         VSOrbitModEntities.REGISTRY.register(eventBus);
         VSOrbitModMenus.REGISTRY.register(eventBus);
         //注册事件
-        MinecraftForge.EVENT_BUS.register(new ParticleWorld());
+        MinecraftForge.EVENT_BUS.register(new ServerStart()); //模拟线程启动
         //MinecraftForge.EVENT_BUS.register(new OnPlayerTick());
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        //MinecraftForge.EVENT_BUS.register(new PlayerRender());
     }
 
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);

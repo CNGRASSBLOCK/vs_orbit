@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import static net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI.getPartialTick;
-
 @Mixin(AtmosphericCollision.class)
 public class SpaceJoinShip {
     @Redirect(method = {"atmosphericCollisionTick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getDouble(Ljava/lang/String;)D"))
@@ -33,7 +31,7 @@ public class SpaceJoinShip {
             }
         }
         if (obj == null) { return atmospheric_data.getDouble(key);}
-        Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), getPartialTick(level), obj);
+        Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), 1, obj, true);
 
         if (key.contains("x")) {
             return newPos.x;

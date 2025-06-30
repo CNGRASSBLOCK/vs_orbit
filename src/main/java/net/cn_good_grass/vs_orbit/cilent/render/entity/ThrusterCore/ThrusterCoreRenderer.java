@@ -1,5 +1,5 @@
 
-package net.cn_good_grass.vs_orbit.cilent.entity.ThrusterCore;
+package net.cn_good_grass.vs_orbit.cilent.render.entity.ThrusterCore;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

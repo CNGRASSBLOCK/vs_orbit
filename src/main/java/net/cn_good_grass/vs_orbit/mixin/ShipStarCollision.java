@@ -30,7 +30,7 @@ public class ShipStarCollision {
 
         for (int i = 0; i < collision_data_map.size(); i++) {
             CompoundTag StarData = collision_data_map.getCompound(i);
-            Vec3 StarPos = StarAPI.getPos(dimensionId, 0, StarData);
+            Vec3 StarPos = StarAPI.getPos(dimensionId, 1, StarData, true);
             StarData.putDouble("x", StarPos.x);
             StarData.putDouble("y", StarPos.y);
             StarData.putDouble("z", StarPos.z);
@@ -44,7 +44,7 @@ public class ShipStarCollision {
     private static List<Object> execute(CompoundTag map, double order, String dimension, Vec3 position, @Local(argsOnly = true) LevelAccessor world, @Local Vec3 Lposition, @Local String dimensionId) {
         ListTag newtag = StarAPI.getAllStarData((Level) world);
         for (Tag tag : newtag) {
-            Vec3 pos = StarAPI.getPos(dimension, 1, (CompoundTag) tag);
+            Vec3 pos = StarAPI.getPos(dimension, 1, (CompoundTag) tag, true);
             newtag.add(newtag.size(), StringTag.valueOf("`" + pos.x + "~" + pos.y + "|" + pos.z + "\\"));
         }
         map.put(dimension, newtag);

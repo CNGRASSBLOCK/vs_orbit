@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.gui.jump_engine_controller;
+package net.cn_good_grass.vs_orbit.cilent.render.gui.jump_engine_controller;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;

@@ -437,7 +437,7 @@
 					}
 				}
 			},
-			"particle_effects": {}
+			"astronomical_object_effects": {}
 		}
 	},
 	"geckolib_format_version": 2

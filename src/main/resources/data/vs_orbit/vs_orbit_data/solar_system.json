@@ -1,124 +1,76 @@
 {
   "planet_data": {
     "Sun": {
-      "mass": 3.1E+15,
-      "particle_state": "fixed",
-      "x": 0,
-      "y": 500,
-      "z": 0,
-      "x_start_speed": 0,
-      "y_start_speed": 0,
-      "z_start_speed": 0
+      "mass": 3.1e+15,
+      "astronomical_compute": true,
+      "pos": [0, 500, 0],
+      "speed": [0, 0, 0]
     },
     "Mercury": {
-      "mass": 3.47E+11,
-      "particle_state": "common",
-      "x": -16348,
-      "y": 500,
-      "z": -18063,
-      "x_start_speed": 2.18,
-      "y_start_speed": 0,
-      "z_start_speed": -1.95
+      "mass": 3.47e+11,
+      "astronomical_compute": true,
+      "pos": [-16348, 500, -18063],
+      "speed": [2.18, 0, -1.95]
     },
     "Venus": {
-      "mass": 3E+12,
-      "particle_state": "common",
-      "x": -16376,
-      "y": 500,
-      "z": 30089,
-      "x_start_speed": -2.12,
-      "y_start_speed": 0,
-      "z_start_speed": -1.20
+      "mass": 3e+12,
+      "astronomical_compute": true,
+      "pos": [-16376, 500, 30089],
+      "speed": [-2.12, 0, -1.20]
     },
     "Earth": {
-      "mass": 4.02E+12,
-      "particle_state": "common",
-      "x": -45165,
-      "y": 500,
-      "z": -442,
-      "x_start_speed": 0.0164,
-      "y_start_speed": 0,
-      "z_start_speed": -2.16
+      "mass": 4.02e+12,
+      "astronomical_compute": true,
+      "pos": [-45165, 500, -442],
+      "speed": [0.0164, 0, -2.16]
     },
     "Moon": {
-      "mass": 9.018E10,
-      "particle_state": "common",
-      "x": -44877,
-      "y": 500,
-      "z": -1563,
-      "x_start_speed": 0.4834,
-      "y_start_speed": 0,
-      "z_start_speed": -2.04
+      "mass": 9.018e10,
+      "astronomical_compute": true,
+      "pos": [-44877, 500, -1563],
+      "speed": [0.4834, 0, -2.04]
     },
     "Mars": {
-      "mass": 5.85E+11,
-      "particle_state": "common",
-      "x": 68742,
-      "y": 500,
-      "z": -7562,
-      "x_start_speed": 0.207,
-      "y_start_speed": 0,
-      "z_start_speed": 1.70
+      "mass": 5.85e+11,
+      "astronomical_compute": true,
+      "pos": [68742, 500, -7562],
+      "speed": [0.207, 0, 1.70]
     },
     "Jupiter": {
-      "mass": 9.07E+12,
-      "particle_state": "common",
-      "x": 85818,
-      "y": 500,
-      "z": -78549,
-      "x_start_speed": 0.900,
-      "y_start_speed": 0,
-      "z_start_speed": 0.983
+      "mass": 9.07e+12,
+      "astronomical_compute": true,
+      "pos": [85818, 500, -78549],
+      "speed": [0.900, 0, 0.983]
     },
     "Europa": {
-      "mass": 5.29E+10,
-      "particle_state": "common",
-      "x": 87663,
-      "y": 500,
-      "z": -81603,
-      "x_start_speed": 1.253,
-      "y_start_speed": 0,
-      "z_start_speed": 1.196
+      "mass": 5.29e+10,
+      "astronomical_compute": true,
+      "pos": [87663, 500, -81603],
+      "speed": [1.253, 0, 1.196]
     },
     "Saturn": {
-      "mass": 2.06E+12,
-      "particle_state": "common",
-      "x": 135367,
-      "y": 500,
-      "z": -147028,
-      "x_start_speed": 0.748,
-      "y_start_speed": 0,
-      "z_start_speed": 0.689
+      "mass": 2.06e+12,
+      "astronomical_compute": true,
+      "pos": [135367, 500, -147028],
+      "speed": [0.748, 0, 0.689]
     },
     "Uranus": {
-      "mass": 2.61E+12,
-      "particle_state": "common",
-      "x": 137176,
-      "y": 500,
-      "z": -307601,
-      "x_start_speed": 0.715,
-      "y_start_speed": 0,
-      "z_start_speed": 0.319
+      "mass": 2.61e+12,
+      "astronomical_compute": true,
+      "pos": [137176, 500, -307601],
+      "speed": [0.715, 0, 0.319]
     },
     "Neptune": {
-      "mass": 2.22E+12,
-      "particle_state": "common",
-      "x": 238826,
-      "y": 500,
-      "z": -453474,
-      "x_start_speed": 0.562,
-      "y_start_speed": 0,
-      "z_start_speed": 0.296
+      "mass": 2.22e+12,
+      "astronomical_compute": true,
+      "pos": [238826, 500, -453474],
+      "speed": [0.562, 0, 0.296]
     },
     "Pluto": {
-      "mass": 8.7E+10,
-      "particle_state": "common",
-      "x": 407176,
-      "y": 500,
-      "z": -572545,
-      "x_start_speed": 0.442,
-      "y_start_speed": 0,
-      "z_start_speed": 0.314
+      "mass": 8.7e+10,
+      "astronomical_compute": true,
+      "pos": [407176, 500, -572545],
+      "speed": [0.442, 0, 0.314]
     }
   }
 }

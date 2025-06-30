@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.gui.mass_generator;
+package net.cn_good_grass.vs_orbit.cilent.render.gui.mass_generator;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
@@ -62,10 +62,12 @@ public class MassGeneratorGUIScreen extends AbstractContainerScreen<MassGenerato
 		guiGraphics.pose().scale(2.0f, 2.0f, 1.0f); // 放大2倍
 		guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.mass_generator_gui.title"), (int) (this.leftPos / 2.0 + 4.5), (int) (this.topPos / 2.0 + 4.5), 0xFF00FFFF, true);
 		guiGraphics.pose().popPose();
+		//质量
+		guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.mass_generator_gui.mass"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, true);
 		//信息
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
-		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.mass_generator_gui.info.pos").getString() + " §5X:" + x + " Y:" + y + " Z:" + z), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFF00FFFF, false);
+		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.mass_generator_gui.info.pos").getString() + " §5X:" + x + " Y:" + y + " Z:" + z), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
 		guiGraphics.pose().popPose();
 	}
 

@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.gui.jump_engine_controller;
+package net.cn_good_grass.vs_orbit.cilent.render.gui.jump_engine_controller;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
@@ -92,7 +92,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		//信息
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
-		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.jump_engine_controller_gui.info.pos").getString() + " §5X:" + x + " Y:" + y + " Z:" + z), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFF00FFFF, false);
+		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.jump_engine_controller_gui.info.pos").getString() + " §5X:" + x + " Y:" + y + " Z:" + z), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
 		guiGraphics.pose().popPose();
 		//右侧屏幕绘制
 		guiGraphics.pose().pushPose();

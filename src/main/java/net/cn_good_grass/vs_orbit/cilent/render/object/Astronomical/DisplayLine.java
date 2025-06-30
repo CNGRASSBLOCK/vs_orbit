@@ -1,10 +1,10 @@
-package net.cn_good_grass.vs_orbit.cilent.render.Particle;
+package net.cn_good_grass.vs_orbit.cilent.render.object.Astronomical;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.cn_good_grass.vs_orbit.config.CilentConfig;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.Vec3;
@@ -26,10 +26,10 @@ public class DisplayLine {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.level == null) return;
 
-            for (Particle particle : ParticlePool.getFromWorldID(minecraft.level.dimension().location().toString()).getAllParticle()) {
-                if (particle == null) continue;
-                renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.x_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.y + (particle.y_speed * CilentConfig.SPEED_SHOW_SCALING.get()), particle.z + (particle.z_speed * CilentConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
-                renderLine(event, new Vec3(particle.x, particle.y, particle.z), new Vec3(particle.x + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.y + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), particle.z + (particle.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
+            for (Astronomical astronomical : AstronomicalPool.getFromWorldID(minecraft.level.dimension().location().toString()).getAllAstronomical()) {
+                if (astronomical == null) continue;
+                renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.x_speed * CilentConfig.SPEED_SHOW_SCALING.get()), astronomical.y + (astronomical.y_speed * CilentConfig.SPEED_SHOW_SCALING.get()), astronomical.z + (astronomical.z_speed * CilentConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
+                renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.y + (astronomical.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.z + (astronomical.getAcceleration().x * CilentConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
             }
 
             RenderSystem.enableDepthTest();

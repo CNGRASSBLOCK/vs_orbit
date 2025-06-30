@@ -1,12 +1,10 @@
 package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
-import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -62,9 +60,9 @@ public class MassGeneratorBlock extends Block implements EntityBlock{
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
         if (ship == null) return;
 
-        Particle particle = ParticlePool.getFromWorldID(world.dimension().location().toString()).getParticle("VSShip-" + ship.getId());
-        if (particle == null) return;
+        Astronomical astronomical = AstronomicalPool.getFromWorldID(world.dimension().location().toString()).getAstronomical("VSShip-" + ship.getId());
+        if (astronomical == null) return;
 
-        particle.Tag.getCompound("vs_orbit:add_mass").putLong(pos.toString(), 1000);
+        astronomical.Tag.getCompound("vs_orbit:add_mass").putLong(pos.toString(), 1000);
     }
 }

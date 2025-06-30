@@ -15,8 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-import static net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI.getPartialTick;
-
 @Mixin(AtmosphericCollisionDetectorProcedure.class) //妈的这玩意得重写整个方法 不然太石山了
 public class SpaceJoinPlayer {
     @ModifyArg(method={"execute"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"), index = 1)
@@ -38,7 +36,7 @@ public class SpaceJoinPlayer {
                 }
             }
             if (obj == null) { return pCommand;}
-            Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), getPartialTick(world), obj);
+            Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), 1, obj, true);
 
             ReturnCommand = ReturnCommand.replace("{x}", "" + newPos.x);
             ReturnCommand = ReturnCommand.replace("{y}", "" + (newPos.y + (obj.getDouble("scale") / 2)));

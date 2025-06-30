@@ -3,9 +3,8 @@ package net.cn_good_grass.vs_orbit.procedures.cosmos;
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
 import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
@@ -26,33 +25,28 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.impl.shadow.I;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
 public class StarAPI {
-    public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag) { //星球更新
-        String WorldID = dimension;
+    public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag, boolean isServer) { //星球更新
+        AstronomicalPool newAstronomicalPool = null;
+        AstronomicalPool oldAstronomicalPool = null;
+        if (isServer) {
+            newAstronomicalPool = AstronomicalPool.getFromWorldID(dimension);
+            oldAstronomicalPool = newAstronomicalPool;
+        } else {
+            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
+                newAstronomicalPool = astronomicalPool;
+                break; }
+            for (AstronomicalPool astronomicalPool : SyncDataTick.Old_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
+                oldAstronomicalPool = astronomicalPool;
+                break; }
+        }
+        if (newAstronomicalPool == null || oldAstronomicalPool == null) return new Vec3(0, 0, 0);
 
-        ParticlePool newParticlePool = null;
-        for (ParticlePool particlePool : SyncDataTick.New_Gravitation_Core_World_Bus) {
-            if (particlePool.WorldId.equals(WorldID)) {
-                newParticlePool = particlePool;
-                break;
-            }
-        }
-        ParticlePool oldParticlePool = null;
-        for (ParticlePool particlePool : SyncDataTick.Old_Gravitation_Core_World_Bus) {
-            if (particlePool.WorldId.equals(WorldID)) {
-                oldParticlePool = particlePool;
-                break;
-            }
-        }
-        if (newParticlePool == null || oldParticlePool == null) return new Vec3(0, 0, 0);
 
         String StarID;
         if (StarTag.getString("function").contains("ring")) {
@@ -62,12 +56,12 @@ public class StarAPI {
         }
 
         if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
-        String ParticleID = "CosmosStar-" + StarID;
-        Particle NewParticle = newParticlePool.getParticle(ParticleID);
-        Particle OldParticle = oldParticlePool.getParticle(ParticleID);
-        if (NewParticle == null || OldParticle == null) return new Vec3(0, 0, 0);
-        Vector3d New_Pos = new Vector3d(NewParticle.x, NewParticle.y, NewParticle.z);
-        Vector3d Old_Pos = new Vector3d(OldParticle.x, OldParticle.y, OldParticle.z);
+        String AstronomicalID = "CosmosStar-" + StarID;
+        Astronomical newAstronomical = newAstronomicalPool.getAstronomical(AstronomicalID);
+        Astronomical oldAstronomical = oldAstronomicalPool.getAstronomical(AstronomicalID);
+        if (newAstronomical == null || oldAstronomical == null) return new Vec3(0, 0, 0);
+        Vector3d New_Pos = new Vector3d(newAstronomical.x, newAstronomical.y, newAstronomical.z);
+        Vector3d Old_Pos = new Vector3d(oldAstronomical.x, oldAstronomical.y, oldAstronomical.z);
         return new Vec3(Mth.lerp(partialTick, Old_Pos.x, New_Pos.x), Mth.lerp(partialTick, Old_Pos.y, New_Pos.y), Mth.lerp(partialTick, Old_Pos.z, New_Pos.z));
     }
 
@@ -78,7 +72,7 @@ public class StarAPI {
         List<Object> sorted_order = new ArrayList<>();
         for (int iter = 0; iter < map.size(); iter++) {
             CompoundTag mint = (CompoundTag) map.get(iter);
-            Vec3 start_pos = getPos(entity.level().dimension().location().toString(), partialTick, mint);
+            Vec3 start_pos = getPos(entity.level().dimension().location().toString(), partialTick, mint, false);
             if (mint.contains("function") && mint.get("function").getAsString().equals("ring")) {
                 Vec3 ring_pos = switch (mint.get("type").getAsString()) {
                     case "ring1" -> new Vec3(-((DoubleTag) mint.get("radius")).getAsDouble(), 0.0F, 0.0F);
@@ -100,7 +94,7 @@ public class StarAPI {
         ListTag light_source_list = (ListTag) CosmosModVariables.WorldVariables.get(world).light_source_map.get(entity.level().dimension().location().toString());
         if (light_source_list != null) {
             for (int i = 0; i < light_source_list.size(); i++) {
-                Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, light_source_list.getCompound(i));
+                Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, light_source_list.getCompound(i), false);
                 CompoundTag compoundTag = light_source_list.getCompound(i).copy();
                 compoundTag.putDouble("x", objPos.x);
                 compoundTag.putDouble("y", objPos.y);
@@ -109,7 +103,7 @@ public class StarAPI {
             }
         }
         ListTag opaque_object_list = (ListTag) CosmosModVariables.WorldVariables.get(world).opaque_object_map.get(entity.level().dimension().location().toString());
-        Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, instance);
+        Vec3 objPos = getPos(entity.level().dimension().location().toString(), partialTick, instance, false);
         double scale;
         Vec3 objScale = Vec3.ZERO;
         if (!instance.get("function").getAsString().equals("ring")) {
@@ -173,14 +167,6 @@ public class StarAPI {
         }
     }
     //杂七杂八的
-    public static float getPartialTick(LevelAccessor world) {
-        return world.isClientSide() ? getClientPartialTick() : 0;
-    }
-
-    @OnlyIn(Dist.CLIENT) private static float getClientPartialTick() {
-        return Minecraft.getInstance().getPartialTick();
-    }
-
     public static String getStarIdFromRing(String dimension, CompoundTag RingTag) {
         if (!RingTag.getString("function").equals("ring")) return "";
 

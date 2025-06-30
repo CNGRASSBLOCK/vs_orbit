@@ -1,15 +1,14 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.core;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
-import net.lointain.cosmos.network.CosmosModVariables;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -28,16 +27,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-public class ParticleWorld {
-    public static List<ParticlePool> Gravitation_Core_World_Bus = new ArrayList<>();
+public class ServerStart {
+    public static List<AstronomicalPool> Gravitation_Core_World_Bus = new ArrayList<>();
 
-    @SubscribeEvent public static void OnServerStart(ServerStartedEvent event) { ParticleThread.CreateThread(); }
+    @SubscribeEvent public static void OnServerStart(ServerStartedEvent event) { AstronomicalThread.CreateThread(); }
 
     @SubscribeEvent
     public static void OnWorldLoad(net.minecraftforge.event.level.LevelEvent.Load event) {
         if (event.getLevel().isClientSide()) return;
 
+        Gravitation_Core_World_Bus.clear();
         for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+            if (!Config.Gravitation_WORK_WORLD.get().contains(WorldId)) continue;
+
             if (HasData(event, WorldId)) { //如果有数据就读取
                 ReadData(event, WorldId);
             } else {
@@ -53,13 +55,14 @@ public class ParticleWorld {
     @SubscribeEvent
     public static void OnWorldUnLoad(LevelEvent.Unload event) { //保存数据
         MinecraftServer server = event.getLevel().getServer();
-        if (server == null) { return; }
+        if (server == null) return;
 
         String WorldID = ((Level) event.getLevel()).dimension().location().toString();
+        if (!Config.Gravitation_WORK_WORLD.get().contains(WorldID)) return;
 
-        ParticlePool thisParticlePool = ParticlePool.getFromWorldID(WorldID);
+        AstronomicalPool thisAstronomicalPool = AstronomicalPool.getFromWorldID(WorldID);
 
-        JsonObject jsonObject = thisParticlePool.toJsonObject();
+        JsonObject jsonObject = thisAstronomicalPool.toJsonObject();
         if (jsonObject.size() == 0) { return; }
 
         String WorldFile = FMLPaths.GAMEDIR.get().toString() + server.getWorldPath(LevelResource.ROOT);
@@ -91,10 +94,9 @@ public class ParticleWorld {
     public static void CreateNewGravitationWorld(Level World) {
         String WorldId = World.dimension().location().toString();
 
-        for (ParticlePool oneWorld : ParticleWorld.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
+        for (AstronomicalPool oneWorld : ServerStart.Gravitation_Core_World_Bus) { if (oneWorld.WorldId.equals(WorldId)) { return; } } //如果已经有了取消
 
-        ParticlePool newWorld = new ParticlePool();
-        newWorld.WorldId = WorldId;
+        AstronomicalPool newWorld = new AstronomicalPool(World);
 
         ListTag listtag = StarAPI.getAllStarData(World);
 
@@ -103,14 +105,20 @@ public class ParticleWorld {
             String StarName = compoundTag.getString("object_name");
 
             JsonObject StarJsonObject = ReadDataPack.StarStateData.getAsJsonObject(WorldId).getAsJsonObject("planet_data").deepCopy();
-            if (!StarJsonObject.has(StarName)) { continue; }
-            Particle particle = new Particle(i, "CosmosStar-" + StarName, StarJsonObject.getAsJsonObject(StarName).get("particle_state").getAsString(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsBigDecimal(), StarJsonObject.getAsJsonObject(StarName).get("x").getAsDouble(), StarJsonObject.getAsJsonObject(StarName).get("y").getAsDouble(), StarJsonObject.getAsJsonObject(StarName).get("z").getAsDouble());
-            particle.x_speed = StarJsonObject.getAsJsonObject(StarName).get("x_start_speed").getAsDouble();
-            particle.y_speed = StarJsonObject.getAsJsonObject(StarName).get("y_start_speed").getAsDouble();
-            particle.z_speed = StarJsonObject.getAsJsonObject(StarName).get("z_start_speed").getAsDouble();
-            newWorld.addParticle(particle);
+            if (!StarJsonObject.has(StarName)) continue;
+            List<JsonElement> pos = StarJsonObject.getAsJsonObject(StarName).get("pos").getAsJsonArray().asList();
+            if (pos.size() != 3) continue;
+            String type = "cosmos:planet";
+            if (compoundTag.contains("core_color")) type = "cosmos:star";
+            Astronomical astronomical = new Astronomical(i, "CosmosStar-" + StarName, type, StarJsonObject.getAsJsonObject(StarName).get("astronomical_compute").getAsBoolean(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsDouble(), pos.get(0).getAsDouble(), pos.get(1).getAsDouble(), pos.get(2).getAsDouble());
+            List<JsonElement> speed = StarJsonObject.getAsJsonObject(StarName).get("speed").getAsJsonArray().asList();
+            if (speed.size() != 3) continue;
+            astronomical.x_speed = speed.get(0).getAsDouble();
+            astronomical.y_speed = speed.get(1).getAsDouble();
+            astronomical.z_speed = speed.get(2).getAsDouble();
+            newWorld.addAstronomical(astronomical);
         }
-        ParticleWorld.Gravitation_Core_World_Bus.add(newWorld); //新建引力世界用于处理
+        ServerStart.Gravitation_Core_World_Bus.add(newWorld); //新建引力世界用于处理
     }
 
     public static boolean HasData(net.minecraftforge.event.level.LevelEvent.Load event, String WorldID) {
@@ -141,8 +149,8 @@ public class ParticleWorld {
             bufferedReader.close();
             JsonObject json = new com.google.gson.Gson().fromJson(jsonstringbuilder.toString(), com.google.gson.JsonObject.class);
 
-            ParticlePool particlePool = ParticlePool.getFromJsonObject(json);
-            if (particlePool != null) { ParticleWorld.Gravitation_Core_World_Bus.add(particlePool); }
+            AstronomicalPool astronomicalPool = AstronomicalPool.getFromJsonObject(json);
+            if (astronomicalPool != null) { ServerStart.Gravitation_Core_World_Bus.add(astronomicalPool); }
         } catch (IOException e) {
             e.printStackTrace();
         }

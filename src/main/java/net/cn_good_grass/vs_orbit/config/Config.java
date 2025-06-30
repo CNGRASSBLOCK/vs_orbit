@@ -36,7 +36,7 @@ public class Config {
         MAIN.push("ValkyrienSkies");
         ValkyrienSkies_ENABLE = MAIN.comment("是否启用对瓦尔基里的运算。\nWhether or not compatibility with Valkyrie is enabled.").define("enable", true);
         ValkyrienSkies_ACCELERATION_SCALING = MAIN.comment("物理体的加速度缩放。\nAcceleration scaling of a physical body.").define("acceleration_scaling", 7200.0);
-        ValkyrienSkies_MOVEMENT_MODE = MAIN.comment("质点对瓦尔基里物理体的模式，可选: \"PARTICLE_FOLLOW_VS\" 或 \"VS_FOLLOW_PARTICLE\"。\nParticle vs. Valkyrie Physics mode, optional: \"PARTICLE_FOLLOW_VS\" or \"VS_FOLLOW_PARTICLE\".\n\"PARTICLE_FOLLOW_VS\"代表质点跟随物理体 \"VS_FOLLOW_PARTICLE\"代表物理体跟随质点。\n\"PARTICLE_FOLLOW_VS\" means that the particle follows the physical body, and \"VS_FOLLOW_PARTICLE\" means that the physical body follows the physical body.\n输入无效的值将按\"PARTICLE_FOLLOW_VS\"计算。\nInvalid values entered will be calculated as \"PARTICLE_FOLLOW_VS\".").define("movement_mode", "PARTICLE_FOLLOW_VS");
+        ValkyrienSkies_MOVEMENT_MODE = MAIN.comment("质点对瓦尔基里物理体的模式，可选: \"PARTICLE_FOLLOW_VS\" 或 \"VS_FOLLOW_PARTICLE\"。\nAstronomical vs. Valkyrie Physics mode, optional: \"PARTICLE_FOLLOW_VS\" or \"VS_FOLLOW_PARTICLE\".\n\"PARTICLE_FOLLOW_VS\"代表质点跟随物理体 \"VS_FOLLOW_PARTICLE\"代表物理体跟随质点。\n\"PARTICLE_FOLLOW_VS\" means that the astronomical follows the physical body, and \"VS_FOLLOW_PARTICLE\" means that the physical body follows the physical body.\n输入无效的值将按\"PARTICLE_FOLLOW_VS\"计算。\nInvalid values entered will be calculated as \"PARTICLE_FOLLOW_VS\".").define("movement_mode", "PARTICLE_FOLLOW_VS");
         MAIN.pop();
 
         MAIN.push("ExperimentalFeatures");

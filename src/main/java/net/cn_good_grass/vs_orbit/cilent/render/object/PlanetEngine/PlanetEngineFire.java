@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.render.PlanetEngine;
+package net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine;
 
 import net.minecraft.core.BlockPos;
 

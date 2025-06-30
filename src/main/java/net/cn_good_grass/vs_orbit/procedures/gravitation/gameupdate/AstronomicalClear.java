@@ -1,8 +1,8 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-public class ParticleClear {
+public class AstronomicalClear {
     @SubscribeEvent
     public static void onWorldTick(TickEvent.ServerTickEvent event) { //质点打扫
         if (!(event.phase == TickEvent.Phase.START)) return;
@@ -26,19 +26,19 @@ public class ParticleClear {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) return;
 
-            ClearParticleForVSShip(level, ParticlePool.getFromWorldID(WorldIDs));
+            ClearAstronomicalForVSShip(level, AstronomicalPool.getFromWorldID(WorldIDs));
         }
     }
 
-    public static void ClearParticleForVSShip(ServerLevel level, ParticlePool particlePool) {
+    public static void ClearAstronomicalForVSShip(ServerLevel level, AstronomicalPool astronomicalPool) {
         List<Long> shipIds = new ArrayList<>();
-        for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + particlePool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
+        for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + astronomicalPool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
 
-        for (Particle particle : particlePool.getAllParticle()) {
-            if (!particle.name.contains("VSShip-")) continue;
+        for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) {
+            if (!astronomical.type.equals("valkyrienskies:ship")) continue;
 
-            long ShipId = Long.valueOf(particle.name.substring(7));
-            if (!shipIds.contains(ShipId)) particlePool.removeParticle(particle.id);
+            long ShipId = Long.valueOf(astronomical.name.substring(7));
+            if (!shipIds.contains(ShipId)) astronomicalPool.removeAstronomical(astronomical.id);
         }
     }
 }

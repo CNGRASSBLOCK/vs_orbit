@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.cilent.entity.ThrusterCore;
+package net.cn_good_grass.vs_orbit.cilent.render.entity.ThrusterCore;
 
 import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.minecraft.resources.ResourceLocation;

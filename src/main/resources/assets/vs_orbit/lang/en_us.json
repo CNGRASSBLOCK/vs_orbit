@@ -3,6 +3,8 @@
   "block.vs_orbit.mass_generator": "Mass Generator",
   "block.vs_orbit.electromagnetic_tractor": "Electromagnetic Tractor",
 
+  "itemGroup.vs_orbit.main_tab": "VS Orbit",
+
 
 
   "gui.vs_orbit.jump_engine_controller_gui.title": "Jump Engine",
@@ -35,14 +37,26 @@
 
 
   "gui.vs_orbit.mass_generator_gui.title": "Mass Generator",
+  "gui.vs_orbit.mass_generator_gui.mass": "Mass :",
+  "gui.vs_orbit.mass_generator_gui.info.pos": "Pos:",
+
+  "gui.vs_orbit.mass_generator_gui.editbox.mass": "kilogram",
 
 
 
-  "message.vs_orbit.core.pause": "§aSetup was successful",
+  "message.vs_orbit.core.info.state" : "============[VS Orbit][Core]============",
+  "message.vs_orbit.core.info.target_tick" : "Target tick:",
+  "message.vs_orbit.core.info.actual_tick" : "Actual tick:",
+  "message.vs_orbit.core.info.size" : "Simulations size:",
+  "message.vs_orbit.core.info.world_size" : "Simulations size of this world:",
+  "message.vs_orbit.core.info.end" : "======================================",
+  "message.vs_orbit.core.state": "§aSetup was successful:",
+  "message.vs_orbit.core.state.run": "§arun",
+  "message.vs_orbit.core.state.pause": "§cpause",
   "message.vs_orbit.core.empty_name": "§c质点名为空！",
-  "message.vs_orbit.core.no_particle": "§c质点不存在！",
+  "message.vs_orbit.core.no_astronomical_object": "§c质点不存在！",
   "message.vs_orbit.core.speed_set": "§aSetup was successful",
-  "message.vs_orbit.core.particle_tp": "§a传送成功！",
-  "message.vs_orbit.core.particle_setspeed": "§aSetup was successful！",
-  "message.vs_orbit.core.particle_addforce": "§aAdd was successful！"
+  "message.vs_orbit.core.astronomical_object_tp": "§a传送成功！",
+  "message.vs_orbit.core.astronomical_object_setspeed": "§aSetup was successful！",
+  "message.vs_orbit.core.astronomical_object_addforce": "§aAdd was successful！"
 }

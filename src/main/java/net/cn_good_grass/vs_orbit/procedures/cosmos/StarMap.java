@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Particle;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.ParticlePool;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.world.level.Level;
 import org.joml.Vector2d;
 
@@ -22,8 +22,8 @@ public class StarMap {
 
     public ArrayList<StarMapData> getStarMap(Level world) {
         List<Vector2d> StarList = new ArrayList<>();
-        ParticlePool particlePool = ParticlePool.getFromWorldID(world.dimension().location().toString());
-        for(Particle particle : particlePool.getAllParticle()) if (particle.name.contains("CosmosStar-")) StarList.add(new Vector2d(particle.x, particle.z));
+        AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(world.dimension().location().toString());
+        for(Astronomical astronomical : astronomicalPool.getAllAstronomical()) if (astronomical.type.equals("cosmos:star") || astronomical.type.equals("cosmos:planet")) StarList.add(new Vector2d(astronomical.x, astronomical.z));
 
         double[] circle = calculateMinimumBoundingCircle(StarList);
 
