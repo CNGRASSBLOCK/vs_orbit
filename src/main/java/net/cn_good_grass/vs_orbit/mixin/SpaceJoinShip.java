@@ -25,21 +25,11 @@ public class SpaceJoinShip {
         ListTag listtag = (ListTag) collision_data_map;
         String WorldId = level.dimension().location().toString();
         CompoundTag obj = null;
-        for (Tag tag : listtag) {
-            if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) {
-                if (compoundTag.getString("travel_to").equals(WorldId)) { obj = compoundTag; }
-            }
-        }
-        if (obj == null) { return atmospheric_data.getDouble(key);}
+        for (Tag tag : listtag) if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) if (compoundTag.getString("travel_to").equals(WorldId)) obj = compoundTag;
+        if (obj == null) return atmospheric_data.getDouble(key);
         Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), 1, obj, true);
 
-        if (key.contains("x")) {
-            return newPos.x;
-        } else if (key.contains("y")) {
-            return newPos.y + (obj.getDouble("scale") / 2);
-        } else if (key.contains("z")) {
-            return newPos.z;
-        }
+        if (key.contains("x")) return newPos.x; else if (key.contains("y")) return newPos.y + (obj.getDouble("scale") / 2); else if (key.contains("z")) return newPos.z;
 
         return atmospheric_data.getDouble(key);
     }

@@ -1,11 +1,14 @@
 package net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate;
 
+import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
 
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.AstronomicalThread;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -61,14 +64,18 @@ public class ShipTick {
 
                     if (!(ship instanceof ServerShip serverShip)) return;
                     double mass = serverShip.getInertiaData().getMass();
-                    for (String key : astronomical.Tag.getCompound("add_mass").getAllKeys()) mass += astronomical.Tag.getCompound("add_mass").getLong(key);
+                    CompoundTag addMass = astronomical.Tag.getCompound("vs_orbit:add_mass");
+                    for (String key : addMass.getAllKeys()) {
+                        if (!level.getBlockState(BlockPos.of(Long.parseLong(key))).getBlock().equals(VSOrbitModBlocks.mass_generator.get())) addMass.remove(key);
+                        mass += addMass.getDouble(key);
+                    }
                     astronomical.mass = mass;
                 }
-                Vector3d ShipGravitation = new Vector3d(Gravitation.x * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.y * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()), Gravitation.z * Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
+                Gravitation.div(astronomical.mass).mul(Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
                 LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
                 if (loadedServerShip == null) { continue; }
                 GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
-                if (applier != null) applier.applyInvariantForce(ShipGravitation); //施加力
+                if (applier != null) applier.applyInvariantForce(Gravitation); //施加力
             }
         }
     }

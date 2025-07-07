@@ -30,7 +30,7 @@ public class StarTick {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) return;
 
-            ListTag StarData = StarAPI.getAllStarData(level);
+            ListTag StarData = StarAPI.getAllStarData(level, false);
 
             for (Tag thisTag : StarData) {
                 CompoundTag thisData = (CompoundTag) thisTag;

@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"RGI",
+		"RCC",
+		"PPP"
+	],
+	"key": {
+		"I": {
+			"tag": "forge:ingots/iron"
+		},
+		"G": {
+			"tag": "forge:ingots/gold"
+		},
+		"C": {
+			"tag": "forge:ingots/copper"
+		},
+		"R": {
+			"item": "minecraft:comparator"
+		},
+		"P": {
+			"tag": "forge:glass_panes"
+		}
+	},
+	"result": {
+		"item": "vs_orbit:control_circuit_board",
+		"count": 1
+	}
+}

@@ -134,11 +134,11 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			if (mode == 0) {
 				JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
 				if (blockEntity == null) return;
-				try { blockEntity.setting.putDouble("force", Double.valueOf(((EditBox) guistate.get("vs_orbit:power_force")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_x", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_x")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_y", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_y")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_z", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_z")).getValue())); } catch (NumberFormatException e) {}
-				try { blockEntity.setting.putDouble("pos_world", Double.valueOf(((EditBox) guistate.get("vs_orbit:pos_world")).getValue())); } catch (NumberFormatException e) {}
+				try { blockEntity.setting.putDouble("force", Double.parseDouble(((EditBox) guistate.get("vs_orbit:power_force")).getValue())); } catch (NumberFormatException ignored) {}
+				try { blockEntity.setting.putDouble("pos_x", Double.parseDouble(((EditBox) guistate.get("vs_orbit:pos_x")).getValue())); } catch (NumberFormatException ignored) {}
+				try { blockEntity.setting.putDouble("pos_y", Double.parseDouble(((EditBox) guistate.get("vs_orbit:pos_y")).getValue())); } catch (NumberFormatException ignored) {}
+				try { blockEntity.setting.putDouble("pos_z", Double.parseDouble(((EditBox) guistate.get("vs_orbit:pos_z")).getValue())); } catch (NumberFormatException ignored) {}
+				try { blockEntity.setting.putDouble("pos_world", Double.parseDouble(((EditBox) guistate.get("vs_orbit:pos_world")).getValue())); } catch (NumberFormatException ignored) {}
 			}
 		}
 

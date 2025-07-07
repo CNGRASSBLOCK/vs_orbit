@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -15,6 +16,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.HashMap;
 
@@ -65,10 +69,13 @@ public class MassGeneratorGUIScreen extends AbstractContainerScreen<MassGenerato
 		//质量
 		guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.mass_generator_gui.mass"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, true);
 		//信息
-		guiGraphics.pose().pushPose();
-		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
-		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.mass_generator_gui.info.pos").getString() + " §5X:" + x + " Y:" + y + " Z:" + z), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
-		guiGraphics.pose().popPose();
+		Ship ship = VSGameUtilsKt.getShipManagingPos(world, new BlockPos(x, y, z));
+		if (ship instanceof ServerShip serverShip) {
+			guiGraphics.pose().pushPose();
+			guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
+			guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.mass_generator_gui.info.all_mass").getString() + " §5" + (serverShip.getInertiaData().getMass() + massGeneratorBlockEntity.mass)), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
+			guiGraphics.pose().popPose();
+		}
 	}
 
 	@Override
@@ -119,7 +126,7 @@ public class MassGeneratorGUIScreen extends AbstractContainerScreen<MassGenerato
 			}
 		};
 		mass.setSuggestion(Component.translatable("gui.vs_orbit.mass_generator_gui.editbox.mass").getString());
-		if (massGeneratorBlockEntity != null) mass.setValue(massGeneratorBlockEntity.mass.toString());
+		if (massGeneratorBlockEntity != null) mass.setValue(String.valueOf(massGeneratorBlockEntity.mass));
 		mass.setMaxLength(16);
 		guistate.put("vs_orbit:mass", mass);
 		this.addWidget(this.mass);

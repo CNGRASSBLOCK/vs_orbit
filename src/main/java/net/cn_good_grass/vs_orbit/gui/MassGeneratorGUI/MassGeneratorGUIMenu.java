@@ -135,7 +135,7 @@ public class MassGeneratorGUIMenu extends AbstractContainerMenu implements Suppl
 			if (mode == 0) {
 				MassGeneratorBlockEntity blockEntity = (MassGeneratorBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
 				if (blockEntity == null) return;
-				try { blockEntity.mass = new BigDecimal(((EditBox) guistate.get("vs_orbit:mass")).getValue()); } catch (NumberFormatException ignored) {}
+				try { blockEntity.mass = Double.parseDouble(((EditBox) guistate.get("vs_orbit:mass")).getValue()); } catch (NumberFormatException ignored) {}
 			}
 		}
 

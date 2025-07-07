@@ -52,3 +52,12 @@ mandatory = true
 versionRange = "[4.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+
+
+[[dependencies.${mod_id}]]
+modId = "computercraft"
+mandatory = false
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"

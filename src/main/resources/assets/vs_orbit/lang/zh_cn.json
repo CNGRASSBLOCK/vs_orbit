@@ -1,9 +1,12 @@
 {
+  "itemGroup.vs_orbit.main_tab": "瓦尔基里:轨道学",
+
   "block.vs_orbit.jump_engine_controller": "跃迁引擎控制器",
   "block.vs_orbit.mass_generator": "质量发生器",
   "block.vs_orbit.electromagnetic_tractor": "电磁牵引器",
 
-  "itemGroup.vs_orbit.main_tab": "瓦尔基里:轨道学",
+  "item.vs_orbit.gravitational_core": "引力核心",
+  "item.vs_orbit.control_circuit_board": "控制电路板",
 
 
 
@@ -38,7 +41,7 @@
 
   "gui.vs_orbit.mass_generator_gui.title": "质量发生器",
   "gui.vs_orbit.mass_generator_gui.mass": "质量 :",
-  "gui.vs_orbit.mass_generator_gui.info.pos": "坐标:",
+  "gui.vs_orbit.mass_generator_gui.info.all_mass": "总质量 :",
 
   "gui.vs_orbit.mass_generator_gui.editbox.mass": "千克",
 

@@ -14,7 +14,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerStart.Gravitation_Core_World_Bus;
+import static net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerAction.Astronomical_Core_World_Bus;
 
 @Mod.EventBusSubscriber
 public class SyncDataTick {
@@ -28,7 +28,7 @@ public class SyncDataTick {
 
         if (player instanceof ServerPlayer serverPlayer) {
             //引力数据
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Gravitation_Core_World_Bus, System.currentTimeMillis()));
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
 
             //行星发动机火焰数据
             StringBuilder planetfirelist = new StringBuilder();

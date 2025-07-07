@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerStart;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerAction;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.gameupdate.AstronomicalGravitation;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3d;
@@ -15,9 +15,7 @@ public class AstronomicalPool {
     public final String WorldId;
     private final List<Astronomical> astronomicalPool = new ArrayList<>();
 
-    public AstronomicalPool(Level world) {
-        this.WorldId = world.dimension().location().toString();
-    }
+    public AstronomicalPool(Level world) { this.WorldId = world.dimension().location().toString(); }
 
     public AstronomicalPool(String worldId) {
         this.WorldId = worldId;
@@ -25,7 +23,7 @@ public class AstronomicalPool {
 
     public static AstronomicalPool getFromWorldID(String worldID) {
         AstronomicalPool thisAstronomicalPool = new AstronomicalPool(worldID);
-        for (AstronomicalPool astronomicalPool : ServerStart.Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) {
+        for (AstronomicalPool astronomicalPool : ServerAction.Astronomical_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) {
                 thisAstronomicalPool = astronomicalPool;
                 break;
         }

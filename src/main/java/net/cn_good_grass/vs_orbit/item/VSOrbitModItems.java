@@ -1,6 +1,8 @@
 package net.cn_good_grass.vs_orbit.item;
 
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
+import net.cn_good_grass.vs_orbit.item.items.ControlCircuitCoardItem;
+import net.cn_good_grass.vs_orbit.item.items.GravitationalCoreItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,6 +16,9 @@ public class VSOrbitModItems {
     public static final RegistryObject<Item> electromagnetic_tractor_item = ITEMS.register("electromagnetic_tractor", () -> new BlockItem(VSOrbitModBlocks.electromagnetic_tractor.get(), new Item.Properties()));
     public static final RegistryObject<Item> jump_engine_controller_item = ITEMS.register("jump_engine_controller", () -> new BlockItem(VSOrbitModBlocks.jump_engine_controller.get(), new Item.Properties()));
     public static final RegistryObject<Item> mass_generator = ITEMS.register("mass_generator", () -> new BlockItem(VSOrbitModBlocks.mass_generator.get(), new Item.Properties()));
+    //注册物品
+    public static final RegistryObject<Item> gravitational_core = ITEMS.register("gravitational_core", () -> new GravitationalCoreItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> control_circuit_board = ITEMS.register("control_circuit_board", () -> new ControlCircuitCoardItem(new Item.Properties().stacksTo(64)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

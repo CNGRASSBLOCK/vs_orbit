@@ -3,7 +3,6 @@ package net.cn_good_grass.vs_orbit.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.jcm.vsch.util.VSCHUtils;
-import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -42,8 +41,9 @@ public class ShipStarCollision {
 
     @Redirect(method = "getNearestPlanet", at = @At(value = "INVOKE", target = "Lnet/lointain/cosmos/procedures/DistanceOrderProviderProcedure;execute(Lnet/minecraft/nbt/CompoundTag;DLjava/lang/String;Lnet/minecraft/world/phys/Vec3;)Ljava/util/List;"), remap = false)
     private static List<Object> execute(CompoundTag map, double order, String dimension, Vec3 position, @Local(argsOnly = true) LevelAccessor world, @Local Vec3 Lposition, @Local String dimensionId) {
-        ListTag newtag = StarAPI.getAllStarData((Level) world);
-        for (Tag tag : newtag) {
+        ListTag listtag = StarAPI.getAllStarData((Level) world, false);
+        ListTag newtag = new ListTag();
+        for (Tag tag : listtag) {
             Vec3 pos = StarAPI.getPos(dimension, 1, (CompoundTag) tag, true);
             newtag.add(newtag.size(), StringTag.valueOf("`" + pos.x + "~" + pos.y + "|" + pos.z + "\\"));
         }

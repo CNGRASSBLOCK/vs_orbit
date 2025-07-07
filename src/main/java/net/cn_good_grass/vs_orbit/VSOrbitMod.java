@@ -3,12 +3,14 @@ package net.cn_good_grass.vs_orbit;
 import com.mojang.logging.LogUtils;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
+import net.cn_good_grass.vs_orbit.cilent.player.CameraController;
+import net.cn_good_grass.vs_orbit.cilent.player.PlayerController;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerStart;
+import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,8 +50,9 @@ public class VSOrbitMod
         VSOrbitModEntities.REGISTRY.register(eventBus);
         VSOrbitModMenus.REGISTRY.register(eventBus);
         //注册事件
-        MinecraftForge.EVENT_BUS.register(new ServerStart()); //模拟线程启动
-        //MinecraftForge.EVENT_BUS.register(new OnPlayerTick());
+        MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
+        MinecraftForge.EVENT_BUS.register(new PlayerController());
+        MinecraftForge.EVENT_BUS.register(new CameraController());
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
