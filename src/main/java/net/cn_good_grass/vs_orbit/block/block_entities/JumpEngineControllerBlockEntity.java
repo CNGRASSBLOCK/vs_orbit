@@ -1,12 +1,22 @@
 package net.cn_good_grass.vs_orbit.block.block_entities;
 
+import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
+import net.cn_good_grass.vs_orbit.block.block_peripheral.JumpEngineControllerPeripheral;
+import net.cn_good_grass.vs_orbit.block.block_peripheral.MassGeneratorPeripheral;
+import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
+import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock.Mode;
+import net.cn_good_grass.vs_orbit.other.CompatMods;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +26,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     public JumpEngineControllerBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.jump_engine_controller_block_entity.get(), pos, state); }
 
     public String state = "none";
-    public String mode = "power";
+    public Mode mode = Mode.POWER;
     public SettingCompoundTag setting = new SettingCompoundTag();
     public Integer red_stone_power = 0;
     public boolean red_stone_power_do = false;
@@ -32,7 +42,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putString("state", this.state); // 保存到NBT
-        tag.putString("mode", this.mode);
+        tag.putString("mode", this.mode.toString());
         tag.put("setting", setting);
         tag.putInt("red_stone_power", this.red_stone_power);
         tag.putBoolean("red_stone_power_do", this.red_stone_power_do);
@@ -47,7 +57,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("state")) this.state = tag.getString("state"); // 从NBT读取
-        if (tag.contains("mode")) this.mode = tag.getString("mode");
+        if (tag.contains("mode")) this.mode = Mode.valueOf(tag.getString("mode"));
         if (tag.contains("setting")) this.setting.merge((CompoundTag) tag.get("setting"));
         if (tag.contains("red_stone_power")) this.red_stone_power = tag.getInt("red_stone_power");
         if (tag.contains("red_stone_power_do")) this.red_stone_power_do = tag.getBoolean("red_stone_power_do");
@@ -75,6 +85,15 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
         return tag;
     }
 
+    public void sendToClient() {
+        this.setChanged();
+        if (this.level != null && !this.level.isClientSide) {
+            BlockPos pos = this.getBlockPos();
+            BlockState state = this.getBlockState();
+            this.level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+        }
+    }
+
     public class SettingCompoundTag extends CompoundTag {
         public SettingCompoundTag() {
             super(); // 调用父类构造
@@ -85,5 +104,14 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("pos_z", 0);
             this.putString("pos_world", "minecraft:overworld");
         }
+    }
+
+
+
+    private final LazyOptional<Object> peripheralCap = LazyOptional.of(() -> new JumpEngineControllerPeripheral(this));
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if(CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast();
+        return super.getCapability(cap, side);
     }
 }

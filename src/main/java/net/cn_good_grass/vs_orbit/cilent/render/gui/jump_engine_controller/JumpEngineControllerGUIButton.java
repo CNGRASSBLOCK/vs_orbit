@@ -2,6 +2,7 @@ package net.cn_good_grass.vs_orbit.cilent.render.gui.jump_engine_controller;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
+import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +23,7 @@ public class JumpEngineControllerGUIButton {
     public static void ButtonToggleMode(Player player, BlockPos blockPos) {
         JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) player.level().getBlockEntity(blockPos);
         if (blockEntity == null) return;
-        if (blockEntity.mode.equals("power")) blockEntity.mode = "jump"; else if (blockEntity.mode.equals("jump")) blockEntity.mode = "power";
+        if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) blockEntity.mode = JumpEngineControllerBlock.Mode.JUMP; else if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) blockEntity.mode = JumpEngineControllerBlock.Mode.POWER;
     }
 
     private final int buttonID, x, y, z;

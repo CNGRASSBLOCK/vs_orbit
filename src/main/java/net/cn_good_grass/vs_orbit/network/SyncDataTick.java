@@ -1,6 +1,7 @@
 package net.cn_good_grass.vs_orbit.network;
 
 import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngineFire;
+import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.network.packet.SyncAstronomicalPoolPacket;
 import net.cn_good_grass.vs_orbit.network.packet.SyncPlanetEngineDataPacket;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
@@ -28,7 +29,7 @@ public class SyncDataTick {
 
         if (player instanceof ServerPlayer serverPlayer) {
             //引力数据
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
+            if (Config.Gravitation_WORK_WORLD.get().contains(player.level().dimension().location().toString())) NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
 
             //行星发动机火焰数据
             StringBuilder planetfirelist = new StringBuilder();

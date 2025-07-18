@@ -42,6 +42,7 @@ public class ShipStarCollision {
     @Redirect(method = "getNearestPlanet", at = @At(value = "INVOKE", target = "Lnet/lointain/cosmos/procedures/DistanceOrderProviderProcedure;execute(Lnet/minecraft/nbt/CompoundTag;DLjava/lang/String;Lnet/minecraft/world/phys/Vec3;)Ljava/util/List;"), remap = false)
     private static List<Object> execute(CompoundTag map, double order, String dimension, Vec3 position, @Local(argsOnly = true) LevelAccessor world, @Local Vec3 Lposition, @Local String dimensionId) {
         ListTag listtag = StarAPI.getAllStarData((Level) world, false);
+        if (listtag == null) return new ArrayList<>();
         ListTag newtag = new ListTag();
         for (Tag tag : listtag) {
             Vec3 pos = StarAPI.getPos(dimension, 1, (CompoundTag) tag, true);

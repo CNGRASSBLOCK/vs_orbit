@@ -6,12 +6,15 @@ import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.Astronom
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
 
 import net.cn_good_grass.vs_orbit.procedures.gravitation.core.AstronomicalThread;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.common.VSOrbitForceInducedShips;
+import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +22,9 @@ import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.impl.config.VSCoreConfig;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
+import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.GameTickForceApplier;
 
 import java.math.BigDecimal;
@@ -37,6 +42,7 @@ public class ShipTick {
             String WorldID = level.dimension().location().toString();
 
             AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldID);
+            if (astronomicalPool == null) return;
 
             for (Ship ship : VSGameUtilsKt.getAllShips(level)) { //遍历世界中的船只
                 if (!("minecraft:dimension:" + WorldID).equals(ship.getChunkClaimDimension())) { return; }
@@ -53,7 +59,9 @@ public class ShipTick {
 
                     Astronomical newastronomical = new Astronomical(astronomicalPool.size(), "VSShip-" + shipId, "valkyrienskies:ship", true, mass, ship.getTransform().getPositionInWorld().x(), ship.getTransform().getPositionInWorld().y(), ship.getTransform().getPositionInWorld().z());
 
-                    AstronomicalPool.getFromWorldID(WorldID).addAstronomical(newastronomical);
+                    AstronomicalPool astronomicalPool1 = AstronomicalPool.getFromWorldID(WorldID);
+                    if (astronomicalPool1 == null) return;
+                    astronomicalPool1.addAstronomical(newastronomical);
                     continue;
                 } else {
                     Gravitation = astronomical.getAllForce().toVector3d();
@@ -71,11 +79,10 @@ public class ShipTick {
                     }
                     astronomical.mass = mass;
                 }
-                Gravitation.div(astronomical.mass).mul(Config.ValkyrienSkies_ACCELERATION_SCALING.get() * 3 * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
-                LoadedServerShip loadedServerShip = VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips().getById(shipId);
-                if (loadedServerShip == null) { continue; }
-                GameTickForceApplier applier = loadedServerShip.getAttachment(GameTickForceApplier.class);
-                if (applier != null) applier.applyInvariantForce(Gravitation); //施加力
+                Gravitation.div(astronomical.mass).mul(Config.ValkyrienSkies_ACCELERATION_SCALING.get() * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
+                VSOrbitForceInducedShips vsOrbitForceInducedShips = VSOrbitForceInducedShips.getOrCreate((ServerShip) ship);
+                Vector3d pos = (Vector3d) ship.getTransform().getPositionInShip();
+                vsOrbitForceInducedShips.addForce(BlockPos.containing(pos.x, pos.y, pos.z), Gravitation);
             }
         }
     }

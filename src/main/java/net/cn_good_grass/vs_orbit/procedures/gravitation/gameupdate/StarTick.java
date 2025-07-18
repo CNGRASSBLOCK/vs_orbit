@@ -31,6 +31,7 @@ public class StarTick {
             if (level == null) return;
 
             ListTag StarData = StarAPI.getAllStarData(level, false);
+            if (StarData == null) return;
 
             for (Tag thisTag : StarData) {
                 CompoundTag thisData = (CompoundTag) thisTag;
@@ -48,6 +49,7 @@ public class StarTick {
                         if (create) return;
 
                         AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(level.dimension().location().toString());
+                        if (astronomicalPool == null) return;
                         Astronomical thisPlanet = astronomicalPool.getAstronomical("CosmosStar-" + thisData.getString("object_name"));
                         Astronomical otherPlanet = astronomicalPool.getAstronomical("CosmosStar-" + otherData.getString("object_name"));
 

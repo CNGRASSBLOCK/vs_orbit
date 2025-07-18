@@ -21,13 +21,9 @@ public class AstronomicalPool {
         this.WorldId = worldId;
     }
 
-    public static AstronomicalPool getFromWorldID(String worldID) {
-        AstronomicalPool thisAstronomicalPool = new AstronomicalPool(worldID);
-        for (AstronomicalPool astronomicalPool : ServerAction.Astronomical_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) {
-                thisAstronomicalPool = astronomicalPool;
-                break;
-        }
-        return thisAstronomicalPool;
+    @Nullable public static AstronomicalPool getFromWorldID(String worldID) {
+        for (AstronomicalPool astronomicalPool : ServerAction.Astronomical_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) return astronomicalPool;
+        return null;
     }
 
     public JsonObject toJsonObject() {

@@ -3,6 +3,7 @@ package net.cn_good_grass.vs_orbit.cilent.render.gui.jump_engine_controller;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
+import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -46,11 +47,11 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		this.renderBackground(guiGraphics);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 		if (blockEntity instanceof JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity) {
-			if (jumpEngineControllerBlockEntity.mode.equals("power")) power_force.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_x.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_y.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_z.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals("jump")) pos_world.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) power_force.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_x.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_y.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_z.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_world.render(guiGraphics, mouseX, mouseY, partialTicks);
 		}
 		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}
@@ -75,20 +76,20 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.jump_engine_controller_gui.state").getString() + " " + Component.translatable("gui.vs_orbit.jump_engine_controller_gui.state." + jumpEngineControllerBlockEntity.state).getString()), this.leftPos + 138, this.topPos + 8, 0xFFFFFFFF, false);
 		//模式
 		guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode").getString() + " " + Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode." + jumpEngineControllerBlockEntity.mode).getString()), this.leftPos + 138, this.topPos + 18, 0xFFFFFFFF, false);
-		if (jumpEngineControllerBlockEntity.mode.equals("power") || jumpEngineControllerBlockEntity.mode.equals("jump")) {
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
 			guiGraphics.pose().pushPose();
 			guiGraphics.pose().translate(0, 0, 1);
 			guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode"), this.leftPos + this.imageWidth - 41 + Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode").getString().length() * 2, this.topPos + 18, 0xFFFFFFFF, false);
 			guiGraphics.pose().popPose();
 		}
 		//力
-		if (jumpEngineControllerBlockEntity.mode.equals("power")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.power.force"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.power.force"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, false);
 		//坐标
-		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.pos"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, false);
-		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.x"), this.leftPos + 9, this.topPos + 48, 0xFFFFFFFF, false);
-		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.y"), this.leftPos + 9, this.topPos + 60, 0xFFFFFFFF, false);
-		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.z"), this.leftPos + 9, this.topPos + 72, 0xFFFFFFFF, false);
-		if (jumpEngineControllerBlockEntity.mode.equals("jump")) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.world"), this.leftPos + 9, this.topPos + 84, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.pos"), this.leftPos + 9, this.topPos + 36, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.x"), this.leftPos + 9, this.topPos + 48, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.y"), this.leftPos + 9, this.topPos + 60, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.z"), this.leftPos + 9, this.topPos + 72, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.world"), this.leftPos + 9, this.topPos + 84, 0xFFFFFFFF, false);
 		//信息
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
@@ -98,7 +99,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().translate(0, 0, 1);
 		DrawGuiGraphics drawGuiGraphics = new DrawGuiGraphics(guiGraphics);
-		if (jumpEngineControllerBlockEntity.mode.equals("power")) {
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) {
 			{
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 87, this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 77, 7.5, 5, 0xFF00FFFF);
 				drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 74, this.topPos + this.imageHeight - 87, this.leftPos + this.imageWidth - 64, this.topPos + this.imageHeight - 87, 7.5, 5, 0xFF00FFFF);
@@ -114,7 +115,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 
 				//drawGuiGraphics.drawLine(this.leftPos + this.imageWidth - 69, this.topPos + this.imageHeight - 82, this.leftPos + this.imageWidth - 69, this.topPos + this.imageHeight - 82, 10, 5, 0xFF00FFFF);
 			}
-		} else if (jumpEngineControllerBlockEntity.mode.equals("jump")) {
+		} else if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
 
 		}
 		guiGraphics.pose().popPose();
@@ -182,12 +183,12 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (blockEntity instanceof JumpEngineControllerBlockEntity) jumpEngineControllerBlockEntity = (JumpEngineControllerBlockEntity) blockEntity; else jumpEngineControllerBlockEntity = null;
         super.init();
 		button_toggle_mode = new ImageButton(this.leftPos + this.imageWidth - 42, this.topPos + 16, 35, 13, 0, 0, 13, new ResourceLocation("vs_orbit:textures/screens/jump_engine_controller_gui/button.png"), 35, 26, e -> {
-			if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals("power") || jumpEngineControllerBlockEntity.mode.equals("jump")) {
+			if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
 				VSOrbitMod.PACKET_HANDLER.sendToServer(new JumpEngineControllerGUIButton(0, x, y, z, textstate));
 				JumpEngineControllerGUIButton.handleButtonAction(entity, 0, x, y, z, textstate);
 			}
-		}) { @Override public void render(GuiGraphics guiGraphics, int gx, int gy, float ticks) { if (jumpEngineControllerBlockEntity.mode.equals("power") || jumpEngineControllerBlockEntity.mode.equals("jump")) super.render(guiGraphics, gx, gy, ticks); } };
-		if (jumpEngineControllerBlockEntity.mode.equals("planet_engine")) guistate.put("button:button_toggle_mode", button_toggle_mode); this.addRenderableWidget(button_toggle_mode);
+		}) { @Override public void render(GuiGraphics guiGraphics, int gx, int gy, float ticks) { if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) super.render(guiGraphics, gx, gy, ticks); } };
+		if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) guistate.put("button:button_toggle_mode", button_toggle_mode); this.addRenderableWidget(button_toggle_mode);
 
 
 

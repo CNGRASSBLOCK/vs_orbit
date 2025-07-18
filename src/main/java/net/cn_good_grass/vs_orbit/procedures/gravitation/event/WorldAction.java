@@ -8,7 +8,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import java.nio.file.Path;
 
 public class WorldAction extends SavedData {
-    private String jsonData;;
+    private String jsonData;
 
     // 从NBT加载数据
     public static WorldAction load(CompoundTag tag) {
@@ -25,11 +25,7 @@ public class WorldAction extends SavedData {
     }
 
     public static WorldAction get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(
-                WorldAction::load,
-                WorldAction::new,
-                "orbit_data"
-        );
+        return level.getDataStorage().computeIfAbsent(WorldAction::load, WorldAction::new, "orbit_data");
     }
 
     public void setJsonData(String json) {

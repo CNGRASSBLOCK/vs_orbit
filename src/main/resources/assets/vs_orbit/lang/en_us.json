@@ -27,15 +27,15 @@
   "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z": "",
   "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world": "",
 
-  "gui.vs_orbit.jump_engine_controller_gui.mode.power": "§ePower",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.POWER": "§ePower",
   "gui.vs_orbit.jump_engine_controller_gui.mode.power.force": "Force :",
-  "gui.vs_orbit.jump_engine_controller_gui.mode.jump": "§bJump",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.JUMP": "§bJump",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.pos": "Position :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.x": "X :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.y": "Y :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.z": "Z :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.world": "WorldID :",
-  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine": "§3Planet §bEngine",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.PLANET_ENGINE": "§3Planet §bEngine",
 
 
 

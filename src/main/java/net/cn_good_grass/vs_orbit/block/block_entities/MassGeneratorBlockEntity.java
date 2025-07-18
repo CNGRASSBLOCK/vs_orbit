@@ -1,17 +1,25 @@
 package net.cn_good_grass.vs_orbit.block.block_entities;
 
+import dan200.computercraft.shared.Capabilities;
+import net.cn_good_grass.vs_orbit.other.CompatMods;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
+import net.cn_good_grass.vs_orbit.block.block_peripheral.MassGeneratorPeripheral;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class MassGeneratorBlockEntity extends BlockEntity {
     public MassGeneratorBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.mass_generator_block_entity.get(), pos, state); }
 
     public double mass = 0;
+
 
     @Override
     public void saveAdditional(CompoundTag tag) {
@@ -42,21 +50,21 @@ public class MassGeneratorBlockEntity extends BlockEntity {
         return tag;
     }
 
+    public void sendToClient() {
+        this.setChanged();
+        if (this.level != null && !this.level.isClientSide) {
+            BlockPos pos = this.getBlockPos();
+            BlockState state = this.getBlockState();
+            this.level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+        }
+    }
 
 
-//    public static final Capability<IPeripheral> CAPABILITY_PERIPHERAL = CapabilityManager.get(new CapabilityToken<>() {});
-//    private final MassGeneratorPeripheral peripheral = new MassGeneratorPeripheral(this);
-//    private final LazyOptional<IPeripheral> peripheralCap = LazyOptional.of(() -> peripheral);
-//
-//    @Override
-//    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-//        if (cap == CAPABILITY_PERIPHERAL) return peripheralCap.cast();
-//        return super.getCapability(cap, side);
-//    }
-//
-//    @Override
-//    public void invalidateCaps() {
-//        super.invalidateCaps();
-//        peripheralCap.invalidate();
-//    }
+
+    private final LazyOptional<Object> peripheralCap = LazyOptional.of(() -> new MassGeneratorPeripheral(this));
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if(CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast();
+        return super.getCapability(cap, side);
+    }
 }

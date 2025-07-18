@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [17, 16],
 	"textures": {
-		"astronomical_object": "vs_orbit:block/jump_engine_controller/common",
+		"particle": "vs_orbit:block/jump_engine_controller/common",
 		"common": "vs_orbit:block/jump_engine_controller/common",
 		"light": "vs_orbit:block/jump_engine_controller/light"
 	},

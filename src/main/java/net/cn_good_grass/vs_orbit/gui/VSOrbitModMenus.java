@@ -5,6 +5,7 @@
 package net.cn_good_grass.vs_orbit.gui;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
+import net.cn_good_grass.vs_orbit.gui.ElectromagneticTractorGUI.ElectromagneticTractorGUIMenu;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -17,4 +18,5 @@ public class VSOrbitModMenus {
 	public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.MENU_TYPES, VSOrbitMod.MODID);
 	public static final RegistryObject<MenuType<JumpEngineControllerGUIMenu>> JumpEngineControllerGUI = REGISTRY.register("jump_engine_controller_gui", () -> IForgeMenuType.create(JumpEngineControllerGUIMenu::new));
 	public static final RegistryObject<MenuType<MassGeneratorGUIMenu>> MassGeneratorGUI = REGISTRY.register("mass_generator_gui", () -> IForgeMenuType.create(MassGeneratorGUIMenu::new));
+	public static final RegistryObject<MenuType<ElectromagneticTractorGUIMenu>> ElectromagneticTractorGUI = REGISTRY.register("electrical_truster_gui", () -> IForgeMenuType.create(ElectromagneticTractorGUIMenu::new));
 }

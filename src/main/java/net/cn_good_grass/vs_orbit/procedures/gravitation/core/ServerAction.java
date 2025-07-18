@@ -7,6 +7,7 @@ import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astrono
 import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.event.ReadDataPack;
 import net.cn_good_grass.vs_orbit.procedures.gravitation.event.WorldAction;
+import net.lointain.cosmos.CosmosMod;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -35,7 +36,7 @@ public class ServerAction {
     public static List<AstronomicalPool> Astronomical_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent
-    public static void OnWorldLoad(net.minecraftforge.event.level.LevelEvent.Load event) {
+    public static void OnWorldLoad(LevelEvent.Load event) {
         if (event.getLevel().isClientSide()) return;
 
         String WorldId;
@@ -60,6 +61,7 @@ public class ServerAction {
         if (!Config.Gravitation_WORK_WORLD.get().contains(WorldID)) return;
 
         AstronomicalPool thisAstronomicalPool = AstronomicalPool.getFromWorldID(WorldID);
+        if (thisAstronomicalPool == null) return;
 
         WorldAction worldAction = WorldAction.get(serverLevel);
         worldAction.setJsonData(thisAstronomicalPool.toJsonObject().toString());
@@ -86,6 +88,10 @@ public class ServerAction {
         AstronomicalPool newWorld = new AstronomicalPool(World);
 
         ListTag listtag = StarAPI.getAllStarData(World, true);
+        if (listtag == null) {
+            CosmosMod.queueServerWork(20, () -> CreateAstronomicalWorld(World));
+            return;
+        }
 
         for (int i = 0 ; i < listtag.size() ; i++) {
             CompoundTag compoundTag = listtag.getCompound(i);

@@ -29,8 +29,14 @@ public class ModCommand {
             Entity entity = arguments.getSource().getEntity();
             if ((entity != null)) { if (entity instanceof Player player && !player.level().isClientSide()) {
                 int size = 0;
-                for (String WorldId : Config.Gravitation_WORK_WORLD.get()) size += AstronomicalPool.getFromWorldID(WorldId).getAllAstronomical().size();
-                int world_size = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString()).getAllAstronomical().size();
+                for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+                    AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldId);
+                    if (astronomicalPool == null) continue;
+                    size += astronomicalPool.getAllAstronomical().size();
+                }
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString());
+                if (astronomicalPool == null) return 0;
+                int world_size = astronomicalPool.size();
                 player.displayClientMessage(Component.literal(Component.translatable("message.vs_orbit.core.info.state").getString()), false);
                 player.displayClientMessage(Component.literal(Component.translatable("message.vs_orbit.core.info.target_tick").getString() + Config.Core_TICK_SPEED.get()), false);
                 player.displayClientMessage(Component.literal(Component.translatable("message.vs_orbit.core.info.actual_tick").getString() + AstronomicalThread.tick), false);
@@ -71,7 +77,9 @@ public class ModCommand {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.empty_name").getString()), false);
                     return 0;
                 }
-                Astronomical astronomical = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString()).getAstronomical(StringArgumentType.getString(arguments, "name"));
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString());
+                if (astronomicalPool == null) return 0;
+                Astronomical astronomical = astronomicalPool.getAstronomical(StringArgumentType.getString(arguments, "name"));
                 if (astronomical == null) {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.no_astronomical").getString()), false);
                     return 0;
@@ -96,7 +104,9 @@ public class ModCommand {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.empty_name").getString()), false);
                     return 0;
                 }
-                Astronomical astronomical = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString()).getAstronomical(StringArgumentType.getString(arguments, "name"));
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString());
+                if (astronomicalPool == null) return 0;
+                Astronomical astronomical = astronomicalPool.getAstronomical(StringArgumentType.getString(arguments, "name"));
                 if (astronomical == null) {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.no_astronomical").getString()), false);
                     return 0;
@@ -120,7 +130,9 @@ public class ModCommand {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.empty_name").getString()), false);
                     return 0;
                 }
-                Astronomical astronomical = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString()).getAstronomical(StringArgumentType.getString(arguments, "name"));
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString());
+                if (astronomicalPool == null) return 0;
+                Astronomical astronomical = astronomicalPool.getAstronomical(StringArgumentType.getString(arguments, "name"));
                 if (astronomical == null) {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.no_astronomical").getString()), false);
                     return 0;
@@ -143,7 +155,9 @@ public class ModCommand {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.empty_name").getString()), false);
                     return 0;
                 }
-                Astronomical astronomical = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString()).getAstronomical(StringArgumentType.getString(arguments, "name"));
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(entity.level().dimension().location().toString());
+                if (astronomicalPool == null) return 0;
+                Astronomical astronomical = astronomicalPool.getAstronomical(StringArgumentType.getString(arguments, "name"));
                 if (astronomical == null) {
                     if (entity instanceof Player player && !player.level().isClientSide()) player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.no_astronomical").getString()), false);
                     return 0;

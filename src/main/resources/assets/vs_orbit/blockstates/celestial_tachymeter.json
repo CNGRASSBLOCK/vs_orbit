@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "vs_orbit:block/celestial_tachymeter/celestial_tachymeter"
+    }
+  }
+}

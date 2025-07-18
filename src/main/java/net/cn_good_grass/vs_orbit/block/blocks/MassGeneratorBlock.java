@@ -79,20 +79,20 @@ public class MassGeneratorBlock extends Block implements EntityBlock{
     public void tick(BlockState blockstate, ServerLevel world, BlockPos pos, RandomSource random) {
         super.tick(blockstate, world, pos, random);
 
-        MassGeneratorBlockEntity blockEntity = (MassGeneratorBlockEntity) world.getBlockEntity(pos); //自动保存 不知道有没有用
-        if (blockEntity == null) return;
+        if (!(world.getBlockEntity(pos) instanceof MassGeneratorBlockEntity blockEntity)) return;
 
 
 
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
         if (ship == null) return;
-        Astronomical astronomical = AstronomicalPool.getFromWorldID(world.dimension().location().toString()).getAstronomical("VSShip-" + ship.getId());
+        AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(world.dimension().location().toString());
+        if (astronomicalPool == null) return;
+        Astronomical astronomical = astronomicalPool.getAstronomical("VSShip-" + ship.getId());
         if (astronomical == null) return;
 
         CompoundTag addMass = astronomical.Tag.getCompound("vs_orbit:add_mass");
-        addMass.putDouble(String.valueOf(pos.asLong()), blockEntity.mass * world.getBestNeighborSignal(pos) / 16);
+        addMass.putDouble(String.valueOf(pos.asLong()), blockEntity.mass * world.getBestNeighborSignal(pos) / 15);
         astronomical.Tag.put("vs_orbit:add_mass", addMass);
-
 
         blockEntity.setChanged();
         world.scheduleTick(pos, this, 1);

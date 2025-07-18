@@ -27,6 +27,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -176,6 +177,7 @@ public class StarAPI {
         ClientLevel world = minecraft.level;
 
         ListTag listtag = StarAPI.getAllStarData(world, true);
+        if (listtag == null) return "";
 
         for (int i = 0 ; i < listtag.size() ; i++) {
             CompoundTag compoundTag = listtag.getCompound(i);
@@ -187,7 +189,7 @@ public class StarAPI {
     }
 
     private final static Map<String, ListTag> AllStarDataSave = new HashMap<>();
-    public static ListTag getAllStarData(Level world, boolean hasStar) {
+    @Nullable public static ListTag getAllStarData(Level world, boolean hasStar) {
         String WorldId = world.dimension().location().toString();
         if (AllStarDataSave.containsKey(WorldId + ";" + hasStar)) {
             return AllStarDataSave.get(WorldId + ";" + hasStar);
@@ -195,12 +197,12 @@ public class StarAPI {
             ListTag listtag = new ListTag();
             CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
 
-            if (!worldVars.collision_data_map.contains(WorldId)) return listtag;
+            if (!worldVars.collision_data_map.contains(WorldId)) return null;
             Tag collision_data_map = worldVars.collision_data_map.get(WorldId); //星球数据
             Tag light_source_map = worldVars.light_source_map.get(WorldId); //恒星数据
             if (collision_data_map instanceof ListTag listTag) listtag.addAll(listTag.copy());
             if (hasStar) if (light_source_map instanceof ListTag listTag) listtag.addAll(listTag.copy());
-            if (listtag.isEmpty()) return listtag;
+            if (listtag.isEmpty()) return null;
 
             AllStarDataSave.put(WorldId + ";" + hasStar, listtag);
 

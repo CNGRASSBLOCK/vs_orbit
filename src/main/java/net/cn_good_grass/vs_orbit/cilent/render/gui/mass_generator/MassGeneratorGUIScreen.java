@@ -37,7 +37,7 @@ public class MassGeneratorGUIScreen extends AbstractContainerScreen<MassGenerato
 		this.z = container.z;
 		this.entity = container.entity;
 		this.imageWidth = 134;
-		this.imageHeight = 166;
+		this.imageHeight = 126;
 	}
 
 	private static final ResourceLocation texture = new ResourceLocation("vs_orbit:textures/screens/mass_generator_gui/main.png");

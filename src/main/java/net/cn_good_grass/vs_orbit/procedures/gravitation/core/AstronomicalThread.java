@@ -69,8 +69,12 @@ public abstract class AstronomicalThread {
     }
 
     public static void StopThread() {
-        AstronomicalThread.task.cancel();
-        AstronomicalThread.timer.purge();
+        ThreadGroup rootGroup = Thread.currentThread().getThreadGroup();
+        while (rootGroup.getParent() != null) rootGroup = rootGroup.getParent();
+        Thread[] threads = new Thread[rootGroup.activeCount()];
+        while (rootGroup.enumerate(threads, true) == threads.length) threads = new Thread[threads.length * 2];
+
+        for (Thread thread : threads) if (thread != null && thread.getName().equals("AstronomicalThread")) thread.stop();
 
         core_tick_speed = Config.Core_TICK_SPEED.get();
         core_tick_time = Config.Core_TICK_TIME.get();

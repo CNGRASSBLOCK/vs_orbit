@@ -1,14 +1,15 @@
 package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
+import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngineFire;
 import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipAction;
-import net.jcm.vsch.ship.ThrusterData;
-import net.jcm.vsch.ship.VSCHForceInducedShips;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.common.VSOrbitForceInducedShips;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -76,7 +77,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (!(world instanceof ServerLevel)) return;
         world.scheduleTick(pos, this, 1);
 
-        VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
         if (ships == null) return;
 
         ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION));
@@ -86,7 +87,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!(level instanceof ServerLevel)) return;
 
-        VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(level, pos);
         if (ships == null) return;
         ships.removeThruster(pos);
 
@@ -104,11 +105,8 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
 
         event_dispose(blockstate, world, pos);
 
-        JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) world.getBlockEntity(pos); //自动保存 不知道有没有用
-        if (blockEntity != null) blockEntity.setChanged();
-
-        world.scheduleTick(pos, this, 1);
-        world.sendBlockUpdated(pos, blockstate, blockstate, 3);
+        if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
+        blockEntity.sendToClient();
     }
 
     @Override
@@ -132,20 +130,18 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
         if (!(world instanceof ServerLevel)) return;// 确保只在服务端执行
-        JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) world.getBlockEntity(pos);
-        if (blockEntity == null) return;
+        if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
         blockEntity.red_stone_power = world.getBestNeighborSignal(pos);
     }
 
-    public static void structural_inspection(BlockState blockstate, ServerLevel world, BlockPos pos) {
+    private static void structural_inspection(BlockState blockstate, ServerLevel world, BlockPos pos) {
         //初始判断
-        JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) world.getBlockEntity(pos);
-        if (blockEntity == null) { return; }
+        if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
 
         Direction facing_0 = blockstate.getValue(BlockStateProperties.FACING);
         if (facing_0.equals(Direction.UP)) { blockEntity.structure_state = "direction"; return; }
-        if (facing_0.equals(Direction.DOWN) && ship == null) { blockEntity.structure_state = "right"; blockEntity.mode = "planet_engine"; return; }
+        if (facing_0.equals(Direction.DOWN) && ship == null) { blockEntity.structure_state = "right"; blockEntity.mode = Mode.PLANET_ENGINE; return; }
 
         if (ship == null) { blockEntity.structure_state = "out"; return; }
 
@@ -176,16 +172,32 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (blockEntity.structure_radius < 3) { blockEntity.structure_state = "small"; return; }
         //检测周围方向向前
         List<Vector3d> vector3d = new ArrayList<>(List.of(new Vector3d(face_pos_offset.get(0)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(1)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(2)).mul(blockEntity.structure_radius + 1), new Vector3d(face_pos_offset.get(3)).mul(blockEntity.structure_radius + 1)));
+        blockEntity.structure_state = "incomplete";
+
+        BlockPos blockPos;
+        Block block;
+        boolean rotate = false;
         for (int i = 1;i < blockEntity.structure_radius + 2;i++) {
             Vector3d vector3d_main = new Vector3d(facing_0.getOpposite().getStepX(), facing_0.getOpposite().getStepY(), facing_0.getOpposite().getStepZ()).mul(i);
-            BlockPos blockPos = new BlockPos((int) (pos.getX() + vector3d.get(0).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(0).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(0).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            blockPos = new BlockPos((int) (pos.getX() + vector3d.get(0).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(0).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(0).z + vector3d_main.z));
+            block = world.getBlockState(blockPos).getBlock();
+            if (block.equals(VSOrbitModBlocks.electromagnetic_tractor.get())) rotate = world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE);
+            if (!block.equals(VSOrbitModBlocks.electromagnetic_tractor.get()) || !rotate) return;
+
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(1).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(1).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(1).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || !world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            block = world.getBlockState(blockPos).getBlock();
+            if (block.equals(VSOrbitModBlocks.electromagnetic_tractor.get())) rotate = world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE);
+            if (!block.equals(VSOrbitModBlocks.electromagnetic_tractor.get()) || !rotate) return;
+
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(2).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(2).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(2).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            block = world.getBlockState(blockPos).getBlock();
+            if (block.equals(VSOrbitModBlocks.electromagnetic_tractor.get())) rotate = world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE);
+            if (!block.equals(VSOrbitModBlocks.electromagnetic_tractor.get()) || rotate) return;
+
             blockPos = new BlockPos((int) (pos.getX() + vector3d.get(3).x + vector3d_main.x), (int) (pos.getY() + vector3d.get(3).y + vector3d_main.y), (int) (pos.getZ() + vector3d.get(3).z + vector3d_main.z));
-            if (!ForgeRegistries.BLOCKS.getKey(world.getBlockState(blockPos).getBlock()).toString().equals("vs_orbit:electromagnetic_tractor") || world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE)) { blockEntity.structure_state = "incomplete"; return; }
+            block = world.getBlockState(blockPos).getBlock();
+            if (block.equals(VSOrbitModBlocks.electromagnetic_tractor.get())) rotate = world.getBlockState(blockPos).getValue(ElectromagneticTractorBlock.ROTATE);
+            if (!block.equals(VSOrbitModBlocks.electromagnetic_tractor.get()) || rotate) return;
         }
 
         Vector3d center_pos = new Vector3d(new Vector3d(pos.getX(), pos.getY(), pos.getZ())).add(new Vector3d(facing_0.getOpposite().getStepX(), facing_0.getOpposite().getStepY(), facing_0.getOpposite().getStepZ()).mul(radius.get(0)));
@@ -193,11 +205,10 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         blockEntity.structure_center_pos = new BlockPos((int) center_pos.x, (int) center_pos.y, (int) center_pos.z);
     }
 
-    public static void display(BlockState blockstate, ServerLevel world, BlockPos pos) {
-        JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) world.getBlockEntity(pos);
-        if (blockEntity == null) return;
+    private static void display(BlockState blockstate, ServerLevel world, BlockPos pos) {
+        if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
         if (!blockEntity.structure_state.equals("right")) { return; }
-        if (blockEntity.mode.equals("planet_engine")) {
+        if (blockEntity.mode.equals(Mode.PLANET_ENGINE)) {
             //行星发动机模式
             PlanetEngineFire planetEngineFire = new PlanetEngineFire(pos.relative(Direction.UP, 5), world.dimension().location().toString(), 23, 0);
             int index = PlanetEngineFire.indexOf(planetEngineFire);
@@ -248,9 +259,8 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         }
     }
 
-    public static void event_dispose(BlockState blockstate, ServerLevel world, BlockPos pos) {
-        JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) world.getBlockEntity(pos);
-        if (blockEntity == null) return;
+    private static void event_dispose(BlockState blockstate, ServerLevel world, BlockPos pos) {
+        if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
 
         if (!blockEntity.structure_state.equals("right")) blockEntity.state = "structure_error"; else if (blockEntity.state.equals("none") || blockEntity.state.equals("structure_error")) blockEntity.state = "wait";
 
@@ -261,7 +271,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
 
         if (blockEntity.structure_state.equals("right") && blockEntity.red_stone_power > 0) {
-            if (blockEntity.mode.equals("power")) {
+            if (blockEntity.mode.equals(Mode.POWER)) {
                 if (blockEntity.animation_tick <= 100) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged");
                     blockEntity.animation_tick ++;
@@ -270,12 +280,12 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick ++;
                 } else {
                     double force = blockEntity.setting.getDouble("force");
-                    VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+                    VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
                     if (ships == null) return;
                     ThrusterData thruster = ships.getThrusterAtPos(pos);
-                    if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else if (thruster.throttle != (float) force) thruster.throttle = (float) force;
+                    if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else thruster.throttle = (float) force / 15;
                 }
-            } else if (blockEntity.mode.equals("jump") && !blockEntity.red_stone_power_do) {
+            } else if (blockEntity.mode.equals(Mode.JUMP) && !blockEntity.red_stone_power_do) {
                 if (blockEntity.animation_tick <= 200) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged_high");
                     blockEntity.animation_tick ++;
@@ -291,15 +301,21 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick = 0;
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
                 }
-            } else if (blockEntity.mode.equals("planet_engine")) {}
+            } else if (blockEntity.mode.equals(Mode.PLANET_ENGINE)) {}
         } else {
             blockEntity.red_stone_power_do = false;
             blockEntity.animation_tick = 0;
             thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
-            VSCHForceInducedShips ships = VSCHForceInducedShips.get(world, pos);
+            VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
             if (ships == null) return;
             ThrusterData thruster = ships.getThrusterAtPos(pos);
             if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else thruster.throttle = 0;
         }
+    }
+
+    public enum Mode {
+        JUMP,
+        POWER,
+        PLANET_ENGINE;
     }
 }

@@ -18,9 +18,6 @@ public class Config {
     //下面是ValkyrienSkies的
     public static final ForgeConfigSpec.ConfigValue<Boolean> ValkyrienSkies_ENABLE;
     public static final ForgeConfigSpec.ConfigValue<Double> ValkyrienSkies_ACCELERATION_SCALING;
-    public static final ForgeConfigSpec.ConfigValue<String> ValkyrienSkies_MOVEMENT_MODE;
-    //下面是ExperimentalFeatures的
-    public static final ForgeConfigSpec.ConfigValue<Boolean> ExperimentalFeatures_AUTO_CLEAR_ZERO_MASS_SHIP;
 
     static {
         MAIN.push("Core");
@@ -36,11 +33,9 @@ public class Config {
         MAIN.push("ValkyrienSkies");
         ValkyrienSkies_ENABLE = MAIN.comment("是否启用对瓦尔基里的运算。\nWhether or not compatibility with Valkyrie is enabled.").define("enable", true);
         ValkyrienSkies_ACCELERATION_SCALING = MAIN.comment("物理体的加速度缩放。\nAcceleration scaling of a physical body.").define("acceleration_scaling", 7200.0);
-        ValkyrienSkies_MOVEMENT_MODE = MAIN.comment("质点对瓦尔基里物理体的模式，可选: \"PARTICLE_FOLLOW_VS\" 或 \"VS_FOLLOW_PARTICLE\"。\nAstronomical vs. Valkyrie Physics mode, optional: \"PARTICLE_FOLLOW_VS\" or \"VS_FOLLOW_PARTICLE\".\n\"PARTICLE_FOLLOW_VS\"代表质点跟随物理体 \"VS_FOLLOW_PARTICLE\"代表物理体跟随质点。\n\"PARTICLE_FOLLOW_VS\" means that the astronomical follows the physical body, and \"VS_FOLLOW_PARTICLE\" means that the physical body follows the physical body.\n输入无效的值将按\"PARTICLE_FOLLOW_VS\"计算。\nInvalid values entered will be calculated as \"PARTICLE_FOLLOW_VS\".").define("movement_mode", "PARTICLE_FOLLOW_VS");
         MAIN.pop();
 
         MAIN.push("ExperimentalFeatures");
-        ExperimentalFeatures_AUTO_CLEAR_ZERO_MASS_SHIP = MAIN.comment("是否自动清理0质量船只。\nWhether or not to automatically clean up 0 mass vessels.").define("auto_clear_zero_mass_ship", true);
         MAIN.pop();
 
         SPEC = MAIN.build();

@@ -35,14 +35,18 @@ public class SyncAstronomicalPoolPacket {
         };
     }
     public static SyncAstronomicalPoolPacket decode(FriendlyByteBuf buffer) {
-        long timestamp = buffer.readLong(); // 读取时间戳
-        int size = buffer.readInt(); // 读取列表大小
-        List<AstronomicalPool> dataList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            AstronomicalPool astronomicalPool = AstronomicalPool.getFromJsonObject(JsonParser.parseString(new String(decompress(buffer.readByteArray()))).getAsJsonObject());
-            if (astronomicalPool != null) dataList.add(astronomicalPool); // 读取列表元素
+        try {
+            long timestamp = buffer.readLong(); // 读取时间戳
+            int size = buffer.readInt(); // 读取列表大小
+            List<AstronomicalPool> dataList = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                AstronomicalPool astronomicalPool = AstronomicalPool.getFromJsonObject(JsonParser.parseString(new String(decompress(buffer.readByteArray()))).getAsJsonObject());
+                if (astronomicalPool != null) dataList.add(astronomicalPool); // 读取列表元素
+            }
+            return new SyncAstronomicalPoolPacket(dataList, timestamp);
+        } catch (Exception e) {
+            return new SyncAstronomicalPoolPacket(new ArrayList<>(), 0L);
         }
-        return new SyncAstronomicalPoolPacket(dataList, timestamp);
     }
     public static void handle(SyncAstronomicalPoolPacket packet, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().execute(() -> {

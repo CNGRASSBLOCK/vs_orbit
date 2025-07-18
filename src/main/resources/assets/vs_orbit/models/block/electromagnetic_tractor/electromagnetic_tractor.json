@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"astronomical_object": "vs_orbit:block/electromagnetic_tractor/common",
+		"particle": "vs_orbit:block/electromagnetic_tractor/common",
 		"common": "vs_orbit:block/electromagnetic_tractor/common",
 		"light": "vs_orbit:block/electromagnetic_tractor/light"
 	},

@@ -26,7 +26,9 @@ public class AstronomicalClear {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) return;
 
-            ClearAstronomicalForVSShip(level, AstronomicalPool.getFromWorldID(WorldIDs));
+            AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldIDs);
+            if (astronomicalPool == null) return;
+            ClearAstronomicalForVSShip(level, astronomicalPool);
         }
     }
 
@@ -37,7 +39,7 @@ public class AstronomicalClear {
         for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) {
             if (!astronomical.type.equals("valkyrienskies:ship")) continue;
 
-            long ShipId = Long.valueOf(astronomical.name.substring(7));
+            long ShipId = Long.parseLong(astronomical.name.substring(7));
             if (!shipIds.contains(ShipId)) astronomicalPool.removeAstronomical(astronomical.id);
         }
     }
