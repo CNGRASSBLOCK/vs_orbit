@@ -2,9 +2,10 @@ package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
 import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -208,5 +210,23 @@ public class StarAPI {
 
             return listtag;
         }
+    }
+
+    @Nullable public static Astronomical getAstronomicalFormLevel(Level world) {
+        for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+            ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
+            if (level == null) continue;
+            ListTag data = StarAPI.getAllStarData(level, false);
+            if (data == null) continue;
+            for (int i = 0; i < data.size(); i++) {
+                CompoundTag StarTag = data.getCompound(i);
+                if (StarTag.getString("travel_to").equals(world.dimension().location().toString())) {
+                    AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldId);
+                    if (astronomicalPool == null) continue;
+                    return astronomicalPool.getAstronomical("CosmosStar-" + StarTag.getString("object_name"));
+                }
+            }
+        }
+        return null;
     }
 }

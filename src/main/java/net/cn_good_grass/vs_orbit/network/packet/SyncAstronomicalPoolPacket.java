@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.network.packet;
 
 import com.google.gson.JsonParser;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkDirection;

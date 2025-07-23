@@ -4,6 +4,8 @@
   "block.vs_orbit.jump_engine_controller": "Jump Engine Controller",
   "block.vs_orbit.mass_generator": "Mass Generator",
   "block.vs_orbit.electromagnetic_tractor": "Electromagnetic Tractor",
+  "block.vs_orbit.electrical_truster": "Hall Thruster",
+  "block.vs_orbit.celestial_tachymeter": "Celestial Tachymeter",
 
   "item.vs_orbit.gravitational_core": "Gravitational Core",
   "item.vs_orbit.control_circuit_board": "Control Circuit Board",
@@ -15,18 +17,10 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode": "Mode :",
   "gui.vs_orbit.jump_engine_controller_gui.info.pos": "Pos :",
   "gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode" : "§cToggle",
-
   "gui.vs_orbit.jump_engine_controller_gui.state.structure_error": "§cStructure Error",
   "gui.vs_orbit.jump_engine_controller_gui.state.wait": "§eWaiting",
   "gui.vs_orbit.jump_engine_controller_gui.state.charged": "§dCharging",
   "gui.vs_orbit.jump_engine_controller_gui.state.work": "§bWorking",
-
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.power_force": "Newton",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world": "",
-
   "gui.vs_orbit.jump_engine_controller_gui.mode.POWER": "§ePower",
   "gui.vs_orbit.jump_engine_controller_gui.mode.power.force": "Force :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.JUMP": "§bJump",
@@ -36,14 +30,18 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.z": "Z :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.world": "WorldID :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.PLANET_ENGINE": "§3Planet §bEngine",
-
-
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force": "Force :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_x": "X :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_y": "Y :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_z": "Z :",
 
   "gui.vs_orbit.mass_generator_gui.title": "Mass Generator",
   "gui.vs_orbit.mass_generator_gui.mass": "Mass :",
   "gui.vs_orbit.mass_generator_gui.info.all_mass": "All Mass :",
 
-  "gui.vs_orbit.mass_generator_gui.editbox.mass": "kilogram",
+  "gui.vs_orbit.electrical_truster_gui.title": "Hall Thruster",
+  "gui.vs_orbit.electrical_truster_gui.force": "Force :",
+  "gui.vs_orbit.electrical_truster_gui.info.mass" : "Ship Mass :",
 
 
 

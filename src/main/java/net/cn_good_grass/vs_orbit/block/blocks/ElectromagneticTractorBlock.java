@@ -6,7 +6,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,28 +22,30 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class  ElectromagneticTractorBlock extends Block{
     public ElectromagneticTractorBlock() {
         super(Properties.of()
-                .strength(5f, 75f) // 硬度（挖掘时间）、爆炸抗性
-                .sound(SoundType.STONE) // 音效类型
+                .strength(0.5f, 5f) // 硬度（挖掘时间）、爆炸抗性
+                .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops() // 需要正确工具采集
                 .lightLevel(state -> 8)
         );
     }
-
+    @Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        if (player.getInventory().getSelected().getItem() instanceof PickaxeItem tieredItem) return tieredItem.getTier().getLevel() >= 2;else return super.canHarvestBlock(state, world, pos, player);
+    }
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty ROTATE = BooleanProperty.create("rotate");
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); builder.add(ROTATE); }
     public BlockState rotate(BlockState state, Rotation rot) { return state.setValue(FACING, rot.rotate(state.getValue(FACING))); }
     public BlockState mirror(BlockState state, Mirror mirrorIn) { return state.rotate(mirrorIn.getRotation(state.getValue(FACING))); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if (context.getPlayer() == null) { return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()); }
-        if (context.getPlayer().isShiftKeyDown()) {
+        if (context.getPlayer() == null) return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        if (!context.getPlayer().isShiftKeyDown()) {
             BlockPos placementPos = context.getClickedPos();
             Direction clickedFace = context.getClickedFace();
             BlockState ChickBlockState = context.getPlayer().level().getBlockState(placementPos.relative(clickedFace.getOpposite()));
             if (ForgeRegistries.BLOCKS.getKey(ChickBlockState.getBlock()).toString().equals("vs_orbit:jump_engine_controller")) {
-                return this.defaultBlockState().setValue(FACING, ChickBlockState.getValue(BlockStateProperties.FACING).getOpposite());
+                return this.defaultBlockState().setValue(FACING, ChickBlockState.getValue(JumpEngineControllerBlock.FACING).getOpposite());
             } else if (ForgeRegistries.BLOCKS.getKey(ChickBlockState.getBlock()).toString().equals("vs_orbit:electromagnetic_tractor")) {
-                return this.defaultBlockState().setValue(FACING, ChickBlockState.getValue(BlockStateProperties.FACING));
+                return this.defaultBlockState().setValue(FACING, ChickBlockState.getValue(FACING)).setValue(ROTATE, ChickBlockState.getValue(ROTATE));
             }
         }
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
@@ -49,10 +53,10 @@ public class  ElectromagneticTractorBlock extends Block{
 
     @Override
     public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
-        super.use(blockstate, world, pos, entity, hand, hit);
-
-        if (entity.isShiftKeyDown()) world.setBlock(pos, blockstate.setValue(ROTATE, !blockstate.getValue(ROTATE)), Block.UPDATE_ALL);
-
-        return InteractionResult.CONSUME;
+        if (entity.isShiftKeyDown() && hit.getDirection().equals(blockstate.getValue(FACING))) {
+            world.setBlock(pos, blockstate.setValue(ROTATE, !blockstate.getValue(ROTATE)), Block.UPDATE_ALL);
+            return InteractionResult.sidedSuccess(world.isClientSide());
+        }
+        return InteractionResult.PASS;
     }
 }

@@ -1,0 +1,19 @@
+{
+	"parent": "vs_orbit:first_go_to_space",
+	"display": {
+		"icon": {
+			"item": "vs_orbit:gravitational_core"
+		},
+		"title": "我的一小步，人类的一大步。",
+		"description": "我的一小步，人类的一大步。",
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"custom_trigger": {
+			"trigger": "vs_orbit:go_to_moon"
+		}
+	}
+}

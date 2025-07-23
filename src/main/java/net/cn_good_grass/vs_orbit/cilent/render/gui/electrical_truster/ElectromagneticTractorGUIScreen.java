@@ -72,7 +72,8 @@ public class ElectromagneticTractorGUIScreen extends AbstractContainerScreen<Ele
 		if (ship instanceof ServerShip serverShip) {
 			guiGraphics.pose().pushPose();
 			guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
-			guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.electrical_truster_gui.info.pos").getString() + " §5"), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
+			double mass = serverShip.getInertiaData().getMass();
+			guiGraphics.drawString(this.font, (Component.translatable("gui.vs_orbit.electrical_truster_gui.info.mass").getString() + " §5" + mass), (int) (this.leftPos / 1.25 + 8), (int) (((this.topPos + this.imageHeight) / 1.25) - 17), 0xFFFFFFFF, false);
 			guiGraphics.pose().popPose();
 		}
 	}
@@ -114,17 +115,8 @@ public class ElectromagneticTractorGUIScreen extends AbstractContainerScreen<Ele
 		if (blockEntity instanceof ElectricalTrusterBlockEntity) electricalTrusterBlockEntity = (ElectricalTrusterBlockEntity) blockEntity; else electricalTrusterBlockEntity = null;
 		super.init();
 
-		force = new EditBox(this.font, this.leftPos + this.imageWidth - 80, this.topPos + 36, 72, 8, Component.translatable("gui.vs_orbit.electrical_truster_gui.editbox.force")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.electrical_truster_gui.editbox.force").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.electrical_truster_gui.editbox.force").getString());else setSuggestion(null);
-			}
-		};
-		force.setSuggestion(Component.translatable("gui.vs_orbit.electrical_truster_gui.editbox.force").getString());
+		force = new EditBox(this.font, this.leftPos + this.imageWidth - 80, this.topPos + 36, 72, 8, Component.translatable(""));
+		force.setSuggestion("");
 		if (electricalTrusterBlockEntity != null) force.setValue(String.valueOf(electricalTrusterBlockEntity.force));
 		force.setMaxLength(16);
 		guistate.put("vs_orbit:force", force);

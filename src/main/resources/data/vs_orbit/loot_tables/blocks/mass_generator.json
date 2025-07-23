@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:block",
+	"random_sequence": "vs_orbit:blocks/mass_generator",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			],
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "vs_orbit:mass_generator"
+				}
+			]
+		}
+	]
+}

@@ -47,11 +47,20 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		this.renderBackground(guiGraphics);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 		if (blockEntity instanceof JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity) {
-			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) power_force.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_x.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_y.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_z.render(guiGraphics, mouseX, mouseY, partialTicks);
-			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) pos_world.render(guiGraphics, mouseX, mouseY, partialTicks);
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) {
+				editBox_1.render(guiGraphics, mouseX, mouseY, partialTicks);
+			}
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
+				editBox_2.render(guiGraphics, mouseX, mouseY, partialTicks);
+				editBox_3.render(guiGraphics, mouseX, mouseY, partialTicks);
+				editBox_4.render(guiGraphics, mouseX, mouseY, partialTicks);
+				editBox_5.render(guiGraphics, mouseX, mouseY, partialTicks);
+			}
+			if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) {
+				editBox_2.render(guiGraphics, mouseX, mouseY, partialTicks);
+				editBox_3.render(guiGraphics, mouseX, mouseY, partialTicks);
+				editBox_4.render(guiGraphics, mouseX, mouseY, partialTicks);
+			}
 		}
 		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}
@@ -79,7 +88,7 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
 			guiGraphics.pose().pushPose();
 			guiGraphics.pose().translate(0, 0, 1);
-			guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode"), this.leftPos + this.imageWidth - 41 + Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode").getString().length() * 2, this.topPos + 18, 0xFFFFFFFF, false);
+			guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode"), this.leftPos + this.imageWidth - 41 + Minecraft.getInstance().font.width(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode").getString()) / 2, this.topPos + 18, 0xFFFFFFFF, false);
 			guiGraphics.pose().popPose();
 		}
 		//力
@@ -90,6 +99,9 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.y"), this.leftPos + 9, this.topPos + 60, 0xFFFFFFFF, false);
 		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.z"), this.leftPos + 9, this.topPos + 72, 0xFFFFFFFF, false);
 		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.jump.world"), this.leftPos + 9, this.topPos + 84, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_x"), this.leftPos + 9, this.topPos + 48, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_y"), this.leftPos + 9, this.topPos + 60, 0xFFFFFFFF, false);
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) guiGraphics.drawString(this.font, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_z"), this.leftPos + 9, this.topPos + 72, 0xFFFFFFFF, false);
 		//信息
 		guiGraphics.pose().pushPose();
 		guiGraphics.pose().scale(1.25f, 1.25f, 1.0f); // 放大1.25倍
@@ -127,54 +139,54 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 			this.minecraft.player.closeContainer();
 			return true;
 		}
-		if (power_force.isFocused()) return power_force.keyPressed(key, b, c);
-		if (pos_x.isFocused()) return pos_x.keyPressed(key, b, c);
-		if (pos_y.isFocused()) return pos_y.keyPressed(key, b, c);
-		if (pos_z.isFocused()) return pos_z.keyPressed(key, b, c);
-		if (pos_world.isFocused()) return pos_world.keyPressed(key, b, c);
+		if (editBox_1.isFocused()) return editBox_1.keyPressed(key, b, c);
+		if (editBox_2.isFocused()) return editBox_2.keyPressed(key, b, c);
+		if (editBox_3.isFocused()) return editBox_3.keyPressed(key, b, c);
+		if (editBox_4.isFocused()) return editBox_4.keyPressed(key, b, c);
+		if (editBox_5.isFocused()) return editBox_5.keyPressed(key, b, c);
 		return super.keyPressed(key, b, c);
 	}
 
 	@Override
 	public void containerTick() {
 		super.containerTick();
-		power_force.tick();
-		pos_x.tick();
-		pos_y.tick();
-		pos_z.tick();
-		pos_world.tick();
-		textstate.put("textin:power_force", power_force.getValue());
-		textstate.put("textin:pos_x", pos_x.getValue());
-		textstate.put("textin:pos_y", pos_y.getValue());
-		textstate.put("textin:pos_z", pos_z.getValue());
-		textstate.put("textin:pos_world", pos_world.getValue());
+		editBox_1.tick();
+		editBox_2.tick();
+		editBox_3.tick();
+		editBox_4.tick();
+		editBox_5.tick();
+		textstate.put("textin:editBox_1", editBox_1.getValue());
+		textstate.put("textin:editBox_2", editBox_2.getValue());
+		textstate.put("textin:editBox_3", editBox_3.getValue());
+		textstate.put("textin:editBox_4", editBox_4.getValue());
+		textstate.put("textin:editBox_5", editBox_5.getValue());
 		VSOrbitMod.PACKET_HANDLER.sendToServer(new JumpEngineControllerGUIMenu.JumpEngineControllerGUIOtherMessage(0, x, y, z, textstate));
 		JumpEngineControllerGUIMenu.JumpEngineControllerGUIOtherMessage.handleOtherAction(entity, 0, x, y, z, textstate);
 	}
 
 	@Override
 	public void resize(Minecraft minecraft, int width, int height) {
-		String power_force_Value = power_force.getValue();
-		String pos_x_Value = pos_x.getValue();
-		String pos_y_Value = pos_y.getValue();
-		String pos_z_Value = pos_z.getValue();
-		String pos_world_Value = pos_world.getValue();
+		String editBox_1_Value = editBox_1.getValue();
+		String editBox_2_Value = editBox_2.getValue();
+		String editBox_3_Value = editBox_3.getValue();
+		String editBox_4_Value = editBox_4.getValue();
+		String editBox_5_Value = editBox_5.getValue();
 		super.resize(minecraft, width, height);
-		power_force.setValue(power_force_Value);
-		pos_x.setValue(pos_x_Value);
-		pos_y.setValue(pos_y_Value);
-		pos_z.setValue(pos_z_Value);
-		pos_world.setValue(pos_world_Value);
+		editBox_1.setValue(editBox_1_Value);
+		editBox_2.setValue(editBox_2_Value);
+		editBox_3.setValue(editBox_3_Value);
+		editBox_4.setValue(editBox_4_Value);
+		editBox_5.setValue(editBox_5_Value);
 	}
 
 	@Override protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {}
 
 	Button button_toggle_mode;
-	EditBox power_force;
-	EditBox pos_x;
-	EditBox pos_y;
-	EditBox pos_z;
-	EditBox pos_world;
+	EditBox editBox_1;
+	EditBox editBox_2;
+	EditBox editBox_3;
+	EditBox editBox_4;
+	EditBox editBox_5;
 
 	@Override
 	public void init() {
@@ -182,95 +194,71 @@ public class JumpEngineControllerGUIScreen extends AbstractContainerScreen<JumpE
 		JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity;
 		if (blockEntity instanceof JumpEngineControllerBlockEntity) jumpEngineControllerBlockEntity = (JumpEngineControllerBlockEntity) blockEntity; else jumpEngineControllerBlockEntity = null;
         super.init();
+
+
+
 		button_toggle_mode = new ImageButton(this.leftPos + this.imageWidth - 42, this.topPos + 16, 35, 13, 0, 0, 13, new ResourceLocation("vs_orbit:textures/screens/jump_engine_controller_gui/button.png"), 35, 26, e -> {
 			if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
 				VSOrbitMod.PACKET_HANDLER.sendToServer(new JumpEngineControllerGUIButton(0, x, y, z, textstate));
 				JumpEngineControllerGUIButton.handleButtonAction(entity, 0, x, y, z, textstate);
+				upEditBoxValue();
 			}
 		}) { @Override public void render(GuiGraphics guiGraphics, int gx, int gy, float ticks) { if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER) || jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) super.render(guiGraphics, gx, gy, ticks); } };
 		if (jumpEngineControllerBlockEntity != null) if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) guistate.put("button:button_toggle_mode", button_toggle_mode); this.addRenderableWidget(button_toggle_mode);
 
 
 
-		power_force = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 36, 72, 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.power_force")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.power_force").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.power_force").getString());else setSuggestion(null);
-			}
-		};
-		power_force.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.power_force").getString());
-		if (jumpEngineControllerBlockEntity != null) power_force.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("force")));
-		power_force.setMaxLength(16);
-		guistate.put("vs_orbit:power_force", power_force);
-		this.addWidget(this.power_force);
+		editBox_1 = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 36, 72, 8, Component.translatable(""));
+		editBox_1.setMaxLength(64);
+		guistate.put("vs_orbit:editBox_1", editBox_1);
+		this.addWidget(this.editBox_1);
 
-		pos_x = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 48, 72, 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x").getString());else setSuggestion(null);
-			}
-		};
-		if (jumpEngineControllerBlockEntity != null) pos_x.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_x")));
-		pos_x.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x").getString());
-		pos_x.setMaxLength(16);
-		guistate.put("vs_orbit:pos_x", pos_x);
-		this.addWidget(this.pos_x);
+		editBox_2 = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 48, 72, 8, Component.translatable(""));
+		editBox_2.setSuggestion("");
+		editBox_2.setMaxLength(64);
+		guistate.put("vs_orbit:editBox_2", editBox_2);
+		this.addWidget(this.editBox_2);
 
-		pos_y = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 60, 72, 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y").getString());else setSuggestion(null);
-			}
-		};
-		if (jumpEngineControllerBlockEntity != null) pos_y.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_y")));
-		pos_y.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y").getString());
-		pos_y.setMaxLength(16);
-		guistate.put("vs_orbit:pos_y", pos_y);
-		this.addWidget(this.pos_y);
+		editBox_3 = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 60, 72, 8, Component.translatable(""));
+		editBox_3.setSuggestion("");
+		editBox_3.setMaxLength(64);
+		guistate.put("vs_orbit:editBox_3", editBox_3);
+		this.addWidget(this.editBox_3);
 
-		pos_z = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 72, 72, 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z").getString());else setSuggestion(null);
-			}
-		};
-		if (jumpEngineControllerBlockEntity != null) pos_z.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_z")));
-		pos_z.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z").getString());
-		pos_z.setMaxLength(16);
-		guistate.put("vs_orbit:pos_z", pos_z);
-		this.addWidget(this.pos_z);
+		editBox_4 = new EditBox(this.font, this.leftPos + this.imageWidth - 211, this.topPos + 72, 72, 8, Component.translatable(""));
+		editBox_4.setSuggestion("");
+		editBox_4.setMaxLength(64);
+		guistate.put("vs_orbit:editBox_4", editBox_4);
+		this.addWidget(this.editBox_4);
 
-		pos_world = new EditBox(this.font, this.leftPos + this.imageWidth - 223, this.topPos + 84, 84 , 8, Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world")) {
-			@Override public void insertText(String text) {
-				super.insertText(text);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());else setSuggestion(null);
-			}
-			@Override public void moveCursorTo(int pos) {
-				super.moveCursorTo(pos);
-				if (getValue().isEmpty()) setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());else setSuggestion(null);
-			}
-		};
-		if (jumpEngineControllerBlockEntity != null) pos_world.setValue(jumpEngineControllerBlockEntity.setting.getString("pos_world"));
-		pos_world.setSuggestion(Component.translatable("gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world").getString());
-		pos_world.setMaxLength(32768);
-		guistate.put("vs_orbit:pos_world", pos_world);
-		this.addWidget(this.pos_world);
+		editBox_5 = new EditBox(this.font, this.leftPos + this.imageWidth - 223, this.topPos + 84, 84 , 8, Component.translatable(""));
+		editBox_5.setSuggestion("");
+		editBox_5.setMaxLength(64);
+		guistate.put("vs_orbit:editBox_5", editBox_5);
+		this.addWidget(this.editBox_5);
+
+		upEditBoxValue();
+	}
+
+	public void upEditBoxValue(){
+		if (!(world.getBlockEntity(new BlockPos(x, y, z)) instanceof JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity)) return;
+
+		if (editBox_1 == null || editBox_2 == null || editBox_3 == null || editBox_4 == null || editBox_5 == null) return;
+
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) {
+			editBox_1.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("force")));
+		}
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
+			editBox_2.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_x")));
+			editBox_3.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_y")));
+			editBox_4.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("pos_z")));
+			editBox_5.setValue(jumpEngineControllerBlockEntity.setting.getString("pos_world"));
+		}
+		if (jumpEngineControllerBlockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) {
+			editBox_2.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("planet_force_x")));
+			editBox_3.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("planet_force_y")));
+			editBox_4.setValue(String.valueOf(jumpEngineControllerBlockEntity.setting.getDouble("planet_force_z")));
+		}
 	}
 
 	public static class DrawGuiGraphics {

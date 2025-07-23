@@ -4,7 +4,7 @@ import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngine
 import net.cn_good_grass.vs_orbit.config.Config;
 import net.cn_good_grass.vs_orbit.network.packet.SyncAstronomicalPoolPacket;
 import net.cn_good_grass.vs_orbit.network.packet.SyncPlanetEngineDataPacket;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -15,7 +15,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerAction.Astronomical_Core_World_Bus;
+import static net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction.Astronomical_Core_World_Bus;
 
 @Mod.EventBusSubscriber
 public class SyncDataTick {

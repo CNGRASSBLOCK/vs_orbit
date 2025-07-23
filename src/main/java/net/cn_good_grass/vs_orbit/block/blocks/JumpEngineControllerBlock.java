@@ -7,8 +7,12 @@ import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngine
 import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
+import net.cn_good_grass.vs_orbit.procedures.cosmos.CableConnectionHelper;
+import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipAction;
-import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.common.VSOrbitForceInducedShips;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterInducedShips;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,22 +24,24 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -54,15 +60,18 @@ import java.util.List;
 
 public class JumpEngineControllerBlock extends Block implements EntityBlock {
     public JumpEngineControllerBlock() {
-        super(Properties.of()
-                .strength(5f, 90f) // 硬度（挖掘时间）、爆炸抗性
-                .sound(SoundType.STONE) // 音效类型
+        super(BlockBehaviour.Properties.of()
+                .strength(0.5f, 5f) // 硬度（挖掘时间）、爆炸抗性
+                .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops() // 需要正确工具采集
                 .lightLevel(state -> 12)
                 .noOcclusion()
         );
     }
-    //方块方向
+    @Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        if (player.getInventory().getSelected().getItem() instanceof PickaxeItem tieredItem) return tieredItem.getTier().getLevel() >= 2;else return super.canHarvestBlock(state, world, pos, player);
+    }
+//方块方向
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) { return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()); }
@@ -77,7 +86,9 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         if (!(world instanceof ServerLevel)) return;
         world.scheduleTick(pos, this, 1);
 
-        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
+        CableConnectionHelper.setCableConnections(world, pos, new Direction[]{blockstate.getValue(BlockStateProperties.FACING), blockstate.getValue(BlockStateProperties.FACING).getClockWise(),  blockstate.getValue(BlockStateProperties.FACING).getCounterClockWise()}, true);
+
+        ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
         if (ships == null) return;
 
         ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION));
@@ -87,7 +98,9 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!(level instanceof ServerLevel)) return;
 
-        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(level, pos);
+        if (level.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity jumpEngineControllerBlockEntity) jumpEngineControllerBlockEntity.setRemoved();
+
+        ThrusterInducedShips ships = ThrusterInducedShips.get(level, pos);
         if (ships == null) return;
         ships.removeThruster(pos);
 
@@ -106,6 +119,7 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         event_dispose(blockstate, world, pos);
 
         if (!(world.getBlockEntity(pos) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
+        world.scheduleTick(pos, this, 1);
         blockEntity.sendToClient();
     }
 
@@ -264,14 +278,10 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
 
         if (!blockEntity.structure_state.equals("right")) blockEntity.state = "structure_error"; else if (blockEntity.state.equals("none") || blockEntity.state.equals("structure_error")) blockEntity.state = "wait";
 
-        ServerShip ship = VSGameUtilsKt.getShipManagingPos(world, pos);
-        if (ship == null) return;
-
-        Entity entity = world.getEntity(blockEntity.display_entity_uuid);
-        if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
-
         if (blockEntity.structure_state.equals("right") && blockEntity.red_stone_power > 0) {
             if (blockEntity.mode.equals(Mode.POWER)) {
+                Entity entity = world.getEntity(blockEntity.display_entity_uuid);
+                if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
                 if (blockEntity.animation_tick <= 100) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged");
                     blockEntity.animation_tick ++;
@@ -280,12 +290,14 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick ++;
                 } else {
                     double force = blockEntity.setting.getDouble("force");
-                    VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
+                    ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
                     if (ships == null) return;
                     ThrusterData thruster = ships.getThrusterAtPos(pos);
                     if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else thruster.throttle = (float) force / 15;
                 }
             } else if (blockEntity.mode.equals(Mode.JUMP) && !blockEntity.red_stone_power_do) {
+                Entity entity = world.getEntity(blockEntity.display_entity_uuid);
+                if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
                 if (blockEntity.animation_tick <= 200) {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "charged_high");
                     blockEntity.animation_tick ++;
@@ -293,6 +305,8 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "work");
                     blockEntity.animation_tick ++;
                 } else {
+                    ServerShip ship = VSGameUtilsKt.getShipManagingPos(world, pos);
+                    if (ship == null) return;
                     ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(world);
                     ServerLevel dimension = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(blockEntity.setting.getString("pos_world"))));
                     if (dimension == null) return;
@@ -301,12 +315,19 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
                     blockEntity.animation_tick = 0;
                     thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
                 }
-            } else if (blockEntity.mode.equals(Mode.PLANET_ENGINE)) {}
+            } else if (blockEntity.mode.equals(Mode.PLANET_ENGINE)) {
+                Astronomical astronomical = StarAPI.getAstronomicalFormLevel(world);
+                if (astronomical == null) return;
+
+                astronomical.addForce(new Force("Planet_Engine-On:" + pos, blockEntity.setting.getDouble("planet_force_x"), blockEntity.setting.getDouble("planet_force_y"), blockEntity.setting.getDouble("planet_force_z"), 1));
+            }
         } else {
             blockEntity.red_stone_power_do = false;
             blockEntity.animation_tick = 0;
+            Entity entity = world.getEntity(blockEntity.display_entity_uuid);
+            if (!(entity instanceof ThrusterCoreEntity thrusterCoreEntity)) return;
             thrusterCoreEntity.getEntityData().set(ThrusterCoreEntity.ANIMATION, "spend");
-            VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
+            ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
             if (ships == null) return;
             ThrusterData thruster = ships.getThrusterAtPos(pos);
             if (thruster == null) ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getNormal()), 0, ThrusterData.ThrusterMode.POSITION)); else thruster.throttle = 0;

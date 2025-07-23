@@ -2,10 +2,10 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
+import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.ElectromagneticTractorGUI.ElectromagneticTractorGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.common.VSOrbitForceInducedShips;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterInducedShips;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterData;
-import net.lointain.cosmos.CosmosMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -20,6 +20,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -39,12 +40,15 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 public class ElectricalTrusterBlock extends Block implements EntityBlock {
     public ElectricalTrusterBlock() {
         super(Properties.of()
-                .strength(5f, 90f) // 硬度（挖掘时间）、爆炸抗性
-                .sound(SoundType.STONE) // 音效类型
+                .strength(0.5f, 5f) // 硬度（挖掘时间）、爆炸抗性
+                .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops() // 需要正确工具采集
                 .lightLevel(state -> 8)
                 .noOcclusion()
         );
+    }
+    @Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        if (player.getInventory().getSelected().getItem() instanceof PickaxeItem tieredItem) return tieredItem.getTier().getLevel() >= 2;else return super.canHarvestBlock(state, world, pos, player);
     }
     //方块方向
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -75,7 +79,7 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         if (!(world instanceof ServerLevel)) return;
         world.scheduleTick(pos, this, 1);
 
-        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
+        ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
         if (ships == null) return;
 
         ships.addThruster(pos, new ThrusterData(VectorConversionsMCKt.toJOMLD(blockstate.getValue(FACING).getOpposite().getNormal()), 0, ThrusterData.ThrusterMode.POSITION));
@@ -85,7 +89,9 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!(level instanceof ServerLevel)) return;
 
-        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(level, pos);
+        if (level.getBlockEntity(pos) instanceof ElectricalTrusterBlockEntity electricalTrusterBlockEntity) electricalTrusterBlockEntity.setRemoved();
+
+        ThrusterInducedShips ships = ThrusterInducedShips.get(level, pos);
         if (ships == null) return;
         ships.removeThruster(pos);
 
@@ -97,6 +103,8 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         super.tick(blockstate, world, pos, random);
 
         event_dispose(blockstate, world, pos);
+
+        do_particle(world, blockstate, pos);
 
         if (!(world.getBlockEntity(pos) instanceof ElectricalTrusterBlockEntity blockEntity)) return;
         blockEntity.sendToClient();
@@ -133,7 +141,7 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         ElectricalTrusterBlockEntity blockEntity = (ElectricalTrusterBlockEntity) world.getBlockEntity(pos);
         if (blockEntity == null) return;
 
-        VSOrbitForceInducedShips ships = VSOrbitForceInducedShips.get(world, pos);
+        ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
         if (ships == null) return;
 
         double force = blockEntity.force;
@@ -146,35 +154,12 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         }
     }
 
-    @Override
-    public void animateTick(BlockState p_220827_, Level p_220828_, BlockPos pos, RandomSource p_220830_) {
-        super.animateTick(p_220827_, p_220828_, pos, p_220830_);
-
-        Direction facing = p_220827_.getValue(FACING);
+    private static void do_particle(ServerLevel level, BlockState blockState, BlockPos blockPos) {
+        Direction facing = blockState.getValue(FACING);
 
         int particleCount = 16;
 
-        for (int i = 0; i < particleCount; i++) {
-            double angle = (Math.PI * 2 / particleCount) * i;
-            Vec3 particlePos = new Vec3(Math.cos(angle) * 0.2, 0.5, Math.sin(angle) * 0.2);
 
-            if (facing.equals(Direction.NORTH)) particlePos = new Vec3(particlePos.x, particlePos.z, particlePos.y);
-            else if (facing.equals(Direction.SOUTH))
-                particlePos = new Vec3(particlePos.x, particlePos.z, particlePos.y);
-            if (facing.equals(Direction.EAST)) particlePos = new Vec3(particlePos.y, particlePos.x, particlePos.z);
-            else if (facing.equals(Direction.WEST))
-                particlePos = new Vec3(particlePos.y - 3, particlePos.x, particlePos.z);
-            if (facing.equals(Direction.DOWN)) particlePos = new Vec3(-particlePos.z, particlePos.y, particlePos.x);
-
-            p_220828_.addParticle(new DustParticleOptions(new Vector3f(0, 1, 1), 0.3f),
-                    pos.getX() + 0.5 + particlePos.x,
-                    pos.getY() + 0.5 + particlePos.y,
-                    pos.getZ() + 0.5 + particlePos.z,
-                    facing.getStepX(),
-                    facing.getStepY(),
-                    facing.getStepZ()
-            );
-        }
     }
 
     public enum Mode {

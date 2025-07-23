@@ -1,0 +1,22 @@
+{
+	"display": {
+		"icon": {
+			"item": "vs_orbit:jump_engine_controller"
+		},
+		"title": "瓦尔基里:轨道学",
+		"description": "宇宙无垠，星辰尘埃皆涵其中。",
+		"background": "vs_orbit:textures/gui/advancements/background.png",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"start": {
+			"trigger": "minecraft:tick"
+		}
+	},
+	"requirements": [
+		["start"]
+	]
+}

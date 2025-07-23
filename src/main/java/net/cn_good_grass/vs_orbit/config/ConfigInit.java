@@ -11,8 +11,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ConfigInit {
     @SubscribeEvent
     public static void register(FMLConstructModEvent event) {
-        event.enqueueWork(() -> {
-            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC, "vs_orbit_config.toml");
-        });
+        event.enqueueWork(() -> ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC, "vs_orbit_config.toml"));
     }
 }

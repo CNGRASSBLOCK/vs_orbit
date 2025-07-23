@@ -30,26 +30,13 @@ public class SpaceJoinPlayer {
             ListTag listtag = (ListTag) collision_data_map;
             String WorldId = ((Level) world).dimension().location().toString();
             CompoundTag obj = null;
-            for (Tag tag : listtag) {
-                if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) {
-                    if (compoundTag.getString("travel_to").equals(WorldId)) { obj = compoundTag; }
-                }
-            }
+            for (Tag tag : listtag) if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) if (compoundTag.getString("travel_to").equals(WorldId)) obj = compoundTag;
             if (obj == null) { return pCommand;}
             Vec3 newPos = StarAPI.getPos(atmospheric_data.getString("travel_to"), 1, obj, true);
 
             ReturnCommand = ReturnCommand.replace("{x}", "" + newPos.x);
             ReturnCommand = ReturnCommand.replace("{y}", "" + (newPos.y + (obj.getDouble("scale") / 2)));
             ReturnCommand = ReturnCommand.replace("{z}", "" + newPos.z);
-
-//            for (Ship ship : VSGameUtilsKt.getAllShips((Level) world)) {
-//                if (!ship.getChunkClaimDimension().equals("minecraft:dimension:" + entity.level().dimension().location())) { continue; }
-//                AABBdc ShipAABB = ship.getWorldAABB();
-//                Vec3 PlayerPos = entity.position();
-//                if (PlayerPos.x >= ShipAABB.minX() && PlayerPos.x <= ShipAABB.maxX() && PlayerPos.y >= ShipAABB.minY() && PlayerPos.y <= ShipAABB.maxY() && PlayerPos.z >= ShipAABB.minZ() && PlayerPos.z <= ShipAABB.maxZ()) {
-//                    return "";
-//                }
-//            }
 
             return ReturnCommand;
         }

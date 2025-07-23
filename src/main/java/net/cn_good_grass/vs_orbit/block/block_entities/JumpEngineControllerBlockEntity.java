@@ -3,8 +3,6 @@ package net.cn_good_grass.vs_orbit.block.block_entities;
 import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.JumpEngineControllerPeripheral;
-import net.cn_good_grass.vs_orbit.block.block_peripheral.MassGeneratorPeripheral;
-import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock.Mode;
 import net.cn_good_grass.vs_orbit.other.CompatMods;
 import net.minecraft.core.BlockPos;
@@ -23,7 +21,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class JumpEngineControllerBlockEntity extends BlockEntity {
-    public JumpEngineControllerBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.jump_engine_controller_block_entity.get(), pos, state); }
+    public JumpEngineControllerBlockEntity(BlockPos pos, BlockState state) {
+        super(VSOrbitModBlockEntities.jump_engine_controller_block_entity.get(), pos, state);
+    }
 
     public String state = "none";
     public Mode mode = Mode.POWER;
@@ -94,6 +94,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
         }
     }
 
+    @Override public void setRemoved() { super.setRemoved(); }
+
     public class SettingCompoundTag extends CompoundTag {
         public SettingCompoundTag() {
             super(); // 调用父类构造
@@ -103,15 +105,17 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("pos_y", 0);
             this.putDouble("pos_z", 0);
             this.putString("pos_world", "minecraft:overworld");
+            this.putDouble("planet_force_x", 0);
+            this.putDouble("planet_force_y", 0);
+            this.putDouble("planet_force_z", 0);
         }
     }
-
 
 
     private final LazyOptional<Object> peripheralCap = LazyOptional.of(() -> new JumpEngineControllerPeripheral(this));
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if(CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast();
+        if (CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast(); //cc
         return super.getCapability(cap, side);
     }
 }

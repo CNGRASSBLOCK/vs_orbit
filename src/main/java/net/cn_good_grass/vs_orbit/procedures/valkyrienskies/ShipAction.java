@@ -23,6 +23,7 @@ import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.apigame.ShipTeleportData;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;

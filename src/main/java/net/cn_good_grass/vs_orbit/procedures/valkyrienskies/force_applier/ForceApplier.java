@@ -1,19 +1,19 @@
 package net.cn_good_grass.vs_orbit.procedures.valkyrienskies.force_applier;
 
-import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.common.IVSOrbitForceApplier;
-import net.minecraft.core.BlockPos;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
 import org.joml.Vector3d;
-import org.joml.Vector3dc;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
-public class ForceApplier implements IVSOrbitForceApplier {
-    private final Vector3dc force;
+public class ForceApplier extends Force {
+    @JsonCreator public ForceApplier(@JsonProperty("name") String name, @JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z, @JsonProperty("time") double time) { super(name, x, y, z, time); }
 
-    public ForceApplier(Vector3d vector3d) { this.force = vector3d; }
-
-    @Override public void applyForces(BlockPos pos, PhysShipImpl physShip) {
-        physShip.applyInvariantForce(force);
+    @JsonIgnore
+    public void applyForces(PhysShipImpl physShip) {
+        if ((Double.isInfinite(x) || Double.isNaN(x)) || (Double.isInfinite(y) || Double.isNaN(y)) || (Double.isInfinite(z) || Double.isNaN(z))) return;
+        physShip.applyInvariantForce(new Vector3d(x, y, z));
     }
+
 }

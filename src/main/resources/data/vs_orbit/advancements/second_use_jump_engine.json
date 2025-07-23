@@ -1,0 +1,19 @@
+{
+	"parent": "vs_orbit:first_go_to_space",
+	"display": {
+		"icon": {
+			"item": "vs_orbit:jump_engine_controller"
+		},
+		"title": "愿此行，终抵群星。",
+		"description": "愿此行，终抵群星。",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"custom_trigger": {
+			"trigger": "vs_orbit:use_jump_engine"
+		}
+	}
+}

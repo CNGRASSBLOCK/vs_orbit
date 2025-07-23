@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;

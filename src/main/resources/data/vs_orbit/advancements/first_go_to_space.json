@@ -1,0 +1,19 @@
+{
+	"parent": "vs_orbit:root",
+	"display": {
+		"icon": {
+			"item": "vs_orbit:gravitational_core"
+		},
+		"title": "挣脱引力，拥抱深空。",
+		"description": "挣脱引力，拥抱深空。",
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	},
+	"criteria": {
+		"custom_trigger": {
+			"trigger": "vs_orbit:go_to_space"
+		}
+	}
+}

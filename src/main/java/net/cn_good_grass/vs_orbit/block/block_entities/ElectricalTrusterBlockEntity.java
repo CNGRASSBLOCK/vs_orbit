@@ -81,7 +81,7 @@ public class ElectricalTrusterBlockEntity extends BlockEntity {
     private final LazyOptional<Object> peripheralCap = LazyOptional.of(() -> new ElectromagneticTractorPeripheral(this));
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if(CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast();
+        if (CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast();
         return super.getCapability(cap, side);
     }
 }

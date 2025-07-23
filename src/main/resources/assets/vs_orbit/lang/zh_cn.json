@@ -4,6 +4,8 @@
   "block.vs_orbit.jump_engine_controller": "跃迁引擎控制器",
   "block.vs_orbit.mass_generator": "质量发生器",
   "block.vs_orbit.electromagnetic_tractor": "电磁牵引器",
+  "block.vs_orbit.electrical_truster": "霍尔推进器",
+  "block.vs_orbit.celestial_tachymeter": "天体测速仪",
 
   "item.vs_orbit.gravitational_core": "引力核心",
   "item.vs_orbit.control_circuit_board": "控制电路板",
@@ -15,18 +17,10 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode": "模式 :",
   "gui.vs_orbit.jump_engine_controller_gui.info.pos": "坐标 :",
   "gui.vs_orbit.jump_engine_controller_gui.button_toggle_mode" : "§c切换",
-
   "gui.vs_orbit.jump_engine_controller_gui.state.structure_error": "§c结构错误",
   "gui.vs_orbit.jump_engine_controller_gui.state.wait": "§e待机",
   "gui.vs_orbit.jump_engine_controller_gui.state.charged": "§d充能",
   "gui.vs_orbit.jump_engine_controller_gui.state.work": "§b工作",
-
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.power_force": "牛顿",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_x": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_y": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_z": "",
-  "gui.vs_orbit.jump_engine_controller_gui.editbox.pos_world": "",
-
   "gui.vs_orbit.jump_engine_controller_gui.mode.POWER": "§e动力",
   "gui.vs_orbit.jump_engine_controller_gui.mode.power.force": "力 :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.JUMP": "§b跃迁",
@@ -36,14 +30,18 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.z": "Z :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.jump.world": "维度ID :",
   "gui.vs_orbit.jump_engine_controller_gui.mode.PLANET_ENGINE": "§3行星§b发动机",
-
-
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force": "力 :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_x": "X方向:",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_y": "Y方向:",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_z": "Z方向:",
 
   "gui.vs_orbit.mass_generator_gui.title": "质量发生器",
   "gui.vs_orbit.mass_generator_gui.mass": "质量 :",
   "gui.vs_orbit.mass_generator_gui.info.all_mass": "总质量 :",
 
-  "gui.vs_orbit.mass_generator_gui.editbox.mass": "千克",
+  "gui.vs_orbit.electrical_truster_gui.title": "霍尔推进器",
+  "gui.vs_orbit.electrical_truster_gui.force": "力",
+  "gui.vs_orbit.electrical_truster_gui.info.mass" : "船只质量 :",
 
 
 

@@ -13,18 +13,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Math.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DisplayPlanetEngineFire {
-    private static List<double[]> PosSave = new ArrayList<>();
-
     private static void renderShapes(RenderLevelStageEvent event) {
-        if (PosSave.isEmpty()) for (int i = 0; i < 30; i++) PosSave.add(new double[]{cos(toRadians(i * 12)) * 46, sin(toRadians(i * 12)) * 46, cos(toRadians((i + 1) * 12)) * 46, sin(toRadians((i + 1) * 12)) * 46});
-
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
         if (level == null) return;
@@ -38,21 +31,20 @@ public class DisplayPlanetEngineFire {
         if (player == null) return;
         for (PlanetEngineFire fire : PlanetEngineFire.fires_cilent) {
             if (player.position().distanceTo(fire.blockPos.getCenter()) >= Minecraft.getInstance().options.renderDistance().get() * 480) continue;
-            for (double[] pos : PosSave) {
-                double[] pos1 = pos.clone();
-                pos1[0] += (Math.random() - 0.5);
-                pos1[1] += (Math.random() - 0.5);
-                pos1[2] += (Math.random() - 0.5);
-                pos1[3] += (Math.random() - 0.5);
+            for (int i = 0; i < 30; i++) {
+                double start_x = cos(toRadians(i*12)) * fire.r;
+                double start_z = sin(toRadians(i*12)) * fire.r;
+                double end_x = cos(toRadians((i + 1)*12)) * fire.r;
+                double end_z = sin(toRadians((i + 1)*12)) * fire.r;
                 if (begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR, true)) {
-                    add(fire.blockPos.getX() + pos1[0], fire.blockPos.getY(), fire.blockPos.getZ() + pos1[1], 0, 0, (int) (0xFF00FFFF + Math.random() * 0xFF0000));
-                    add(fire.blockPos.getX() + pos1[0], fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + pos1[1], 0, 0, 0x0000FFFF);
-                    add(fire.blockPos.getX() + pos1[2], fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + pos1[3], 0, 0, 0x0000FFFF);
-                    add(fire.blockPos.getX() + pos1[2], fire.blockPos.getY(), fire.blockPos.getZ() + pos1[3], 0, 0, (int) (0xFF00FFFF + Math.random() * 0xFF0000));
-                    add(fire.blockPos.getX() + pos1[1], fire.blockPos.getY(), fire.blockPos.getZ() + pos1[0], 0, 0, (int) (0xFF00FFFF + Math.random() * 0xFF0000));
-                    add(fire.blockPos.getX() + pos1[1], fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + pos1[0], 0, 0, 0x0000FFFF);
-                    add(fire.blockPos.getX() + pos1[3], fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + pos1[2], 0, 0, 0x0000FFFF);
-                    add(fire.blockPos.getX() + pos1[3], fire.blockPos.getY(), fire.blockPos.getZ() + pos1[2], 0, 0, (int) (0xFF00FFFF + Math.random() * 0xFF0000));
+                    add(fire.blockPos.getX() + start_x, fire.blockPos.getY(), fire.blockPos.getZ() + start_z, 0, 0, 0xFFBFFFFF);
+                    add(fire.blockPos.getX() + start_x, fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + start_z, 0, 0, 0x0000FFFF);
+                    add(fire.blockPos.getX() + end_x, fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + end_z, 0, 0, 0x0000FFFF);
+                    add(fire.blockPos.getX() + end_x, fire.blockPos.getY(), fire.blockPos.getZ() + end_z, 0, 0, 0xFFBFFFFF);
+                    add(fire.blockPos.getX() + start_z, fire.blockPos.getY(), fire.blockPos.getZ() + start_x, 0, 0, 0xFFBFFFFF);
+                    add(fire.blockPos.getX() + start_z, fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + start_x, 0, 0, 0x0000FFFF);
+                    add(fire.blockPos.getX() + end_z, fire.blockPos.getY() + fire.h, fire.blockPos.getZ() + end_x, 0, 0, 0x0000FFFF);
+                    add(fire.blockPos.getX() + end_z, fire.blockPos.getY(), fire.blockPos.getZ() + end_x, 0, 0, 0xFFBFFFFF);
                     end();
                 }
                 if (target(2)) {
@@ -184,4 +176,3 @@ public class DisplayPlanetEngineFire {
         }
     }
 }
-

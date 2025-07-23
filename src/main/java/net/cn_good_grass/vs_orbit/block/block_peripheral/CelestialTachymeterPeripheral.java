@@ -1,13 +1,10 @@
 package net.cn_good_grass.vs_orbit.block.block_peripheral;
 
 import dan200.computercraft.api.lua.LuaFunction;
-import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.AttachedComputerSet;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.cn_good_grass.vs_orbit.block.block_entities.CelestialTachymeterBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
 
 public class CelestialTachymeterPeripheral implements IPeripheral {
     private final CelestialTachymeterBlockEntity blockEntity;

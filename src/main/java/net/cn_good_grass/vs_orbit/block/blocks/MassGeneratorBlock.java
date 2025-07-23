@@ -1,14 +1,10 @@
 package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
-import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
-import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.classes.theard.AstronomicalPool;
-import net.jcm.vsch.ship.ThrusterData;
-import net.jcm.vsch.ship.VSCHForceInducedShips;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,26 +18,30 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 public class MassGeneratorBlock extends Block implements EntityBlock{
     public MassGeneratorBlock() {
         super(Properties.of()
-                .strength(5f, 75f) // 硬度（挖掘时间）、爆炸抗性
-                .sound(SoundType.STONE) // 音效类型
+                .strength(0.5f, 5f) // 硬度（挖掘时间）、爆炸抗性
+                .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops() // 需要正确工具采集
                 .lightLevel(state -> 8)
                 .noOcclusion()
         );
+    }
+
+    @Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        if (player.getInventory().getSelected().getItem() instanceof PickaxeItem tieredItem) return tieredItem.getTier().getLevel() >= 2;else return super.canHarvestBlock(state, world, pos, player);
     }
 
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new MassGeneratorBlockEntity(pos, state); }
@@ -72,6 +72,9 @@ public class MassGeneratorBlock extends Block implements EntityBlock{
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!(level instanceof ServerLevel)) return;
+
+        if (level.getBlockEntity(pos) instanceof MassGeneratorBlockEntity massGeneratorBlockEntity) massGeneratorBlockEntity.setRemoved();
+
         super.onRemove(state, level, pos, newState, isMoving);
     }
 

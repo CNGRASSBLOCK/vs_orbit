@@ -21,8 +21,8 @@ public class Config {
 
     static {
         MAIN.push("Core");
-        Core_TICK_SPEED = MAIN.comment("每秒多少次刻。\nHow many ticks per second.\n请注意:当瓦尔基里的运算速度与本mod物理核心运算速度不一致时将会出现严重的精度问题。\nPlease note: Serious accuracy issues will occur when Valkyrie's speed does not match the speed of the mod's physics core.").define("tick_speed", 20);
-        Core_TICK_TIME = MAIN.comment("单位刻相当于现实的多少秒。\nThe unit tick is equivalent to the number of seconds in reality.\n当目标速度为1.0时该值应为(1除以Core_TICK_SPEED)所得到的值。\nWhen the target speed is 1.0, the value should be (1 divided by Core_TICK_SPEED).").define("tick_time", 0.05);
+        Core_TICK_SPEED = MAIN.comment("每秒多少次刻。\nHow many ticks per second.\n请注意:当瓦尔基里的运算速度与本mod物理核心运算速度不一致时将会出现严重的精度问题。\nPlease note: Serious accuracy issues will occur when Valkyrie's speed does not match the speed of the mod's physics core.").define("tick_speed", 100);
+        Core_TICK_TIME = MAIN.comment("单位刻相当于现实的多少秒。\nThe unit tick is equivalent to the number of seconds in reality.\n当目标速度为1.0时该值应为(1除以Core_TICK_SPEED)所得到的值。\nWhen the target speed is 1.0, the value should be (1 divided by Core_TICK_SPEED).").define("tick_time", 0.01);
         MAIN.pop();
 
         MAIN.push("Gravitation");
@@ -32,7 +32,7 @@ public class Config {
 
         MAIN.push("ValkyrienSkies");
         ValkyrienSkies_ENABLE = MAIN.comment("是否启用对瓦尔基里的运算。\nWhether or not compatibility with Valkyrie is enabled.").define("enable", true);
-        ValkyrienSkies_ACCELERATION_SCALING = MAIN.comment("物理体的加速度缩放。\nAcceleration scaling of a physical body.").define("acceleration_scaling", 7200.0);
+        ValkyrienSkies_ACCELERATION_SCALING = MAIN.comment("物理体的加速度缩放。\nAcceleration scaling of a physical body.").define("acceleration_scaling", 1.0);
         MAIN.pop();
 
         MAIN.push("ExperimentalFeatures");
