@@ -3,14 +3,13 @@ package net.cn_good_grass.vs_orbit;
 import com.mojang.logging.LogUtils;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
-import net.cn_good_grass.vs_orbit.cilent.player.CameraController;
-import net.cn_good_grass.vs_orbit.cilent.player.PlayerController;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
-import net.cn_good_grass.vs_orbit.procedures.gravitation.core.ServerAction;
+import net.cn_good_grass.vs_orbit.procedures.create.CreateIntegration;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,27 +36,28 @@ public class VSOrbitMod
     //日志输出
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    private static final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
     public VSOrbitMod()
     {
         NetworkHandler.register();
-
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        eventBus.addListener(this::onClientSetup);
+        //注册事件
         VSOrbitModBlocks.register(eventBus);
         VSOrbitModBlockEntities.register(eventBus);
         VSOrbitModItems.register(eventBus);
         VSOrbitModCreativeTab.register(eventBus);
-        VSOrbitModEntities.REGISTRY.register(eventBus);
         VSOrbitModMenus.REGISTRY.register(eventBus);
-        //注册事件
+        VSOrbitModEntities.REGISTRY.register(eventBus);
+
         MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
-        MinecraftForge.EVENT_BUS.register(new PlayerController());
-        MinecraftForge.EVENT_BUS.register(new CameraController());
+
+        CreateIntegration.register();
+
+        eventBus.addListener(this::onClientSetup);
+
     }
 
-    private void onClientSetup(FMLClientSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+    private void onClientSetup(FMLClientSetupEvent event) {}
 
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
     private static int messageID = 0;
@@ -65,5 +65,6 @@ public class VSOrbitMod
         PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
         messageID++;
     }
+
 }
 

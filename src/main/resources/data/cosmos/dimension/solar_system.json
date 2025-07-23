@@ -1,0 +1,13 @@
+{
+  "type": "cosmos:solar_system",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "cosmos:space",
+      "lakes": false,
+      "features": false,
+      "layers": [],
+      "structure_overrides": ""
+    }
+  }
+}
