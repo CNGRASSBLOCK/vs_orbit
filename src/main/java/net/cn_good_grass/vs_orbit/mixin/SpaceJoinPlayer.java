@@ -25,9 +25,9 @@ public class SpaceJoinPlayer {
             if (atmospheric_data.contains("travel_to")) ReturnCommand = ReturnCommand.replace("{travel_to}", atmospheric_data.getString("travel_to"));
 
             CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-            Tag collision_data_map = worldVars.collision_data_map.get(atmospheric_data.getString("travel_to"));//星球数据
-            if (collision_data_map == null) { return pCommand; }
-            ListTag listtag = (ListTag) collision_data_map;
+            Tag opaque_object_map = worldVars.opaque_object_map.get(atmospheric_data.getString("travel_to"));//星球数据
+            if (opaque_object_map == null) { return pCommand; }
+            ListTag listtag = (ListTag) opaque_object_map;
             String WorldId = ((Level) world).dimension().location().toString();
             CompoundTag obj = null;
             for (Tag tag : listtag) if (tag instanceof CompoundTag compoundTag && compoundTag.contains("travel_to")) if (compoundTag.getString("travel_to").equals(WorldId)) obj = compoundTag;

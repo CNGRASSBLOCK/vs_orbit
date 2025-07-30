@@ -1,6 +1,5 @@
 package net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster;
 
-import net.jcm.vsch.config.VSCHConfig;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -31,23 +30,17 @@ public class ThrusterApplier {
 
         Vector3dc linearVelocity = physShip.getPoseVel().getVel();
 
-        if (VSCHConfig.LIMIT_SPEED.get()) {
-            int maxSpeed = VSCHConfig.MAX_SPEED.get().intValue();
-            if (Math.abs(linearVelocity.length()) >= maxSpeed) {
-                double dotProduct = tForce.dot(linearVelocity);
-                if (dotProduct > 0) {
-                    if (data.mode == ThrusterData.ThrusterMode.GLOBAL) {
-                        applyScaledForce(physShip, linearVelocity, tForce, maxSpeed);
-                    } else {
-                        Vector3d tPos = VectorConversionsMCKt.toJOMLD(pos).add(0.5, 0.5, 0.5, new Vector3d()).sub(transform.getPositionInShip());
-                        Vector3d parallel = new Vector3d(tPos).mul(tForce.dot(tPos) / tForce.dot(tForce));
-                        Vector3d perpendicular = new Vector3d(tForce).sub(parallel);
-                        physShip.applyInvariantForceToPos(perpendicular, tPos);
-                        applyScaledForce(physShip, linearVelocity, parallel, maxSpeed);
-                    }
-                    return;
-                }
+        if (tForce.dot(linearVelocity) > 0) {
+            if (data.mode == ThrusterData.ThrusterMode.GLOBAL) {
+                applyScaledForce(physShip, linearVelocity, tForce);
+            } else {
+                Vector3d tPos = VectorConversionsMCKt.toJOMLD(pos).add(0.5, 0.5, 0.5, new Vector3d()).sub(transform.getPositionInShip());
+                Vector3d parallel = new Vector3d(tPos).mul(tForce.dot(tPos) / tForce.dot(tForce));
+                Vector3d perpendicular = new Vector3d(tForce).sub(parallel);
+                physShip.applyInvariantForceToPos(perpendicular, tPos);
+                applyScaledForce(physShip, linearVelocity, parallel);
             }
+            return;
         }
 
         if (data.mode == ThrusterData.ThrusterMode.POSITION) {
@@ -58,12 +51,12 @@ public class ThrusterApplier {
         }
     }
 
-    private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
+    private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce) {
         assert ValkyrienSkiesMod.getCurrentServer() != null;
         double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
         double mass = physShip.getInertia().getShipMass();
 
-        Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
+        Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass))).sub(linearVelocity);
 
         physShip.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
     }

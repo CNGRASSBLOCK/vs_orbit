@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.block.block_entities;
 
 import dan200.computercraft.shared.Capabilities;
-import net.cn_good_grass.vs_orbit.other.CompatMods;
+import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.MassGeneratorPeripheral;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,6 @@ public class MassGeneratorBlockEntity extends BlockEntity {
     public MassGeneratorBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.mass_generator_block_entity.get(), pos, state); }
 
     public double mass = 0;
-
 
     @Override
     public void saveAdditional(CompoundTag tag) {

@@ -17,6 +17,7 @@ public class Config {
     public static final ForgeConfigSpec.ConfigValue<Double> Gravitation_GRAVITATIONAL_CONSTANT;
     //下面是ValkyrienSkies的
     public static final ForgeConfigSpec.ConfigValue<Boolean> ValkyrienSkies_ENABLE;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> ValkyrienSkies_SYNC_MODE;
     public static final ForgeConfigSpec.ConfigValue<Double> ValkyrienSkies_ACCELERATION_SCALING;
 
     static {
@@ -32,6 +33,7 @@ public class Config {
 
         MAIN.push("ValkyrienSkies");
         ValkyrienSkies_ENABLE = MAIN.comment("是否启用对瓦尔基里的运算。\nWhether or not compatibility with Valkyrie is enabled.").define("enable", true);
+        ValkyrienSkies_SYNC_MODE = MAIN.comment("物理体的同步模式，true代表物理体跟随天体。\nThe synchronization mode of the physical body, True means that the physical body follows the celestial body.").define("sync_mode", false);
         ValkyrienSkies_ACCELERATION_SCALING = MAIN.comment("物理体的加速度缩放。\nAcceleration scaling of a physical body.").define("acceleration_scaling", 1.0);
         MAIN.pop();
 

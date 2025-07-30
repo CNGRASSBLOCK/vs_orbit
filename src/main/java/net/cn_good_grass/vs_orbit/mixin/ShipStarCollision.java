@@ -22,21 +22,19 @@ import java.util.List;
 @Mixin(VSCHUtils.class)
 public class ShipStarCollision {
     @ModifyVariable(method = "getNearestPlanet", at = @At("STORE"), ordinal = 0, remap = false)
-    private static Tag DistanceOrderProvider(Tag cdm, LevelAccessor world, Vec3 position, String dimensionId) {
-        if (!(cdm instanceof ListTag collision_data_map)) return cdm;
+    private static ListTag DistanceOrderProvider(ListTag cdm, LevelAccessor world, Vec3 position, String dimensionId) {
+        ListTag Ropaque_object_map = cdm.copy();
 
-        ListTag Rcollision_data_map = collision_data_map.copy();
-
-        for (int i = 0; i < collision_data_map.size(); i++) {
-            CompoundTag StarData = collision_data_map.getCompound(i);
+        for (int i = 0; i < cdm.size(); i++) {
+            CompoundTag StarData = cdm.getCompound(i);
             Vec3 StarPos = StarAPI.getPos(dimensionId, 1, StarData, true);
             StarData.putDouble("x", StarPos.x);
             StarData.putDouble("y", StarPos.y);
             StarData.putDouble("z", StarPos.z);
-            Rcollision_data_map.set(i, StarData);
+            Ropaque_object_map.set(i, StarData);
         }
 
-        return Rcollision_data_map;
+        return Ropaque_object_map;
     }
 
     @Redirect(method = "getNearestPlanet", at = @At(value = "INVOKE", target = "Lnet/lointain/cosmos/procedures/DistanceOrderProviderProcedure;execute(Lnet/minecraft/nbt/CompoundTag;DLjava/lang/String;Lnet/minecraft/world/phys/Vec3;)Ljava/util/List;"), remap = false)

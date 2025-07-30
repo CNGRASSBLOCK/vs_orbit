@@ -88,19 +88,13 @@ dependencies {
     implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
 
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    implementation fg.deobf("curse.maven:starlance-1130106:6419355")
+    implementation fg.deobf("curse.maven:starlance-1130106:6823260")
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.2')
     implementation 'thedarkcolour:kotlinforforge:4.10.0'
     implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
 
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-
-    //runtimeOnly fg.deobf(files("libs/rubidium-extra-0.5.4.4+mc1.20.1-build.131.jar"))
-    //runtimeOnly fg.deobf(files("libs/oculus-mc1.20.1-1.8.0.jar")) { exclude group: 'org.spongepowered', module: 'mixin' }
-    //runtimeOnly fg.deobf(files("libs/embeddium-0.3.31+mc1.20.1.jar")) { exclude group: 'org.spongepowered', module: 'mixin' }
-    //runtimeOnly files("libs/Shimmer-forge-1.20.1-0.2.4.jar")
-    //runtimeOnly fg.deobf(files("libs/yesstevemodel-forge-1.20-2.2.2.jar")) //炸了
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))

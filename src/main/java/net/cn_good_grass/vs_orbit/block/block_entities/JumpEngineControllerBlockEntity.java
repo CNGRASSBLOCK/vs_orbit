@@ -4,7 +4,7 @@ import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.JumpEngineControllerPeripheral;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock.Mode;
-import net.cn_good_grass.vs_orbit.other.CompatMods;
+import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +96,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
 
     @Override public void setRemoved() { super.setRemoved(); }
 
-    public class SettingCompoundTag extends CompoundTag {
+    public static class SettingCompoundTag extends CompoundTag {
         public SettingCompoundTag() {
             super(); // 调用父类构造
             // 设置默认值
@@ -108,6 +108,19 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("planet_force_x", 0);
             this.putDouble("planet_force_y", 0);
             this.putDouble("planet_force_z", 0);
+        }
+
+        public SettingCompoundTag(CompoundTag tag) {
+            super(); // 调用父类构造
+            // 设置默认值
+            this.putDouble("force", tag.getDouble("force"));
+            this.putDouble("pos_x", tag.getDouble("pos_x"));
+            this.putDouble("pos_y", tag.getDouble("pos_y"));
+            this.putDouble("pos_z", tag.getDouble("pos_z"));
+            this.putString("pos_world", tag.getString("pos_world"));
+            this.putDouble("planet_force_x", tag.getDouble("planet_force_x"));
+            this.putDouble("planet_force_y", tag.getDouble("planet_force_y"));
+            this.putDouble("planet_force_z", tag.getDouble("planet_force_z"));
         }
     }
 

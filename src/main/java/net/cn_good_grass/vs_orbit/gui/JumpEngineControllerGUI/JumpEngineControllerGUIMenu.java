@@ -5,6 +5,8 @@ import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
+import net.cn_good_grass.vs_orbit.network.NetworkHandler;
+import net.cn_good_grass.vs_orbit.network.gui.SyncJumpEngineControllerGUI;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -132,23 +134,24 @@ public class JumpEngineControllerGUIMenu extends AbstractContainerMenu implement
 			}
 			// security measure to prevent arbitrary chunk generation
 			if (!world.hasChunkAt(new BlockPos(x, y, z))) return;
-			if (mode == 0) {
-				JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
-				if (blockEntity == null) return;
-				if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.POWER)) {
-					try { blockEntity.setting.putDouble("force", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_1")).getValue())); } catch (NumberFormatException ignored) {}
+			if (mode == 0 && world.isClientSide()) {
+				JumpEngineControllerBlockEntity.SettingCompoundTag settingCompoundTag = new JumpEngineControllerBlockEntity.SettingCompoundTag();
+				if (!(world.getBlockEntity(new BlockPos(x, y, z)) instanceof JumpEngineControllerBlockEntity blockEntity)) return;
+				if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
+					try {settingCompoundTag.putDouble("force", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_1")).getValue()));} catch (NumberFormatException ignored) {}
 				}
 				if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.JUMP)) {
-					try { blockEntity.setting.putDouble("pos_x", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_2")).getValue())); } catch (NumberFormatException ignored) {}
-					try { blockEntity.setting.putDouble("pos_y", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_3")).getValue())); } catch (NumberFormatException ignored) {}
-					try { blockEntity.setting.putDouble("pos_z", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_4")).getValue())); } catch (NumberFormatException ignored) {}
-					try { blockEntity.setting.putDouble("pos_world", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_5")).getValue())); } catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("pos_x", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_2")).getValue()));} catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("pos_y", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_3")).getValue()));} catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("pos_z", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_4")).getValue()));} catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("pos_world", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_5")).getValue()));} catch (NumberFormatException ignored) {}
 				}
 				if (blockEntity.mode.equals(JumpEngineControllerBlock.Mode.PLANET_ENGINE)) {
-					try { blockEntity.setting.putDouble("planet_force_x", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_2")).getValue())); } catch (NumberFormatException ignored) {}
-					try { blockEntity.setting.putDouble("planet_force_y", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_3")).getValue())); } catch (NumberFormatException ignored) {}
-					try { blockEntity.setting.putDouble("planet_force_z", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_4")).getValue())); } catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("planet_force_x", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_2")).getValue()));} catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("planet_force_y", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_3")).getValue()));} catch (NumberFormatException ignored) {}
+					try {settingCompoundTag.putDouble("planet_force_z", Double.parseDouble(((EditBox) guistate.get("vs_orbit:editBox_4")).getValue()));} catch (NumberFormatException ignored) {}
 				}
+				NetworkHandler.INSTANCE.sendToServer(new SyncJumpEngineControllerGUI(new BlockPos(x, y, z), settingCompoundTag));
 			}
 		}
 

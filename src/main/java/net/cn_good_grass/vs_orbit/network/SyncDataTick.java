@@ -2,8 +2,8 @@ package net.cn_good_grass.vs_orbit.network;
 
 import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngineFire;
 import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.network.packet.SyncAstronomicalPoolPacket;
-import net.cn_good_grass.vs_orbit.network.packet.SyncPlanetEngineDataPacket;
+import net.cn_good_grass.vs_orbit.network.data.SyncAstronomicalPoolPacket;
+import net.cn_good_grass.vs_orbit.network.data.SyncPlanetEngineDataPacket;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,7 @@ public class SyncDataTick {
 
         if (player instanceof ServerPlayer serverPlayer) {
             //引力数据
-            if (Config.Gravitation_WORK_WORLD.get().contains(player.level().dimension().location().toString())) NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
+            if (Config.Gravitation_WORK_WORLD.get().contains(serverPlayer.level().dimension().location().toString())) NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
 
             //行星发动机火焰数据
             StringBuilder planetfirelist = new StringBuilder();

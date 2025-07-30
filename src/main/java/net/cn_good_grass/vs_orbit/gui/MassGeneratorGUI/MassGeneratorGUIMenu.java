@@ -4,6 +4,9 @@ package net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
+import net.cn_good_grass.vs_orbit.network.NetworkHandler;
+import net.cn_good_grass.vs_orbit.network.gui.SyncElectromagneticTractorGUI;
+import net.cn_good_grass.vs_orbit.network.gui.SyncMassGeneratorGUI;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -132,10 +135,12 @@ public class MassGeneratorGUIMenu extends AbstractContainerMenu implements Suppl
 			}
 			// security measure to prevent arbitrary chunk generation
 			if (!world.hasChunkAt(new BlockPos(x, y, z))) return;
-			if (mode == 0) {
+			if (mode == 0 && world.isClientSide()) {
 				MassGeneratorBlockEntity blockEntity = (MassGeneratorBlockEntity) entity.level().getBlockEntity(new BlockPos(x, y, z));
 				if (blockEntity == null) return;
-				try { blockEntity.mass = Double.parseDouble(((EditBox) guistate.get("vs_orbit:mass")).getValue()); } catch (NumberFormatException ignored) {}
+				double mass = 0;
+				try { mass = Double.parseDouble(((EditBox) guistate.get("vs_orbit:mass")).getValue()); } catch (NumberFormatException ignored) {}
+				NetworkHandler.INSTANCE.sendToServer(new SyncMassGeneratorGUI(new BlockPos(x, y, z), mass));
 			}
 		}
 

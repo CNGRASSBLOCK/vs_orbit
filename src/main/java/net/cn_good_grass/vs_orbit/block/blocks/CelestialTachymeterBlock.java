@@ -71,8 +71,8 @@ public class CelestialTachymeterBlock extends Block implements EntityBlock{
 
     private static Vector3d SpeedMeasurementForShip(Ship ship) {
         AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(ship.getChunkClaimDimension().replace("minecraft:dimension:", ""));
-        if (astronomicalPool == null) return new Vector3d(0, 0, 0);
-        Astronomical astronomical = astronomicalPool.getAstronomical("VSShip-" + ship.getId());
+        Astronomical astronomical = null;
+        if (astronomicalPool != null) astronomical = astronomicalPool.getAstronomical("VSShip-" + ship.getId());
 
         if (astronomical != null) { //如果有质点优先使用质点速度
             return new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed);

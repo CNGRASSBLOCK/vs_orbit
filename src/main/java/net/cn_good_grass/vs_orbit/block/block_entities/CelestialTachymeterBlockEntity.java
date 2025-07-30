@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.block.block_entities;
 import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.CelestialTachymeterPeripheral;
-import net.cn_good_grass.vs_orbit.other.CompatMods;
+import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,8 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.joml.Vector3d;
-
-import java.util.List;
 
 public class CelestialTachymeterBlockEntity extends BlockEntity {
     public CelestialTachymeterBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.celestial_tachymeter_block_entity.get(), pos, state); }

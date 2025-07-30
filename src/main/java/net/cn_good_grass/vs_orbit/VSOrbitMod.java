@@ -8,7 +8,7 @@ import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
-import net.cn_good_grass.vs_orbit.procedures.create.CreateIntegration;
+import net.cn_good_grass.vs_orbit.procedures.create.CreateRegistrar;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -51,13 +52,18 @@ public class VSOrbitMod
 
         MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
 
-        CreateIntegration.register();
-
         eventBus.addListener(this::onClientSetup);
-
+        eventBus.addListener(this::onCommonSetup);
     }
 
-    private void onClientSetup(FMLClientSetupEvent event) {}
+    private void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            CreateRegistrar.register();
+        });
+    }
+
+    private void onClientSetup(FMLClientSetupEvent event) {
+    }
 
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
     private static int messageID = 0;

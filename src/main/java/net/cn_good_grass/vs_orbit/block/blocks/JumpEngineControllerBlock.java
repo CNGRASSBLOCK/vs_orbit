@@ -7,7 +7,6 @@ import net.cn_good_grass.vs_orbit.cilent.render.object.PlanetEngine.PlanetEngine
 import net.cn_good_grass.vs_orbit.entity.ThrusterCore.ThrusterCoreEntity;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.cosmos.CableConnectionHelper;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,7 +39,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -85,8 +82,6 @@ public class JumpEngineControllerBlock extends Block implements EntityBlock {
         super.onPlace(blockstate, world, pos, oldState, moving);
         if (!(world instanceof ServerLevel)) return;
         world.scheduleTick(pos, this, 1);
-
-        CableConnectionHelper.setCableConnections(world, pos, new Direction[]{blockstate.getValue(BlockStateProperties.FACING), blockstate.getValue(BlockStateProperties.FACING).getClockWise(),  blockstate.getValue(BlockStateProperties.FACING).getCounterClockWise()}, true);
 
         ThrusterInducedShips ships = ThrusterInducedShips.get(world, pos);
         if (ships == null) return;

@@ -4,28 +4,17 @@ import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.ElectromagneticTractorPeripheral;
 import net.cn_good_grass.vs_orbit.block.blocks.ElectricalTrusterBlock.Mode;
-import net.cn_good_grass.vs_orbit.other.CompatMods;
-import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
+import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-
-import static net.cn_good_grass.vs_orbit.block.blocks.ElectricalTrusterBlock.FACING;
 
 public class ElectricalTrusterBlockEntity extends BlockEntity {
     public ElectricalTrusterBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.electrical_truster_block_entity.get(), pos, state); }

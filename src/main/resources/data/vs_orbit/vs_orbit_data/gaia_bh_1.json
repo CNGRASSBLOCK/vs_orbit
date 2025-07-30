@@ -1,0 +1,22 @@
+{
+  "planet_data": {
+    "BH1 B": {
+      "mass": 0,
+      "astronomical_compute": true,
+      "pos": [60000, 900, -300],
+      "speed": [0, 0, 0]
+    },
+    "Gaia BH1": {
+      "mass": 1.91e+20,
+      "astronomical_compute": true,
+      "pos": [45000, 1200, 85000],
+      "speed": [0, 0, 0]
+    },
+    "Dark Earth": {
+      "mass": 0,
+      "astronomical_compute": true,
+      "pos": [35000, 470, 35000],
+      "speed": [0, 0, 0]
+    }
+  }
+}

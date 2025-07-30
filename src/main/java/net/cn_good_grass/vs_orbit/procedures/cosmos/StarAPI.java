@@ -27,6 +27,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
@@ -51,14 +53,14 @@ public class StarAPI {
         if (newAstronomicalPool == null || oldAstronomicalPool == null) return new Vec3(0, 0, 0);
 
 
-        String StarID;
+        String StarID = "";
         if (StarTag.getString("function").contains("ring")) {
-            StarID = getStarIdFromRing(dimension, StarTag);
+            if (!isServer) StarID = getStarIdFromRing(dimension, StarTag);
         } else {
             StarID = StarTag.getString("object_name");
         }
 
-        if (StarID.isEmpty()) { return new Vec3(0, 0, 0); }
+        if (StarID.isEmpty()) return new Vec3(0, 0, 0);
         String AstronomicalID = "CosmosStar-" + StarID;
         Astronomical newAstronomical = newAstronomicalPool.getAstronomical(AstronomicalID);
         Astronomical oldAstronomical = oldAstronomicalPool.getAstronomical(AstronomicalID);
@@ -68,7 +70,7 @@ public class StarAPI {
         return new Vec3(Mth.lerp(partialTick, Old_Pos.x, New_Pos.x), Mth.lerp(partialTick, Old_Pos.y, New_Pos.y), Mth.lerp(partialTick, Old_Pos.z, New_Pos.z));
     }
 
-    public static List<Object> changeOrder(LevelAccessor world, Entity entity, double partialTick, ListTag map, double order, String dimension, Vec3 position) {
+    public static List<Object> changeOrder(Entity entity, double partialTick, ListTag map, double order, String dimension, Vec3 position) {
         if (map == null || dimension == null || position == null)
             return new ArrayList<>();
         Map<Object, Object> starting_map = new HashMap<>();
@@ -170,6 +172,7 @@ public class StarAPI {
         }
     }
     //杂七杂八的
+    @OnlyIn(Dist.CLIENT)
     public static String getStarIdFromRing(String dimension, CompoundTag RingTag) {
         if (!RingTag.getString("function").equals("ring")) return "";
 
@@ -199,10 +202,17 @@ public class StarAPI {
             ListTag listtag = new ListTag();
             CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
 
-            if (!worldVars.collision_data_map.contains(WorldId)) return null;
-            Tag collision_data_map = worldVars.collision_data_map.get(WorldId); //星球数据
+            if (!worldVars.opaque_object_map.contains(WorldId)) return null;
+            Tag opaque_object_map = worldVars.opaque_object_map.get(WorldId); //星球数据
             Tag light_source_map = worldVars.light_source_map.get(WorldId); //恒星数据
-            if (collision_data_map instanceof ListTag listTag) listtag.addAll(listTag.copy());
+            //找黑洞的
+            Tag render_data_map = worldVars.render_data_map.get(WorldId);
+            if (render_data_map instanceof ListTag listTag) for (int i = 0; i < listTag.size(); i++) {
+                    CompoundTag compoundTag = listTag.getCompound(i);
+                    if (compoundTag.getString("type").equals("blackhole")) listtag.add(compoundTag);
+            }
+
+            if (opaque_object_map instanceof ListTag listTag) listtag.addAll(listTag.copy());
             if (hasStar) if (light_source_map instanceof ListTag listTag) listtag.addAll(listTag.copy());
             if (listtag.isEmpty()) return null;
 
@@ -210,6 +220,20 @@ public class StarAPI {
 
             return listtag;
         }
+    }
+
+    @Nullable public static CompoundTag getStarDataFormLevel(Level world) {
+        for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+            ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
+            if (level == null) continue;
+            ListTag data = StarAPI.getAllStarData(level, false);
+            if (data == null) continue;
+            for (int i = 0; i < data.size(); i++) {
+                CompoundTag StarTag = data.getCompound(i);
+                if (StarTag.getString("travel_to").equals(world.dimension().location().toString())) return StarTag;
+            }
+        }
+        return null;
     }
 
     @Nullable public static Astronomical getAstronomicalFormLevel(Level world) {
