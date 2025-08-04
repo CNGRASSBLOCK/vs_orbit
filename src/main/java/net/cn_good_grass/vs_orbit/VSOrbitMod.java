@@ -62,8 +62,7 @@ public class VSOrbitMod
         });
     }
 
-    private void onClientSetup(FMLClientSetupEvent event) {
-    }
+    private void onClientSetup(FMLClientSetupEvent event) {}
 
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
     private static int messageID = 0;

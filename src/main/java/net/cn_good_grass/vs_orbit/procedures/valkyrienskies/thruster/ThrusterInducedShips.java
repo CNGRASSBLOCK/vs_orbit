@@ -25,9 +25,7 @@ public class ThrusterInducedShips implements ShipForcesInducer {
 
 	// ----- Force Appliers ----- //
 
-	public void addApplier(BlockPos pos, ThrusterApplier applier) {
-		appliers.put(pos, applier);
-	}
+	public void addApplier(BlockPos pos, ThrusterApplier applier) { appliers.put(pos, applier); }
 
 	public void removeApplier(BlockPos pos){ appliers.remove(pos); }
 

@@ -4,25 +4,33 @@
       "mass": 13891500000000000,
       "astronomical_compute": true,
       "pos": [43301.3, 500, 0],
-      "speed": [0, 0, 0]
+      "speed": [0, 0, 0],
+      "rotating_shaft": [0, 1, 0],
+      "rotating_cycle": 30240
     },
     "Rigil Kentaurus": {
       "mass": 13891500000000000,
       "astronomical_compute": true,
       "pos": [-43301.3, 500, 50000],
-      "speed": [0, 0, 0]
+      "speed": [0, 0, 0],
+      "rotating_shaft": [0, 1, 0],
+      "rotating_cycle": 26400
     },
     "Proxima": {
       "mass": 13891500000000000,
       "astronomical_compute": true,
       "pos": [-43301.3, 500, -50000],
-      "speed": [0, 0, 0]
+      "speed": [0, 0, 0],
+      "rotating_shaft": [0, 1, 0],
+      "rotating_cycle": 99600
     },
     "Glacio": {
       "mass": 501187500000,
       "astronomical_compute": true,
       "pos": [0, 500, 0],
-      "speed": [0, 0, 0]
+      "speed": [0, 0, 0],
+      "rotating_shaft": [0, 0.906, -0.423],
+      "rotating_cycle": 1280
     }
   }
 }

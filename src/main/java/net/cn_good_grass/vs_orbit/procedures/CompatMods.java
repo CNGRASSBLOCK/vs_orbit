@@ -3,7 +3,8 @@ package net.cn_good_grass.vs_orbit.procedures;
 import net.minecraftforge.fml.ModList;
 
 public enum CompatMods {
-	COMPUTERCRAFT("computercraft");
+	COMPUTERCRAFT("computercraft"),
+	CREATE("create");
 
 	private final String modId;
 

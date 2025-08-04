@@ -42,11 +42,15 @@ public abstract class AstronomicalThread {
                 if (ServerLifecycleHooks.getCurrentServer() != null) if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) if (Minecraft.getInstance().isPaused()) run = false;
 
                 if (run) {
-                    for (AstronomicalPool gravitationPool : ServerAction.Astronomical_Core_World_Bus) {
-                        //下各种事件更新
-                        gravitationPool.ForceUpdate(core_tick_time);
-                        gravitationPool.SpeedUpdates(core_tick_time);
-                        gravitationPool.LocationUpdates(core_tick_time);
+                    synchronized (ServerAction.Astronomical_Core_World_Bus) {
+                        for (AstronomicalPool gravitationPool : ServerAction.Astronomical_Core_World_Bus) {
+                            //下各种事件更新
+                            gravitationPool.ForceUpdate(core_tick_time);
+                            gravitationPool.SpeedUpdates(core_tick_time);
+                            gravitationPool.LocationUpdates(core_tick_time);
+
+                            gravitationPool.RotateUpdates(core_tick_time);
+                        }
                     }
                 }
 

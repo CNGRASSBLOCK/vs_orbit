@@ -23,15 +23,14 @@ public class Astronomical {
 
     public double x, y, z; //位置
 
-    public Quaterniond rotate; //旋转
-
-    public double mass; //质量
-
     public double x_speed = 0; //速度
     public double y_speed = 0;
     public double z_speed = 0;
 
-    public double rotate_speed = 0; //旋转速度
+    public Quaterniond rotate; //自转
+    public double rotate_speed = 0; //自转速度
+
+    public double mass; //质量
 
     private final List<Force> forces = new ArrayList<>();
 
@@ -51,18 +50,6 @@ public class Astronomical {
         this.y = y;
         this.z = z;
         this.rotate = new Quaterniond(0, 1, 0, 0);
-    }
-
-    public Astronomical(int id, String name, String type, boolean compute, double mass, double x, double y, double z, Quaterniond rotate) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.compute = compute;
-        this.mass = mass;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.rotate = rotate;
     }
 
     public boolean addForce(Force force){

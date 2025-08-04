@@ -60,30 +60,29 @@ public class CelestialTachymeterBlock extends Block implements EntityBlock{
         if (!(world.getBlockEntity(pos) instanceof CelestialTachymeterBlockEntity celestialTachymeterBlockEntity)) return;
 
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
-        if (ship != null)
-            celestialTachymeterBlockEntity.speed = SpeedMeasurementForShip(ship);
-        else
-            celestialTachymeterBlockEntity.speed = SpeedMeasurementForStar(world);
+        if (ship != null) SpeedMeasurementForShip(ship, celestialTachymeterBlockEntity); else SpeedMeasurementForStar(world, celestialTachymeterBlockEntity);
 
         world.scheduleTick(pos, this, 1);
         world.sendBlockUpdated(pos, blockstate, blockstate, 3);
     }
 
-    private static Vector3d SpeedMeasurementForShip(Ship ship) {
+    private static void SpeedMeasurementForShip(Ship ship, CelestialTachymeterBlockEntity celestialTachymeterBlockEntity) {
         AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(ship.getChunkClaimDimension().replace("minecraft:dimension:", ""));
         Astronomical astronomical = null;
         if (astronomicalPool != null) astronomical = astronomicalPool.getAstronomical("VSShip-" + ship.getId());
+        celestialTachymeterBlockEntity.target = "VSShip-" + ship.getId();
 
-        if (astronomical != null) { //如果有质点优先使用质点速度
-            return new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed);
-        } else {
-            return (Vector3d) ship.getVelocity();
-        }
+        if (astronomical != null) celestialTachymeterBlockEntity.speed = new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed); else celestialTachymeterBlockEntity.speed = (Vector3d) ship.getVelocity();
     }
 
-    private static Vector3d SpeedMeasurementForStar(ServerLevel world) {
+    private static void SpeedMeasurementForStar(ServerLevel world, CelestialTachymeterBlockEntity celestialTachymeterBlockEntity) {
         Astronomical astronomical = StarAPI.getAstronomicalFormLevel(world);
-        if (astronomical != null) return new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed);
-        return new Vector3d(0, 0, 0);
+        if (astronomical != null) {
+            celestialTachymeterBlockEntity.speed = new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed);
+            celestialTachymeterBlockEntity.target = astronomical.name;
+            return;
+        }
+        celestialTachymeterBlockEntity.speed = new Vector3d(0, 0, 0);
+        celestialTachymeterBlockEntity.target = "NULL";
     }
 }

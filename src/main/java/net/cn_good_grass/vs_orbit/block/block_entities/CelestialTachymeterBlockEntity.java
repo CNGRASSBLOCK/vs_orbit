@@ -19,6 +19,7 @@ import org.joml.Vector3d;
 public class CelestialTachymeterBlockEntity extends BlockEntity {
     public CelestialTachymeterBlockEntity(BlockPos pos, BlockState state) { super(VSOrbitModBlockEntities.celestial_tachymeter_block_entity.get(), pos, state); }
 
+    public String target = "";
     public Vector3d speed = new Vector3d();
 
     @Override

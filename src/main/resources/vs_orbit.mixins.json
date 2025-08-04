@@ -7,6 +7,7 @@
   "mixins": [
     "SpaceJoinPlayer",
     "SpaceJoinShip",
+    "PlayerStarCollision",
     "ShipStarCollision",
     "NoVoidDamage"
   ],

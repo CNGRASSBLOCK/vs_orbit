@@ -70,6 +70,46 @@ public class StarAPI {
         return new Vec3(Mth.lerp(partialTick, Old_Pos.x, New_Pos.x), Mth.lerp(partialTick, Old_Pos.y, New_Pos.y), Mth.lerp(partialTick, Old_Pos.z, New_Pos.z));
     }
 
+    public static Vec3 getRotate(String dimension, double partialTick, CompoundTag StarTag, boolean isServer) { //星球更新
+        AstronomicalPool newAstronomicalPool = null;
+        AstronomicalPool oldAstronomicalPool = null;
+        if (isServer) {
+            newAstronomicalPool = AstronomicalPool.getFromWorldID(dimension);
+            oldAstronomicalPool = newAstronomicalPool;
+        } else {
+            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
+                newAstronomicalPool = astronomicalPool;
+                break; }
+            for (AstronomicalPool astronomicalPool : SyncDataTick.Old_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
+                oldAstronomicalPool = astronomicalPool;
+                break; }
+        }
+        if (newAstronomicalPool == null || oldAstronomicalPool == null) return new Vec3(0, 0, 0);
+
+
+        String StarID = "";
+        if (StarTag.getString("function").contains("ring")) {
+            if (!isServer) StarID = getStarIdFromRing(dimension, StarTag);
+        } else {
+            StarID = StarTag.getString("object_name");
+        }
+
+        if (StarID.isEmpty()) return new Vec3(0, 0, 0);
+        String AstronomicalID = "CosmosStar-" + StarID;
+        Astronomical newAstronomical = newAstronomicalPool.getAstronomical(AstronomicalID);
+        Astronomical oldAstronomical = oldAstronomicalPool.getAstronomical(AstronomicalID);
+        if (newAstronomical == null || oldAstronomical == null) return new Vec3(0, 0, 0);
+        Vector3d New_Rotate = newAstronomical.rotate.getEulerAnglesXYZ(new Vector3d());
+        New_Rotate.x = Math.toDegrees(New_Rotate.x);
+        New_Rotate.y = Math.toDegrees(New_Rotate.y);
+        New_Rotate.z = Math.toDegrees(New_Rotate.z);
+        Vector3d Old_Rotate = oldAstronomical.rotate.getEulerAnglesXYZ(new Vector3d());
+        Old_Rotate.x = Math.toDegrees(Old_Rotate.x);
+        Old_Rotate.y = Math.toDegrees(Old_Rotate.y);
+        Old_Rotate.z = Math.toDegrees(Old_Rotate.z);
+        return new Vec3(Mth.lerp(partialTick, Old_Rotate.x, New_Rotate.x), Mth.lerp(partialTick, Old_Rotate.y, New_Rotate.y), Mth.lerp(partialTick, Old_Rotate.z, New_Rotate.z));
+    }
+
     public static List<Object> changeOrder(Entity entity, double partialTick, ListTag map, double order, String dimension, Vec3 position) {
         if (map == null || dimension == null || position == null)
             return new ArrayList<>();

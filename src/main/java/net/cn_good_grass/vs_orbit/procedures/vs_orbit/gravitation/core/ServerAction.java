@@ -19,13 +19,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import net.cn_good_grass.vs_orbit.config.Config;
+import org.joml.Quaterniond;
+import org.joml.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ServerAction {
-    public static List<AstronomicalPool> Astronomical_Core_World_Bus = new ArrayList<>();
+    public static final List<AstronomicalPool> Astronomical_Core_World_Bus = new ArrayList<>();
 
     @SubscribeEvent
     public static void OnWorldLoad(LevelEvent.Load event) {
@@ -96,11 +98,23 @@ public class ServerAction {
             String type = "cosmos:planet";
             if (compoundTag.contains("core_color")) type = "cosmos:star";
             Astronomical astronomical = new Astronomical(i, "CosmosStar-" + StarName, type, StarJsonObject.getAsJsonObject(StarName).get("astronomical_compute").getAsBoolean(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsDouble(), pos.get(0).getAsDouble(), pos.get(1).getAsDouble(), pos.get(2).getAsDouble());
+
             List<JsonElement> speed = StarJsonObject.getAsJsonObject(StarName).get("speed").getAsJsonArray().asList();
             if (speed.size() != 3) continue;
             astronomical.x_speed = speed.get(0).getAsDouble();
             astronomical.y_speed = speed.get(1).getAsDouble();
             astronomical.z_speed = speed.get(2).getAsDouble();
+
+            List<JsonElement> rotating_shaft = StarJsonObject.getAsJsonObject(StarName).get("rotating_shaft").getAsJsonArray().asList();
+            if (rotating_shaft.size() != 3) continue;
+            astronomical.rotate = new Quaterniond().rotateXYZ(rotating_shaft.get(0).getAsDouble(), rotating_shaft.get(1).getAsDouble(),rotating_shaft.get(2).getAsDouble());
+            astronomical.rotate_speed = 2 * Math.PI / StarJsonObject.getAsJsonObject(StarName).get("rotating_cycle").getAsDouble();
+            CompoundTag rotating_shaft_tag = new CompoundTag();
+            rotating_shaft_tag.putDouble("x", rotating_shaft.get(0).getAsDouble());
+            rotating_shaft_tag.putDouble("y", rotating_shaft.get(1).getAsDouble());
+            rotating_shaft_tag.putDouble("z", rotating_shaft.get(2).getAsDouble());
+            astronomical.Tag.put("rotating_shaft", rotating_shaft_tag);
+
             newWorld.addAstronomical(astronomical);
         }
         ServerAction.Astronomical_Core_World_Bus.add(newWorld); //新建引力世界用于处理

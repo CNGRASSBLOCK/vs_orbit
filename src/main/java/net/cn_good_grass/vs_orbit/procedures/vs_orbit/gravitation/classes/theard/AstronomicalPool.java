@@ -4,12 +4,15 @@ import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate.AstronomicalGravitation;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class AstronomicalPool {
     public final String WorldId;
@@ -131,6 +134,12 @@ public class AstronomicalPool {
                 astronomical.y += time * astronomical.y_speed;
                 astronomical.z += time * astronomical.z_speed;
             }
+        }
+    }
+
+    public void RotateUpdates(double time) {
+        synchronized (astronomicalPool) {
+            for (Astronomical astronomical : astronomicalPool) astronomical.rotate.rotateLocalY(astronomical.rotate_speed * time);
         }
     }
 }

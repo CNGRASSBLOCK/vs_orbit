@@ -59,5 +59,11 @@
   "message.vs_orbit.core.speed_set": "§a设置成功！",
   "message.vs_orbit.core.astronomical_object_tp": "§a传送成功！",
   "message.vs_orbit.core.astronomical_object_setspeed": "§a设置成功！",
-  "message.vs_orbit.core.astronomical_object_addforce": "§a添加成功！"
+  "message.vs_orbit.core.astronomical_object_addforce": "§a添加成功！",
+
+
+
+  "create.vs_orbit.display_source.celestial_tachymeter.target": "目标:",
+  "create.vs_orbit.display_source.celestial_tachymeter.speed": "总速度:",
+  "create.vs_orbit.display_source.celestial_tachymeter.speed_xyz": "XYZ方向上速度:"
 }
