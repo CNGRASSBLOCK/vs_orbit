@@ -35,6 +35,11 @@ public class VSOrbitModBlocks {
             "celestial_tachymeter",
             CelestialTachymeterBlock::new
     );
+
+    public static final RegistryObject<Block> orbital_projector_block = BLOCKS.register(
+            "orbital_projector",
+            OrbitalProjectorBlock::new
+    );
     // 在构造函数中注册到主模组总线
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

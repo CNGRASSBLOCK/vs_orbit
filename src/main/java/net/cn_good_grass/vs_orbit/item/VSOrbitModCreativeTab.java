@@ -23,6 +23,7 @@ public class VSOrbitModCreativeTab {
                         output.accept(VSOrbitModItems.mass_generator.get());
                         output.accept(VSOrbitModItems.celestial_tachymeter.get());
                         output.accept(VSOrbitModItems.electrical_truster.get());
+                        output.accept(VSOrbitModItems.orbital_projector.get());
                     }).build());
 
     public static void register(IEventBus eventBus) { CREATIVE_MODE_TABS.register(eventBus); }

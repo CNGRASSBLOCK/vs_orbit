@@ -2,6 +2,7 @@ package net.cn_good_grass.vs_orbit;
 
 import com.mojang.logging.LogUtils;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
+import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntitiesRenderer;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
@@ -10,6 +11,7 @@ import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
 import net.cn_good_grass.vs_orbit.procedures.create.CreateRegistrar;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,12 +59,12 @@ public class VSOrbitMod
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            CreateRegistrar.register();
-        });
+        CreateRegistrar.register();
     }
 
-    private void onClientSetup(FMLClientSetupEvent event) {}
+    private void onClientSetup(FMLClientSetupEvent event) {
+
+    }
 
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
     private static int messageID = 0;

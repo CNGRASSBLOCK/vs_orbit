@@ -20,10 +20,10 @@ public class CelestialTachymeterPeripheral implements IPeripheral {
 
     @Override public boolean equals(@Nullable IPeripheral iPeripheral) { return false; }
 
-    @LuaFunction public String getSpeedType() { return ""; }
-    @LuaFunction public double getSpeed() { return 0; }
-    @LuaFunction public double getXSpeed() { return 0; }
-    @LuaFunction public double getYSpeed() { return 0; }
-    @LuaFunction public double getZSpeed() { return 0; }
+    @LuaFunction public String getSpeedTarget() { return blockEntity.target; }
+    @LuaFunction public double getSpeed() { return blockEntity.speed.length(); }
+    @LuaFunction public double getXSpeed() { return blockEntity.speed.x(); }
+    @LuaFunction public double getYSpeed() { return blockEntity.speed.y(); }
+    @LuaFunction public double getZSpeed() { return blockEntity.speed.z(); }
 }
 

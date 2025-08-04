@@ -18,6 +18,7 @@ public class VSOrbitModItems {
     public static final RegistryObject<Item> mass_generator = ITEMS.register("mass_generator", () -> new BlockItem(VSOrbitModBlocks.mass_generator.get(), new Item.Properties()));
     public static final RegistryObject<Item> electrical_truster = ITEMS.register("electrical_truster", () -> new BlockItem(VSOrbitModBlocks.electrical_truster.get(), new Item.Properties()));
     public static final RegistryObject<Item> celestial_tachymeter = ITEMS.register("celestial_tachymeter", () -> new BlockItem(VSOrbitModBlocks.celestial_tachymeter.get(), new Item.Properties()));
+    public static final RegistryObject<Item> orbital_projector = ITEMS.register("orbital_projector", () -> new BlockItem(VSOrbitModBlocks.orbital_projector_block.get(), new Item.Properties()));
     //注册物品
     public static final RegistryObject<Item> gravitational_core = ITEMS.register("gravitational_core", () -> new GravitationalCoreItem(new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> control_circuit_board = ITEMS.register("control_circuit_board", () -> new ControlCircuitCoardItem(new Item.Properties().stacksTo(64)));

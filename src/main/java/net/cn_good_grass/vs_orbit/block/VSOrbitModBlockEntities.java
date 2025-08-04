@@ -1,9 +1,6 @@
 package net.cn_good_grass.vs_orbit.block;
 
-import net.cn_good_grass.vs_orbit.block.block_entities.CelestialTachymeterBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
+import net.cn_good_grass.vs_orbit.block.block_entities.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,6 +14,7 @@ public class VSOrbitModBlockEntities {
     public static final RegistryObject<BlockEntityType<MassGeneratorBlockEntity>> mass_generator_block_entity = BLOCK_ENTITIES.register("mass_generator_block_entity", () -> BlockEntityType.Builder.of(MassGeneratorBlockEntity::new).build(null));
     public static final RegistryObject<BlockEntityType<ElectricalTrusterBlockEntity>> electrical_truster_block_entity = BLOCK_ENTITIES.register("electrical_truster_block_entity", () -> BlockEntityType.Builder.of(ElectricalTrusterBlockEntity::new).build(null));
     public static final RegistryObject<BlockEntityType<CelestialTachymeterBlockEntity>> celestial_tachymeter_block_entity = BLOCK_ENTITIES.register("celestial_tachymeter_block_entity", () -> BlockEntityType.Builder.of(CelestialTachymeterBlockEntity::new).build(null));
+    public static final RegistryObject<BlockEntityType<OrbitalProjectorBlockEntity>> orbital_projector_block_entity = BLOCK_ENTITIES.register("orbital_projector_block_entity", () -> BlockEntityType.Builder.of(OrbitalProjectorBlockEntity::new).build(null));
     // 在构造函数中注册到主模组总线
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
