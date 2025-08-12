@@ -6,8 +6,11 @@
   "block.vs_orbit.electromagnetic_tractor": "电磁牵引器",
   "block.vs_orbit.electrical_truster": "霍尔推进器",
   "block.vs_orbit.celestial_tachymeter": "天体测速仪",
+  "block.vs_orbit.orbital_projector": "轨道投影仪",
 
   "item.vs_orbit.gravitational_core": "引力核心",
+  "item.vs_orbit.mass_core": "质量核心",
+  "item.vs_orbit.power_core": "能量核心",
   "item.vs_orbit.control_circuit_board": "控制电路板",
 
 
@@ -34,6 +37,9 @@
   "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_x": "X方向:",
   "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_y": "Y方向:",
   "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.force_z": "Z方向:",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.fire_display": "火焰显示 :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.fire_display_h": "高度 :",
+  "gui.vs_orbit.jump_engine_controller_gui.mode.planet_engine.fire_display_r": "半径 :",
 
   "gui.vs_orbit.mass_generator_gui.title": "质量发生器",
   "gui.vs_orbit.mass_generator_gui.mass": "质量 :",
@@ -42,6 +48,8 @@
   "gui.vs_orbit.electrical_truster_gui.title": "霍尔推进器",
   "gui.vs_orbit.electrical_truster_gui.force": "力",
   "gui.vs_orbit.electrical_truster_gui.info.mass" : "船只质量 :",
+
+  "gui.vs_orbit.orbital_projector_gui.title": "轨道投影仪",
 
 
 
@@ -57,6 +65,8 @@
   "message.vs_orbit.core.empty_name": "§c质点名为空！",
   "message.vs_orbit.core.no_astronomical_object": "§c质点不存在！",
   "message.vs_orbit.core.speed_set": "§a设置成功！",
+  "message.vs_orbit.core.speed_set.speed_warn": "§c请注意！在使用船只跟随天体同步模式时调整模拟速度会造成严重卡顿！",
+  "message.vs_orbit.core.speed_set.open_empty_save_chuck": "§e太空区块丢弃已被强制开启！",
   "message.vs_orbit.core.astronomical_object_tp": "§a传送成功！",
   "message.vs_orbit.core.astronomical_object_setspeed": "§a设置成功！",
   "message.vs_orbit.core.astronomical_object_addforce": "§a添加成功！",

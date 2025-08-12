@@ -4,7 +4,8 @@ import net.minecraftforge.fml.ModList;
 
 public enum CompatMods {
 	COMPUTERCRAFT("computercraft"),
-	CREATE("create");
+	CREATE("create"),
+	MEKANISM("mekanism");
 
 	private final String modId;
 

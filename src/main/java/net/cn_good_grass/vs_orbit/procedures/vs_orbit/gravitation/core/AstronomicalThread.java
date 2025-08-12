@@ -1,8 +1,9 @@
 package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
-import net.cn_good_grass.vs_orbit.config.Config;
+import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -15,8 +16,8 @@ public abstract class AstronomicalThread {
     private static Timer timer;
     private static TimerTask task;
 
-    public static double core_tick_speed = Config.Core_TICK_SPEED.get();
-    public static double core_tick_time = Config.Core_TICK_TIME.get();
+    public static double core_tick_speed = VSOrbitModConfig.Core_TICK_SPEED.get();
+    public static double core_tick_time = VSOrbitModConfig.Core_TICK_TIME.get();
     public static boolean pause = false;
 
     private static int tick_record;
@@ -30,8 +31,8 @@ public abstract class AstronomicalThread {
             return;
         }
         //初始化
-        core_tick_speed = Config.Core_TICK_SPEED.get();
-        core_tick_time = Config.Core_TICK_TIME.get();
+        core_tick_speed = VSOrbitModConfig.Core_TICK_SPEED.get();
+        core_tick_time = VSOrbitModConfig.Core_TICK_TIME.get();
         pause = false;
 
         AstronomicalThread.timer = new Timer("AstronomicalThread");
@@ -77,8 +78,8 @@ public abstract class AstronomicalThread {
         timer.cancel();
         timer.purge();
 
-        core_tick_speed = Config.Core_TICK_SPEED.get();
-        core_tick_time = Config.Core_TICK_TIME.get();
+        core_tick_speed = VSOrbitModConfig.Core_TICK_SPEED.get();
+        core_tick_time = VSOrbitModConfig.Core_TICK_TIME.get();
         pause = false;
     }
 }

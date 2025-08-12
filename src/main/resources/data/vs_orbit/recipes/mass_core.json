@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" G ",
+		"NSN",
+		" G "
+	],
+	"key": {
+		"S": {
+			"tag": "forge:nether_stars"
+		},
+		"N": {
+			"tag": "forge:storage_blocks/netherite"
+		},
+		"G": {
+			"item": "vs_orbit:mass_core"
+		}
+	},
+	"result": {
+		"item": "vs_orbit:gravitational_core",
+		"count": 1
+	}
+}

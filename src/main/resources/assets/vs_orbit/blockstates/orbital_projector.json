@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "vs_orbit:block/orbital_projector/orbital_projector"
+    }
+  }
+}

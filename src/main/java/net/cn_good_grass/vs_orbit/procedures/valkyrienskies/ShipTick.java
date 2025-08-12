@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.procedures.valkyrienskies;
 
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
-import net.cn_good_grass.vs_orbit.config.Config;
+import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
@@ -29,9 +29,9 @@ public class ShipTick {
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) { //引力更新基于游戏刻 而不是物理帧
         if (!(event.phase == TickEvent.Phase.START)) return;
-        if (!Config.ValkyrienSkies_ENABLE.get()) return;
+        if (!VSOrbitModConfig.ValkyrienSkies_ENABLE.get()) return;
 
-        for (String WorldIDs : Config.Gravitation_WORK_WORLD.get()) {
+        for (String WorldIDs : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) continue;
             String WorldID = level.dimension().location().toString();
@@ -63,26 +63,30 @@ public class ShipTick {
 
                     if (!(ship instanceof ServerShip serverShip)) continue;
 
-                    if (serverShip.getTransform().getPositionInWorld().distance(astronomical.x, astronomical.y, astronomical.z) >= 25) {
-                        if (Config.ValkyrienSkies_SYNC_MODE.get()) {
+                    if (VSOrbitModConfig.ValkyrienSkies_SYNC_MODE.get()) {
+                        if (serverShip.getTransform().getPositionInWorld().distance(astronomical.x, astronomical.y, astronomical.z) >= 25) {
+                            if (!level.isLoaded(BlockPos.containing(astronomical.x, astronomical.y, astronomical.z))) return;
+
                             ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
+
+                            if (Double.isInfinite(astronomical.x) || Double.isNaN(astronomical.x) || Double.isInfinite(astronomical.y) || Double.isNaN(astronomical.y) || Double.isInfinite(astronomical.z) || Double.isNaN(astronomical.z)) return;
 
                             shipWorld.teleportShip(serverShip, new ShipTeleportDataImpl(
                                     new Vector3d(astronomical.x, astronomical.y, astronomical.z),
                                     serverShip.getTransform().getShipToWorldRotation(),
-                                    new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed).mul(1.0095),
+                                    new Vector3d(astronomical.x_speed, astronomical.y_speed, astronomical.z_speed).mul(VSOrbitModConfig.ValkyrienSkies_ACCELERATION_SCALING.get() * AstronomicalThread.core_tick_time / VSOrbitModConfig.Core_TICK_TIME.get()),
                                     new Vector3d(),
                                     serverShip.getChunkClaimDimension(), 1.0
                             ));
-                        } else {
-                            astronomical.x = serverShip.getTransform().getPositionInWorld().x();
-                            astronomical.y = serverShip.getTransform().getPositionInWorld().y();
-                            astronomical.z = serverShip.getTransform().getPositionInWorld().z();
-
-                            astronomical.x_speed = serverShip.getVelocity().x();
-                            astronomical.y_speed = serverShip.getVelocity().y();
-                            astronomical.z_speed = serverShip.getVelocity().z();
                         }
+                    } else {
+                        astronomical.x = serverShip.getTransform().getPositionInWorld().x();
+                        astronomical.y = serverShip.getTransform().getPositionInWorld().y();
+                        astronomical.z = serverShip.getTransform().getPositionInWorld().z();
+
+                        astronomical.x_speed = serverShip.getVelocity().x();
+                        astronomical.y_speed = serverShip.getVelocity().y();
+                        astronomical.z_speed = serverShip.getVelocity().z();
                     }
 
                     double mass = serverShip.getInertiaData().getMass();
@@ -93,7 +97,7 @@ public class ShipTick {
                     }
                     astronomical.mass = mass;
                 }
-                Gravitation.mul(Config.ValkyrienSkies_ACCELERATION_SCALING.get() * (AstronomicalThread.core_tick_time / Config.Core_TICK_TIME.get()));
+                Gravitation.mul(VSOrbitModConfig.ValkyrienSkies_ACCELERATION_SCALING.get() * AstronomicalThread.core_tick_time / VSOrbitModConfig.Core_TICK_TIME.get());
 
                 ForcerInducedShips forcerInducedShips = ForcerInducedShips.getFromShip(ship);
                 if (forcerInducedShips == null) continue;

@@ -5,9 +5,10 @@
 package net.cn_good_grass.vs_orbit.gui;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
-import net.cn_good_grass.vs_orbit.gui.ElectromagneticTractorGUI.ElectromagneticTractorGUIMenu;
-import net.cn_good_grass.vs_orbit.gui.JumpEngineControllerGUI.JumpEngineControllerGUIMenu;
-import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.ElectromagneticTractorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.JumpEngineControllerGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.MassGeneratorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.OrbitalProjectorGUIMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -19,4 +20,5 @@ public class VSOrbitModMenus {
 	public static final RegistryObject<MenuType<JumpEngineControllerGUIMenu>> JumpEngineControllerGUI = REGISTRY.register("jump_engine_controller_gui", () -> IForgeMenuType.create(JumpEngineControllerGUIMenu::new));
 	public static final RegistryObject<MenuType<MassGeneratorGUIMenu>> MassGeneratorGUI = REGISTRY.register("mass_generator_gui", () -> IForgeMenuType.create(MassGeneratorGUIMenu::new));
 	public static final RegistryObject<MenuType<ElectromagneticTractorGUIMenu>> ElectromagneticTractorGUI = REGISTRY.register("electrical_truster_gui", () -> IForgeMenuType.create(ElectromagneticTractorGUIMenu::new));
+	public static final RegistryObject<MenuType<OrbitalProjectorGUIMenu>> OrbitalProjectorGUI = REGISTRY.register("orbital_projector_gui", () -> IForgeMenuType.create(OrbitalProjectorGUIMenu::new));
 }

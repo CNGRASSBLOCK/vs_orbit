@@ -1,6 +1,6 @@
 package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate;
 
-import net.cn_good_grass.vs_orbit.config.Config;
+import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
@@ -35,7 +35,7 @@ public class AstronomicalGravitation {
 
         if (distanceSq == 0.0) return new Vector3d(0, 0, 0);
 
-        double factor = Config.Gravitation_GRAVITATIONAL_CONSTANT.get() * other_astronomical.mass / (distanceSq * Math.sqrt(distanceSq));
+        double factor = VSOrbitModConfig.Gravitation_GRAVITATIONAL_CONSTANT.get() * other_astronomical.mass / (distanceSq * Math.sqrt(distanceSq));
 
         return new Vector3d(factor * dx, factor * dy, factor * dz);
     }

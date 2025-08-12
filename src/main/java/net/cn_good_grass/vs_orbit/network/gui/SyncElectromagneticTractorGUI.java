@@ -16,7 +16,6 @@ public record SyncElectromagneticTractorGUI(BlockPos blockPos, double force) {
     public static void encode(SyncElectromagneticTractorGUI msg, FriendlyByteBuf buf) {
         buf.writeBlockPos(msg.blockPos);
         buf.writeDouble(msg.force);
-
     }
 
     public static SyncElectromagneticTractorGUI decode(FriendlyByteBuf buf) {

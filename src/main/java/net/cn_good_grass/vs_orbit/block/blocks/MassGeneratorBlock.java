@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.MassGeneratorGUI.MassGeneratorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.MassGeneratorGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.BlockPos;
@@ -81,10 +81,14 @@ public class MassGeneratorBlock extends Block implements EntityBlock{
     @Override
     public void tick(BlockState blockstate, ServerLevel world, BlockPos pos, RandomSource random) {
         super.tick(blockstate, world, pos, random);
+        world.scheduleTick(pos, this, 1);
 
         if (!(world.getBlockEntity(pos) instanceof MassGeneratorBlockEntity blockEntity)) return;
 
-
+        blockEntity.cube.rotateX((float) Math.random() / 12.5f - 0.04f);
+        blockEntity.cube.rotateY((float) Math.random() / 12.5f - 0.04f);
+        blockEntity.cube.rotateZ((float) Math.random() / 12.5f - 0.04f);
+        blockEntity.sendToClient();
 
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
         if (ship == null) return;
@@ -98,7 +102,6 @@ public class MassGeneratorBlock extends Block implements EntityBlock{
         astronomical.Tag.put("vs_orbit:add_mass", addMass);
 
         blockEntity.setChanged();
-        world.scheduleTick(pos, this, 1);
         world.sendBlockUpdated(pos, blockstate, blockstate, 3);
     }
 }

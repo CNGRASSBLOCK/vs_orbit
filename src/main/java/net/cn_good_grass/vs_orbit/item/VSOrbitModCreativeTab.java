@@ -17,6 +17,8 @@ public class VSOrbitModCreativeTab {
                     .icon(() -> new ItemStack(VSOrbitModItems.jump_engine_controller_item.get()))
                     .displayItems((params, output) -> {
                         output.accept(VSOrbitModItems.gravitational_core.get());
+                        output.accept(VSOrbitModItems.mass_core.get());
+                        output.accept(VSOrbitModItems.power_core.get());
                         output.accept(VSOrbitModItems.control_circuit_board.get());
                         output.accept(VSOrbitModItems.jump_engine_controller_item.get());
                         output.accept(VSOrbitModItems.electromagnetic_tractor_item.get());

@@ -34,8 +34,8 @@ public class CelestialTachymeterBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("speed_x")) this.speed.x = tag.getDouble("speed_x");
-        if (tag.contains("speed_y")) this.speed.x = tag.getDouble("speed_y");
-        if (tag.contains("speed_z")) this.speed.x = tag.getDouble("speed_z");
+        if (tag.contains("speed_y")) this.speed.y = tag.getDouble("speed_y");
+        if (tag.contains("speed_z")) this.speed.z = tag.getDouble("speed_z");
     }
 
     @Override

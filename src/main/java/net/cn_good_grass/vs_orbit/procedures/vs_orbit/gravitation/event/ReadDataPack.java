@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.cn_good_grass.vs_orbit.config.Config;
+import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -32,7 +32,7 @@ public class ReadDataPack {
 
             @Override
             protected void apply(Object object, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-                List<String> GravitationWorlds = new ArrayList<String>(Config.Gravitation_WORK_WORLD.get());
+                List<String> GravitationWorlds = new ArrayList<String>(VSOrbitModConfig.Gravitation_WORK_WORLD.get());
                 for (String FilePos : GravitationWorlds) {
                     String FileName = FilePos.substring(FilePos.indexOf(":") + 1);
                     ResourceLocation advancementLocation = new ResourceLocation("vs_orbit", "vs_orbit_data/" + FileName + ".json");

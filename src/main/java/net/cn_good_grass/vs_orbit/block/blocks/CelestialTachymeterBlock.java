@@ -56,13 +56,13 @@ public class CelestialTachymeterBlock extends Block implements EntityBlock{
     @Override
     public void tick(BlockState blockstate, ServerLevel world, BlockPos pos, RandomSource random) {
         super.tick(blockstate, world, pos, random);
+        world.scheduleTick(pos, this, 1);
 
         if (!(world.getBlockEntity(pos) instanceof CelestialTachymeterBlockEntity celestialTachymeterBlockEntity)) return;
 
         Ship ship = VSGameUtilsKt.getShipManagingPos(world, pos);
         if (ship != null) SpeedMeasurementForShip(ship, celestialTachymeterBlockEntity); else SpeedMeasurementForStar(world, celestialTachymeterBlockEntity);
 
-        world.scheduleTick(pos, this, 1);
         world.sendBlockUpdated(pos, blockstate, blockstate, 3);
     }
 

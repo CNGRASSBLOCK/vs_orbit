@@ -2,12 +2,12 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		"ICI",
-		"RGR",
-		"III"
+		"GRG",
+		"IPI"
 	],
 	"key": {
 		"G": {
-			"item": "vs_orbit:gravitational_core"
+			"item": "vs_orbit:mass_core"
 		},
 		"I": {
 			"tag": "forge:ingots/iron"
@@ -17,6 +17,9 @@
 		},
 		"C": {
 			"item": "vs_orbit:control_circuit_board"
+		},
+		"P": {
+			"item": "vs_orbit:power_core"
 		}
 	},
 	"result": {

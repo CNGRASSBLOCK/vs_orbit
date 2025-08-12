@@ -51,8 +51,6 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 
 	@Override
 	public void baseTick() {
-		if (this.level().isClientSide) return;
-		//方块检测
 		BlockState blockState = this.level().getBlockState(this.entityData.get(engine_pos));
 		if (!blockState.is(VSOrbitModBlocks.jump_engine_controller.get())) { this.discard(); } else { JumpEngineControllerBlockEntity blockEntity = (JumpEngineControllerBlockEntity) this.level().getBlockEntity(this.entityData.get(engine_pos)); if (blockEntity == null) { this.discard(); } else { if (!blockEntity.structure_state.equals("right")) { this.discard(); } } }
 	}
@@ -62,11 +60,15 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 	@Override public boolean shouldRenderAtSqrDistance(double distance) { return true; }
 	@Override public MobType getMobType() { return MobType.UNDEFINED; }
 	@Override public boolean causeFallDamage(float l, float d, DamageSource source) { return false; }
-	@Override public boolean hurt(DamageSource source, float amount) { if (source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL)) return super.hurt(source, amount); return false; }
+	@Override public boolean hurt(DamageSource source, float amount) {
+		if (source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL))
+			return super.hurt(source, amount);
+		return false;
+	}
 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();;
-		builder = builder.add(Attributes.MAX_HEALTH, NaN);
+		builder = builder.add(Attributes.MAX_HEALTH, 1024.0);
 		return builder;
 	}
 

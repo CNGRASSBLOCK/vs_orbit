@@ -2,13 +2,11 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.ElectromagneticTractorGUI.ElectromagneticTractorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.ElectromagneticTractorGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterInducedShips;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -30,11 +28,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-import org.joml.Vector3f;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 public class ElectricalTrusterBlock extends Block implements EntityBlock {
@@ -101,6 +97,7 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
     @Override
     public void tick(BlockState blockstate, ServerLevel world, BlockPos pos, RandomSource random) {
         super.tick(blockstate, world, pos, random);
+        world.scheduleTick(pos, this, 1);
 
         event_dispose(blockstate, world, pos);
 
@@ -109,7 +106,6 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         if (!(world.getBlockEntity(pos) instanceof ElectricalTrusterBlockEntity blockEntity)) return;
         blockEntity.sendToClient();
 
-        world.scheduleTick(pos, this, 1);
         world.sendBlockUpdated(pos, blockstate, blockstate, 3);
     }
 

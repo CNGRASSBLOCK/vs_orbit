@@ -2,7 +2,6 @@ package net.cn_good_grass.vs_orbit;
 
 import com.mojang.logging.LogUtils;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
-import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntitiesRenderer;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.entity.VSOrbitModEntities;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
@@ -10,8 +9,7 @@ import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
 import net.cn_good_grass.vs_orbit.procedures.create.CreateRegistrar;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,14 +50,14 @@ public class VSOrbitMod
         VSOrbitModMenus.REGISTRY.register(eventBus);
         VSOrbitModEntities.REGISTRY.register(eventBus);
 
-        MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
-
-        eventBus.addListener(this::onClientSetup);
         eventBus.addListener(this::onCommonSetup);
+        eventBus.addListener(this::onClientSetup);
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
         CreateRegistrar.register();
+
+        MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {

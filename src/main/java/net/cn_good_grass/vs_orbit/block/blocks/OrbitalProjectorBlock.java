@@ -1,14 +1,25 @@
 package net.cn_good_grass.vs_orbit.block.blocks;
 
+import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.CelestialTachymeterBlockEntity;
 import net.cn_good_grass.vs_orbit.block.block_entities.OrbitalProjectorBlockEntity;
+import net.cn_good_grass.vs_orbit.gui.menu.MassGeneratorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.OrbitalProjectorGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -17,6 +28,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -39,6 +52,22 @@ public class OrbitalProjectorBlock extends Block implements EntityBlock{
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new OrbitalProjectorBlockEntity(pos, state); }
 
     @Override
+    public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
+        if (!(world instanceof ServerLevel)) return InteractionResult.CONSUME;
+
+        super.use(blockstate, world, pos, entity, hand, hit);
+
+        if (entity instanceof ServerPlayer serverPlayer) { NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+            @Override public Component getDisplayName() {
+                return Component.literal("OrbitalProjectorGUI");
+            }
+            @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new OrbitalProjectorGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos)); }
+        }, pos); }
+
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
     public void onPlace(BlockState blockstate, Level world, BlockPos pos, BlockState oldState, boolean moving) {
         super.onPlace(blockstate, world, pos, oldState, moving);
         if (!(world instanceof ServerLevel)) return;
@@ -57,11 +86,16 @@ public class OrbitalProjectorBlock extends Block implements EntityBlock{
     @Override
     public void tick(BlockState blockstate, ServerLevel world, BlockPos pos, RandomSource random) {
         super.tick(blockstate, world, pos, random);
+        world.scheduleTick(pos, this, 1);
 
         if (!(world.getBlockEntity(pos) instanceof OrbitalProjectorBlockEntity orbitalProjectorBlockEntity)) return;
         orbitalProjectorBlockEntity.sendToClient();
 
-        world.scheduleTick(pos, this, 1);
         world.sendBlockUpdated(pos, blockstate, blockstate, 3);
+    }
+
+    public enum DataMode {
+        LOCK,
+        FOLLOW;
     }
 }

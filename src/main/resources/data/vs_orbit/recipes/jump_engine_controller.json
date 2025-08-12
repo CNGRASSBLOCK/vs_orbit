@@ -3,7 +3,7 @@
 	"pattern": [
 		"ORO",
 		"CGP",
-		"III"
+		"IWI"
 	],
 	"key": {
 		"G": {
@@ -23,6 +23,9 @@
 		},
 		"C": {
 			"item": "vs_orbit:control_circuit_board"
+		},
+		"W": {
+			"item": "vs_orbit:power_core"
 		}
 	},
 	"result": {

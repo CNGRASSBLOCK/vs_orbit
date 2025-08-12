@@ -5,6 +5,7 @@ import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
 import net.cn_good_grass.vs_orbit.block.block_peripheral.JumpEngineControllerPeripheral;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock.Mode;
 import net.cn_good_grass.vs_orbit.procedures.CompatMods;
+import net.jcm.vsch.blocks.entity.GyroBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +15,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.cn_good_grass.vs_orbit.procedures.mekanism.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class JumpEngineControllerBlockEntity extends BlockEntity {
     public JumpEngineControllerBlockEntity(BlockPos pos, BlockState state) {
         super(VSOrbitModBlockEntities.jump_engine_controller_block_entity.get(), pos, state);
+        this.energyStorage = new EnergyStorage(1000000000);
     }
 
     public String state = "none";
@@ -38,6 +42,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     public UUID display_entity_uuid = new UUID(0,0);
     public Integer animation_tick = 0;
 
+    public final EnergyStorage energyStorage;
+
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
@@ -51,6 +57,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
         tag.putUUID("display_entity_uuid", this.display_entity_uuid);
         tag.putIntArray("structure_center_pos", new ArrayList<>(List.of(structure_center_pos.getX(), structure_center_pos.getY(), structure_center_pos.getZ())));
         tag.putInt("animation_tick", this.animation_tick);
+
+        tag.putInt("Energy", this.energyStorage.storedEnergy);
     }
 
     @Override
@@ -66,6 +74,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
         if (tag.contains("display_entity_uuid")) this.display_entity_uuid = tag.getUUID("display_entity_uuid");
         if (tag.contains("structure_center_pos")) this.structure_center_pos = new BlockPos(tag.getIntArray("structure_center_pos")[0], tag.getIntArray("structure_center_pos")[1], tag.getIntArray("structure_center_pos")[2]);
         if (tag.contains("animation_tick")) this.animation_tick = tag.getInt("animation_tick");
+
+        if (tag.contains("Energy")) this.energyStorage.storedEnergy = tag.getInt("Energy");
     }
 
     @Override
@@ -108,6 +118,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("planet_force_x", 0);
             this.putDouble("planet_force_y", 0);
             this.putDouble("planet_force_z", 0);
+            this.putInt("planet_fire_display_height", 6000);
+            this.putInt("planet_fire_display_radius", 23);
         }
 
         public SettingCompoundTag(CompoundTag tag) {
@@ -121,6 +133,8 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
             this.putDouble("planet_force_x", tag.getDouble("planet_force_x"));
             this.putDouble("planet_force_y", tag.getDouble("planet_force_y"));
             this.putDouble("planet_force_z", tag.getDouble("planet_force_z"));
+            this.putInt("planet_fire_display_height", tag.getInt("planet_fire_display_height"));
+            this.putInt("planet_fire_display_radius", tag.getInt("planet_fire_display_radius"));
         }
     }
 
@@ -128,6 +142,7 @@ public class JumpEngineControllerBlockEntity extends BlockEntity {
     private final LazyOptional<Object> peripheralCap = LazyOptional.of(() -> new JumpEngineControllerPeripheral(this));
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == ForgeCapabilities.ENERGY) return LazyOptional.of(() -> this.energyStorage).cast();
         if (CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) return peripheralCap.cast(); //cc
         return super.getCapability(cap, side);
     }

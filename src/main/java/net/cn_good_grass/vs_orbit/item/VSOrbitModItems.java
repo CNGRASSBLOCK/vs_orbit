@@ -3,6 +3,8 @@ package net.cn_good_grass.vs_orbit.item;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlocks;
 import net.cn_good_grass.vs_orbit.item.items.ControlCircuitCoardItem;
 import net.cn_good_grass.vs_orbit.item.items.GravitationalCoreItem;
+import net.cn_good_grass.vs_orbit.item.items.MassCoreItem;
+import net.cn_good_grass.vs_orbit.item.items.PowerCoreItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,6 +23,8 @@ public class VSOrbitModItems {
     public static final RegistryObject<Item> orbital_projector = ITEMS.register("orbital_projector", () -> new BlockItem(VSOrbitModBlocks.orbital_projector_block.get(), new Item.Properties()));
     //注册物品
     public static final RegistryObject<Item> gravitational_core = ITEMS.register("gravitational_core", () -> new GravitationalCoreItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> mass_core = ITEMS.register("mass_core", () -> new MassCoreItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> power_core = ITEMS.register("power_core", () -> new PowerCoreItem(new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> control_circuit_board = ITEMS.register("control_circuit_board", () -> new ControlCircuitCoardItem(new Item.Properties().stacksTo(64)));
 
     public static void register(IEventBus eventBus) {

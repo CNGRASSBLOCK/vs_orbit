@@ -2,8 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.config.Config;
-import net.cn_good_grass.vs_orbit.network.SyncDataTick;
+import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.lointain.cosmos.network.CosmosModVariables;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
@@ -37,18 +37,14 @@ import java.util.*;
 
 public class StarAPI {
     public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag, boolean isServer) { //星球更新
-        AstronomicalPool newAstronomicalPool = null;
-        AstronomicalPool oldAstronomicalPool = null;
+        AstronomicalPool newAstronomicalPool;
+        AstronomicalPool oldAstronomicalPool;
         if (isServer) {
             newAstronomicalPool = AstronomicalPool.getFromWorldID(dimension);
             oldAstronomicalPool = newAstronomicalPool;
         } else {
-            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
-                newAstronomicalPool = astronomicalPool;
-                break; }
-            for (AstronomicalPool astronomicalPool : SyncDataTick.Old_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
-                oldAstronomicalPool = astronomicalPool;
-                break; }
+            newAstronomicalPool = AstronomicalPool.getFromWorldIDCilent(dimension, false);
+            oldAstronomicalPool = AstronomicalPool.getFromWorldIDCilent(dimension, true);
         }
         if (newAstronomicalPool == null || oldAstronomicalPool == null) return new Vec3(0, 0, 0);
 
@@ -71,18 +67,14 @@ public class StarAPI {
     }
 
     public static Vec3 getRotate(String dimension, double partialTick, CompoundTag StarTag, boolean isServer) { //星球更新
-        AstronomicalPool newAstronomicalPool = null;
-        AstronomicalPool oldAstronomicalPool = null;
+        AstronomicalPool newAstronomicalPool;
+        AstronomicalPool oldAstronomicalPool;
         if (isServer) {
             newAstronomicalPool = AstronomicalPool.getFromWorldID(dimension);
             oldAstronomicalPool = newAstronomicalPool;
         } else {
-            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
-                newAstronomicalPool = astronomicalPool;
-                break; }
-            for (AstronomicalPool astronomicalPool : SyncDataTick.Old_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(dimension)) {
-                oldAstronomicalPool = astronomicalPool;
-                break; }
+            newAstronomicalPool = AstronomicalPool.getFromWorldIDCilent(dimension, false);
+            oldAstronomicalPool = AstronomicalPool.getFromWorldIDCilent(dimension, true);
         }
         if (newAstronomicalPool == null || oldAstronomicalPool == null) return new Vec3(0, 0, 0);
 
@@ -99,20 +91,15 @@ public class StarAPI {
         Astronomical newAstronomical = newAstronomicalPool.getAstronomical(AstronomicalID);
         Astronomical oldAstronomical = oldAstronomicalPool.getAstronomical(AstronomicalID);
         if (newAstronomical == null || oldAstronomical == null) return new Vec3(0, 0, 0);
-        Vector3d New_Rotate = newAstronomical.rotate.getEulerAnglesXYZ(new Vector3d());
-        New_Rotate.x = Math.toDegrees(New_Rotate.x);
-        New_Rotate.y = Math.toDegrees(New_Rotate.y);
-        New_Rotate.z = Math.toDegrees(New_Rotate.z);
-        Vector3d Old_Rotate = oldAstronomical.rotate.getEulerAnglesXYZ(new Vector3d());
-        Old_Rotate.x = Math.toDegrees(Old_Rotate.x);
-        Old_Rotate.y = Math.toDegrees(Old_Rotate.y);
-        Old_Rotate.z = Math.toDegrees(Old_Rotate.z);
-        return new Vec3(Mth.lerp(partialTick, Old_Rotate.x, New_Rotate.x), Mth.lerp(partialTick, Old_Rotate.y, New_Rotate.y), Mth.lerp(partialTick, Old_Rotate.z, New_Rotate.z));
+        Vector3d Rotate = new Quaterniond(oldAstronomical.rotate).slerp(new Quaterniond(newAstronomical.rotate), partialTick).getEulerAnglesYXZ(new Vector3d());
+        Rotate.x = Math.toDegrees(Rotate.x);
+        Rotate.y = Math.toDegrees(Rotate.y);
+        Rotate.z = Math.toDegrees(Rotate.z);
+        return new Vec3(Rotate.x(), Rotate.y(), Rotate.z());
     }
 
     public static List<Object> changeOrder(Entity entity, double partialTick, ListTag map, double order, String dimension, Vec3 position) {
-        if (map == null || dimension == null || position == null)
-            return new ArrayList<>();
+        if (map == null || dimension == null || position == null) return new ArrayList<>();
         Map<Object, Object> starting_map = new HashMap<>();
         List<Object> sorted_order = new ArrayList<>();
         for (int iter = 0; iter < map.size(); iter++) {
@@ -133,7 +120,7 @@ public class StarAPI {
         if (order == (double)-1.0F) Collections.reverse(sorted_order);
         return sorted_order;
     }
-
+    //光照计算
     public static Tag recalculateLight(CompoundTag instance, String pKey, Operation<Tag> original, LevelAccessor world, Entity entity, double partialTick) {
         if (!pKey.equals("light_data") && !pKey.equals("alpha_data") && !pKey.equals("i_alpha_data")) return original.call(instance, pKey);
         ListTag light_source_list = (ListTag) CosmosModVariables.WorldVariables.get(world).light_source_map.get(entity.level().dimension().location().toString());
@@ -207,8 +194,7 @@ public class StarAPI {
                     i++;
                 }
                 return JsontomapconverterProcedure.execute(i_alpha_data);
-            default:
-                return original.call(instance, pKey);
+            default: return original.call(instance, pKey);
         }
     }
     //杂七杂八的
@@ -263,7 +249,7 @@ public class StarAPI {
     }
 
     @Nullable public static CompoundTag getStarDataFormLevel(Level world) {
-        for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+        for (String WorldId : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
             ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
             if (level == null) continue;
             ListTag data = StarAPI.getAllStarData(level, false);
@@ -277,7 +263,7 @@ public class StarAPI {
     }
 
     @Nullable public static Astronomical getAstronomicalFormLevel(Level world) {
-        for (String WorldId : Config.Gravitation_WORK_WORLD.get()) {
+        for (String WorldId : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
             ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
             if (level == null) continue;
             ListTag data = StarAPI.getAllStarData(level, false);

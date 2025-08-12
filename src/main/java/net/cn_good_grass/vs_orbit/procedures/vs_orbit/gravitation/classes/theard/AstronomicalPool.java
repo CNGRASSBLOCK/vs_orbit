@@ -1,18 +1,19 @@
 package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard;
 
 import com.google.gson.JsonObject;
+import net.cn_good_grass.vs_orbit.network.SyncDataTick;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.ServerAction;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate.AstronomicalGravitation;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class AstronomicalPool {
     public final String WorldId;
@@ -26,6 +27,15 @@ public class AstronomicalPool {
 
     @Nullable public static AstronomicalPool getFromWorldID(String worldID) {
         for (AstronomicalPool astronomicalPool : ServerAction.Astronomical_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) return astronomicalPool;
+        return null;
+    }
+
+    @Nullable public static AstronomicalPool getFromWorldIDCilent(String worldID, boolean isOld) {
+        if (isOld) {
+            for (AstronomicalPool astronomicalPool : SyncDataTick.Old_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) return astronomicalPool;
+        } else {
+            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(worldID)) return astronomicalPool;
+        }
         return null;
     }
 
@@ -139,7 +149,7 @@ public class AstronomicalPool {
 
     public void RotateUpdates(double time) {
         synchronized (astronomicalPool) {
-            for (Astronomical astronomical : astronomicalPool) astronomical.rotate.rotateLocalY(astronomical.rotate_speed * time);
+            for (Astronomical astronomical : astronomicalPool) astronomical.rotate.mul(new Quaterniond().rotateY(astronomical.rotate_speed * time));
         }
     }
 }

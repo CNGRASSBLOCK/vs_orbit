@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"CRC",
+		"RGR",
+		"CRC"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:nether_stars"
+		},
+		"R": {
+			"tag": "forge:storage_blocks/redstone"
+		},
+		"C": {
+			"tag": "forge:storage_blocks/copper"
+		},
+		"G": {
+			"item": "vs_orbit:mass_core"
+		}
+	},
+	"result": {
+		"item": "vs_orbit:gravitational_core",
+		"count": 1
+	}
+}

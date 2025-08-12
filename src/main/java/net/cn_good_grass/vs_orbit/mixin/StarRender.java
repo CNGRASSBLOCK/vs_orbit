@@ -41,7 +41,7 @@ public class StarRender {
     }
     //星球旋转
     @Inject(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", ordinal = 23, shift = At.Shift.AFTER, target = "net/minecraft/world/phys/Vec3.<init>(DDD)V"))
-    private static void RotatePlanet(Event event, LevelAccessor world, Entity entity, double partialTick, double ticks, CallbackInfo ci, @Local(ordinal = 2) LocalRef<Vec3> rotate, @Local(ordinal = 0) CompoundTag Target_object) {
+    private static void RotatePlanet(Event event, LevelAccessor world, Entity entity, double partialTick, double ticks, CallbackInfo ci, @Local(ordinal = 1) LocalRef<Vec3> rotate, @Local(ordinal = 0) CompoundTag Target_object) {
         rotate.set(StarAPI.getRotate(entity.level().dimension().location().toString(), partialTick, Target_object, false));
     }
 }
