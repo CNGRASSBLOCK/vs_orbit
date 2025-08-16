@@ -1,11 +1,10 @@
-package net.cn_good_grass.vs_orbit.block.block_peripheral;
+package net.cn_good_grass.vs_orbit.procedures.computercraft.BlockPeripheral;
 
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.AttachedComputerSet;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.cn_good_grass.vs_orbit.block.block_entities.JumpEngineControllerBlockEntity;
-import net.cn_good_grass.vs_orbit.block.block_entities.MassGeneratorBlockEntity;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock;
 import org.jetbrains.annotations.Nullable;
 

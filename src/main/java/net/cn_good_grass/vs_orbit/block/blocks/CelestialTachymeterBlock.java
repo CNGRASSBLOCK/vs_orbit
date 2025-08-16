@@ -2,8 +2,8 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import net.cn_good_grass.vs_orbit.block.block_entities.CelestialTachymeterBlockEntity;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

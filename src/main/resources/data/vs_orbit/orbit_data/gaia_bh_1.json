@@ -5,7 +5,7 @@
       "astronomical_compute": true,
       "pos": [60000, 900, -300],
       "speed": [0, 0, 0],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.3978, 0.9175],
       "rotating_cycle": 32400
     },
     "Gaia BH1": {
@@ -13,7 +13,7 @@
       "astronomical_compute": true,
       "pos": [45000, 1200, 85000],
       "speed": [0, 0, 0],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.9999, 0.0124],
       "rotating_cycle": 0
     },
     "Dark Earth": {
@@ -21,7 +21,7 @@
       "astronomical_compute": true,
       "pos": [35000, 470, 35000],
       "speed": [0, 0, 0],
-      "rotating_shaft": [0, 0.707, -0.707],
+      "rotating_shaft": [0.0, 0.9175, -0.3978],
       "rotating_cycle": 1800
     }
   }

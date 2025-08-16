@@ -24,10 +24,22 @@ import java.util.List;
 
 @Mixin({RenderMINTProcedure.class})
 public class StarRender {
-    //星球及星环渲染
-    @Inject(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", ordinal = 22, shift = At.Shift.AFTER, target = "net/minecraft/world/phys/Vec3.<init>(DDD)V"))
-    private static void MovePlanet(Event event, LevelAccessor world, Entity entity, double partialTick, double ticks, CallbackInfo ci, @Local(ordinal = 1) LocalRef<Vec3> pos, @Local(ordinal = 0) CompoundTag Target_object) {
-       pos.set(StarAPI.getPos(entity.level().dimension().location().toString(), partialTick, Target_object, false));
+    //天体渲染
+    @WrapOperation(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", target = "net/minecraft/nbt/ListTag.get(I)Lnet/minecraft/nbt/Tag;"))
+    private static Tag RotatePlanet(ListTag instance, int pKey, Operation<Tag> original, Event event, LevelAccessor world, Entity entity, double partialTick, double ticks) {
+        if (instance.get(pKey) instanceof CompoundTag cTag) {
+            CompoundTag compoundTag = cTag.copy();
+            Vec3 pos = StarAPI.getPos(entity.level().dimension().location().toString(), partialTick, cTag, false);
+            compoundTag.putDouble("x", pos.x());
+            compoundTag.putDouble("y", pos.y());
+            compoundTag.putDouble("z", pos.z());
+            Vec3 rotate = StarAPI.getRotate(entity.level().dimension().location().toString(), partialTick, cTag, false);
+            compoundTag.putDouble("pitch", rotate.x());
+            compoundTag.putDouble("yaw", rotate.y());
+            compoundTag.putDouble("roll", rotate.z());
+            return compoundTag;
+        }
+        return instance.get(pKey);
     }
     //渲染层覆盖
     @Redirect(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", target = "Lnet/lointain/cosmos/procedures/DistanceOrderProviderProcedure;execute(Lnet/minecraft/nbt/CompoundTag;DLjava/lang/String;Lnet/minecraft/world/phys/Vec3;)Ljava/util/List;"), remap = false)
@@ -38,10 +50,5 @@ public class StarRender {
     @WrapOperation(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", target = "net/minecraft/nbt/CompoundTag.get(Ljava/lang/String;)Lnet/minecraft/nbt/Tag;"))
     private static Tag ChangeLightingData(CompoundTag instance, String pKey, Operation<Tag> original, Event event, LevelAccessor world, Entity entity, double partialTick, double ticks) {
         return StarAPI.recalculateLight(instance, pKey, original, world, entity, partialTick);
-    }
-    //星球旋转
-    @Inject(method = {"execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;DD)V"}, at = @At(value = "INVOKE", ordinal = 23, shift = At.Shift.AFTER, target = "net/minecraft/world/phys/Vec3.<init>(DDD)V"))
-    private static void RotatePlanet(Event event, LevelAccessor world, Entity entity, double partialTick, double ticks, CallbackInfo ci, @Local(ordinal = 1) LocalRef<Vec3> rotate, @Local(ordinal = 0) CompoundTag Target_object) {
-        rotate.set(StarAPI.getRotate(entity.level().dimension().location().toString(), partialTick, Target_object, false));
     }
 }

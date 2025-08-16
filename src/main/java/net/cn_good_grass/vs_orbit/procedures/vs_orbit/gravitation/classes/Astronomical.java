@@ -1,9 +1,11 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagParser;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 
@@ -127,6 +129,8 @@ public class Astronomical {
         for (Force force : forces) Force_json.add(force.name, force.toJsonObject());
         Astronomical_json.add("force", Force_json);
 
+        Astronomical_json.addProperty("tag", this.Tag.toString());
+
         return Astronomical_json;
     }
 
@@ -165,8 +169,8 @@ public class Astronomical {
             List<JsonElement> rotate = jsonObject.get("rotate").getAsJsonArray().asList();
             if (rotate.size() != 4) return null;
             astronomical.rotate = new Quaterniond(rotate.get(0).getAsDouble(), rotate.get(1).getAsDouble(), rotate.get(2).getAsDouble(), rotate.get(3).getAsDouble());
-        } else return null;
-        if (jsonObject.has("rotate_speed")) astronomical.rotate_speed = jsonObject.get("rotate_speed").getAsDouble(); else return null;
+        }
+        if (jsonObject.has("rotate_speed")) astronomical.rotate_speed = jsonObject.get("rotate_speed").getAsDouble();
 
         if (jsonObject.has("force")) {
             JsonObject Force_json = jsonObject.get("force").getAsJsonObject();
@@ -174,7 +178,9 @@ public class Astronomical {
                 Force force = Force.getFromJsonObject(Force_json.getAsJsonObject(key));
                 if (force != null) astronomical.addForce(force);
             }
-        } else return null;
+        }
+
+        if (jsonObject.has("tag")) { try { astronomical.Tag = TagParser.parseTag(jsonObject.get("tag").getAsString()); } catch (Exception ignored) { } }
 
         return astronomical;
     }

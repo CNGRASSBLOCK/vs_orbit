@@ -4,10 +4,11 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.AstronomicalThread;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.jcm.vsch.config.VSCHConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -30,7 +31,7 @@ public class VSOrbitModCommand {
             Entity entity = arguments.getSource().getEntity();
             if ((entity != null)) { if (entity instanceof Player player && !player.level().isClientSide()) {
                 int size = 0;
-                for (String WorldId : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
+                for (String WorldId : VSOrbitDataPack.OrbitWorld) {
                     AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldId);
                     if (astronomicalPool == null) continue;
                     size += astronomicalPool.getAllAstronomical().size();

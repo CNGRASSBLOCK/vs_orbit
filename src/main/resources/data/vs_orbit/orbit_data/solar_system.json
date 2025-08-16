@@ -5,7 +5,7 @@
       "astronomical_compute": true,
       "pos": [0, 500, 0],
       "speed": [0, 0, 0],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.3978, 0.9175],
       "rotating_cycle": 30060
     },
     "Mercury": {
@@ -13,7 +13,7 @@
       "astronomical_compute": true,
       "pos": [-16348, 500, -18063],
       "speed": [2.18, 0, -1.95],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.9999, 0.0123],
       "rotating_cycle": 70380
     },
     "Venus": {
@@ -21,7 +21,7 @@
       "astronomical_compute": true,
       "pos": [-16376, 500, 30089],
       "speed": [-2.12, 0, -1.20],
-      "rotating_shaft": [0, -1, 0],
+      "rotating_shaft": [0.0, -0.9996, -0.0274],
       "rotating_cycle": 291600
     },
     "Earth": {
@@ -29,7 +29,7 @@
       "astronomical_compute": true,
       "pos": [-45165, 500, -442],
       "speed": [0.0164, 0, -2.16],
-      "rotating_shaft": [0, 0.917, -0.399],
+      "rotating_shaft": [0.0, 0.9175, -0.3978],
       "rotating_cycle": 1200
     },
     "Moon": {
@@ -37,7 +37,7 @@
       "astronomical_compute": true,
       "pos": [-44877, 500, -1563],
       "speed": [0.4834, 0, -2.04],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.9999, 0.0124],
       "rotating_cycle": 32784
     },
     "Mars": {
@@ -45,7 +45,7 @@
       "astronomical_compute": true,
       "pos": [68742, 500, -7562],
       "speed": [0.207, 0, 1.70],
-      "rotating_shaft": [0, 0.905, -0.426],
+      "rotating_shaft": [0.0, 0.905, -0.4259],
       "rotating_cycle": 1231
     },
     "Jupiter": {
@@ -53,7 +53,7 @@
       "astronomical_compute": true,
       "pos": [85818, 500, -78549],
       "speed": [0.900, 0, 0.983],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.9962, 0.0868],
       "rotating_cycle": 492
     },
     "Europa": {
@@ -61,7 +61,7 @@
       "astronomical_compute": true,
       "pos": [87663, 500, -81603],
       "speed": [1.253, 0, 1.196],
-      "rotating_shaft": [0, 1, 0],
+      "rotating_shaft": [0.0, 0.9999, 0.0124],
       "rotating_cycle": 4260
     },
     "Saturn": {
@@ -69,7 +69,7 @@
       "astronomical_compute": true,
       "pos": [135367, 500, -147028],
       "speed": [0.748, 0, 0.689],
-      "rotating_shaft": [0, 0.892, -0.452],
+      "rotating_shaft": [0.0, 0.892, -0.452],
       "rotating_cycle": 528
     },
     "Uranus": {
@@ -77,7 +77,7 @@
       "astronomical_compute": true,
       "pos": [137176, 500, -307601],
       "speed": [0.715, 0, 0.319],
-      "rotating_shaft": [0, 0, -1],
+      "rotating_shaft": [0.0, -0.3978, -0.9175],
       "rotating_cycle": 864
     },
     "Neptune": {
@@ -85,7 +85,7 @@
       "astronomical_compute": true,
       "pos": [238826, 500, -453474],
       "speed": [0.562, 0, 0.296],
-      "rotating_shaft": [0, 0.879, -0.477],
+      "rotating_shaft": [0.0, 0.879, -0.477],
       "rotating_cycle": 804
     },
     "Pluto": {
@@ -93,7 +93,7 @@
       "astronomical_compute": true,
       "pos": [407176, 500, -572545],
       "speed": [0.442, 0, 0.314],
-      "rotating_shaft": [0, -0.537, -0.844],
+      "rotating_shaft": [0.0, -0.537, -0.8435],
       "rotating_cycle": 7668
     }
   }

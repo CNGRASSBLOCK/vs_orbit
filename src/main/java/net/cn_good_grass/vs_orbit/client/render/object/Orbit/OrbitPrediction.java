@@ -1,13 +1,10 @@
 package net.cn_good_grass.vs_orbit.client.render.object.Orbit;
 
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
-import org.valkyrienskies.core.impl.shadow.A;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class OrbitPrediction {
     public static List<List<AstronomicalPool>> DataSave = new ArrayList<>();

@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.block.block_entities;
 import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
-import net.cn_good_grass.vs_orbit.block.block_peripheral.MassGeneratorPeripheral;
+import net.cn_good_grass.vs_orbit.procedures.computercraft.BlockPeripheral.MassGeneratorPeripheral;
 import net.cn_good_grass.vs_orbit.procedures.mekanism.EnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

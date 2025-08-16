@@ -1,0 +1,8 @@
+{
+	"dimension_id": "minecraft:overworld",
+
+	"position_projection_method": "preset_1",
+	"center_position": [0, 0],
+	"radius": 32768.0,
+	"rotate": 0.0
+}

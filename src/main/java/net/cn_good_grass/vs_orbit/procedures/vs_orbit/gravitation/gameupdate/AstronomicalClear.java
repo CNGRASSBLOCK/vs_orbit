@@ -1,8 +1,8 @@
 package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate;
 
-import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +22,7 @@ public class AstronomicalClear {
     public static void onWorldTick(TickEvent.ServerTickEvent event) { //质点打扫
         if (!(event.phase == TickEvent.Phase.START)) return;
 
-        for (String WorldIDs : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
+        for (String WorldIDs : VSOrbitDataPack.OrbitWorld) {
             ServerLevel level = event.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldIDs)));
             if (level == null) return;
 

@@ -1,13 +1,10 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate.AstronomicalGravitation;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 

@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.server.ServerLifecycleHooks;

@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.block.block_peripheral;
+package net.cn_good_grass.vs_orbit.procedures.computercraft.BlockPeripheral;
 
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;

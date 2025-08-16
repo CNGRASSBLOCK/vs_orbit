@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.procedures.valkyrienskies.force_applier;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 

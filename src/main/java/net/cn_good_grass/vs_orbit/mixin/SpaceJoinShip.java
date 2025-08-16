@@ -3,9 +3,9 @@ package net.cn_good_grass.vs_orbit.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Force;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.force_applier.ForcerInducedShips;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.AstronomicalThread;
 import net.jcm.vsch.event.AtmosphericCollision;
@@ -15,9 +15,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 @Mixin(AtmosphericCollision.class)
 public class SpaceJoinShip {
@@ -86,6 +90,8 @@ public class SpaceJoinShip {
 
                 forcerInducedShips.addForce(new Force("get_into_orbit", force.x, force.y, force.z, 1));
             }
+
+            for (Entity entity : level.getEntities(null, VectorConversionsMCKt.toMinecraft(ship.getWorldAABB()).inflate(10))) if (entity instanceof ServerPlayer serverPlayer) serverPlayer.displayClientMessage(Component.literal("[VS_Orbit] [Game] " + Component.translatable("message.vs_orbit.game.orbit_synchronous").getString()), false);
         });
     }
 }

@@ -2,10 +2,9 @@ package net.cn_good_grass.vs_orbit.block.block_entities;
 
 import dan200.computercraft.shared.Capabilities;
 import net.cn_good_grass.vs_orbit.block.VSOrbitModBlockEntities;
-import net.cn_good_grass.vs_orbit.block.block_peripheral.JumpEngineControllerPeripheral;
+import net.cn_good_grass.vs_orbit.procedures.computercraft.BlockPeripheral.JumpEngineControllerPeripheral;
 import net.cn_good_grass.vs_orbit.block.blocks.JumpEngineControllerBlock.Mode;
 import net.cn_good_grass.vs_orbit.procedures.CompatMods;
-import net.jcm.vsch.blocks.entity.GyroBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

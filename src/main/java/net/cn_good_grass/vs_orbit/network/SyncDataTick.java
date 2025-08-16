@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.network;
 import net.cn_good_grass.vs_orbit.client.render.object.PlanetEngine.PlanetEngineFire;
 import net.cn_good_grass.vs_orbit.network.data.SyncAstronomicalPoolPacket;
 import net.cn_good_grass.vs_orbit.network.data.SyncPlanetEngineDataPacket;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;

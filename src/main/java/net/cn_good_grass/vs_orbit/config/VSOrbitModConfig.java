@@ -13,7 +13,6 @@ public class VSOrbitModConfig {
     public static final ForgeConfigSpec.ConfigValue<Integer> Core_TICK_SPEED;
     public static final ForgeConfigSpec.ConfigValue<Double> Core_TICK_TIME;
     //下面是Gravitation的
-    public static final ForgeConfigSpec.ConfigValue<List<String>> Gravitation_WORK_WORLD;
     public static final ForgeConfigSpec.ConfigValue<Double> Gravitation_GRAVITATIONAL_CONSTANT;
     //下面是ValkyrienSkies的
     public static final ForgeConfigSpec.ConfigValue<Boolean> ValkyrienSkies_ENABLE;
@@ -27,7 +26,6 @@ public class VSOrbitModConfig {
         MAIN.pop();
 
         MAIN.push("Gravitation");
-        Gravitation_WORK_WORLD = MAIN.comment("重力计算在哪些世界中工作，需要维度的注册名。\nIn which worlds gravity calculations work, the registration name of the dimension is required.").define("work_world", new ArrayList<>(Arrays.asList("cosmos:solar_system")));
         Gravitation_GRAVITATIONAL_CONSTANT = MAIN.comment("引力常数。\nGravitational constant.").define("gravitational_constant", 6.676E-11);
         MAIN.pop();
 

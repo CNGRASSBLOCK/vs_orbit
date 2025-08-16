@@ -2,9 +2,11 @@ package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.AstronomicalThread;
 import net.lointain.cosmos.CosmosMod;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +19,6 @@ import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
 import org.joml.Quaterniond;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ServerAction {
 
         String WorldId;
         if (event.getLevel() instanceof ServerLevel serverLevel) WorldId = serverLevel.dimension().location().toString(); else return;
-        if (!VSOrbitModConfig.Gravitation_WORK_WORLD.get().contains(WorldId)) return;
+        if (!VSOrbitDataPack.OrbitWorld.contains(WorldId)) return;
 
         WorldAction worldAction = WorldAction.get(serverLevel);
 
@@ -50,7 +51,7 @@ public class ServerAction {
         if (!(event.getLevel() instanceof ServerLevel serverLevel)) return;
 
         String WorldID = serverLevel.dimension().location().toString();
-        if (!VSOrbitModConfig.Gravitation_WORK_WORLD.get().contains(WorldID)) return;
+        if (!VSOrbitDataPack.OrbitWorld.contains(WorldID)) return;
 
         AstronomicalPool thisAstronomicalPool = AstronomicalPool.getFromWorldID(WorldID);
         if (thisAstronomicalPool == null) return;
@@ -89,7 +90,7 @@ public class ServerAction {
             CompoundTag compoundTag = listtag.getCompound(i);
             String StarName = compoundTag.getString("object_name");
 
-            JsonObject StarJsonObject = ReadDataPack.StarStateData.getAsJsonObject(WorldId).getAsJsonObject("planet_data").deepCopy();
+            JsonObject StarJsonObject = VSOrbitDataPack.OrbitData.getAsJsonObject(WorldId).getAsJsonObject("planet_data").deepCopy();
             if (!StarJsonObject.has(StarName)) continue;
             List<JsonElement> pos = StarJsonObject.getAsJsonObject(StarName).get("pos").getAsJsonArray().asList();
             if (pos.size() != 3) continue;
@@ -107,14 +108,16 @@ public class ServerAction {
             if (rotating_shaft.size() != 3) continue;
             astronomical.rotate = new Quaterniond().rotateXYZ(rotating_shaft.get(0).getAsDouble(), rotating_shaft.get(1).getAsDouble(),rotating_shaft.get(2).getAsDouble());
             astronomical.rotate_speed = 2 * Math.PI / StarJsonObject.getAsJsonObject(StarName).get("rotating_cycle").getAsDouble();
-            CompoundTag rotating_shaft_tag = new CompoundTag();
-            rotating_shaft_tag.putDouble("x", rotating_shaft.get(0).getAsDouble());
-            rotating_shaft_tag.putDouble("y", rotating_shaft.get(1).getAsDouble());
-            rotating_shaft_tag.putDouble("z", rotating_shaft.get(2).getAsDouble());
-            astronomical.Tag.put("rotating_shaft", rotating_shaft_tag);
+
+            CompoundTag CelestialBodyData = new CompoundTag();
+            CelestialBodyData.putDouble("scale", compoundTag.getDouble("scale"));
+            astronomical.Tag.put("CelestialBodyData", CelestialBodyData);
 
             newWorld.addAstronomical(astronomical);
         }
+
+        VSOrbitMod.LOGGER.info("[VSOrbit] [Game] Create a celestial simulation dimension:" + newWorld.WorldId);
+
         ServerAction.Astronomical_Core_World_Bus.add(newWorld); //新建引力世界用于处理
     }
 }

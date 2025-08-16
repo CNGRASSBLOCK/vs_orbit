@@ -2,9 +2,9 @@ package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.BrightnessProviderProcedure;
 import net.lointain.cosmos.procedures.CubeVertexOrientorProcedure;
@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class StarAPI {
+public abstract class StarAPI {
     public static Vec3 getPos(String dimension, double partialTick, CompoundTag StarTag, boolean isServer) { //星球更新
         AstronomicalPool newAstronomicalPool;
         AstronomicalPool oldAstronomicalPool;
@@ -249,7 +249,7 @@ public class StarAPI {
     }
 
     @Nullable public static CompoundTag getStarDataFormLevel(Level world) {
-        for (String WorldId : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
+        for (String WorldId : VSOrbitDataPack.OrbitWorld) {
             ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
             if (level == null) continue;
             ListTag data = StarAPI.getAllStarData(level, false);
@@ -263,7 +263,7 @@ public class StarAPI {
     }
 
     @Nullable public static Astronomical getAstronomicalFormLevel(Level world) {
-        for (String WorldId : VSOrbitModConfig.Gravitation_WORK_WORLD.get()) {
+        for (String WorldId : VSOrbitDataPack.OrbitWorld) {
             ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
             if (level == null) continue;
             ListTag data = StarAPI.getAllStarData(level, false);

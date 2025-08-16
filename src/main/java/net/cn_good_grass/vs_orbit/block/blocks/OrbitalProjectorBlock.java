@@ -1,13 +1,8 @@
 package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
-import net.cn_good_grass.vs_orbit.block.block_entities.CelestialTachymeterBlockEntity;
 import net.cn_good_grass.vs_orbit.block.block_entities.OrbitalProjectorBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.menu.MassGeneratorGUIMenu;
 import net.cn_good_grass.vs_orbit.gui.menu.OrbitalProjectorGUIMenu;
-import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.theard.AstronomicalPool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -30,9 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
-import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class OrbitalProjectorBlock extends Block implements EntityBlock{
     public OrbitalProjectorBlock() {

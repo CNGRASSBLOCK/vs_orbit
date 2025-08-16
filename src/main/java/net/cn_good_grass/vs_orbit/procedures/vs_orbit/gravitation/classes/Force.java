@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.physics;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.JsonArray;
