@@ -8,6 +8,7 @@ import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModCreativeTab;
 import net.cn_good_grass.vs_orbit.item.VSOrbitModItems;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
+import net.cn_good_grass.vs_orbit.procedures.CompatMods;
 import net.cn_good_grass.vs_orbit.procedures.create.CreateRegistrar;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -55,7 +56,7 @@ public class VSOrbitMod
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
-        CreateRegistrar.register();
+        if (CompatMods.CREATE.isLoaded()) CreateRegistrar.register();
 
         MinecraftForge.EVENT_BUS.register(new ServerAction()); //模拟线程启动
     }

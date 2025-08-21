@@ -17,8 +17,6 @@ import java.lang.reflect.Method;
 
 public class CreateRegistrar {
     public static void register() {
-        if (CompatMods.COMPUTERCRAFT.isLoaded()) {
-            AllDisplayBehaviours.assignDataBehaviour(new CelestialTachymeterDisplaySource(), "celestial_tachymeter_display_source").accept(VSOrbitModBlocks.celestial_tachymeter.get());
-        }
+        AllDisplayBehaviours.assignDataBehaviour(new CelestialTachymeterDisplaySource(), "celestial_tachymeter_display_source").accept(VSOrbitModBlocks.celestial_tachymeter.get());
     }
 }

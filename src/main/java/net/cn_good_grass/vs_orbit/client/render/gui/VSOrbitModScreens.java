@@ -4,7 +4,7 @@
  */
 package net.cn_good_grass.vs_orbit.client.render.gui;
 
-import net.cn_good_grass.vs_orbit.client.render.gui.electrical_truster.ElectromagneticTractorGUIScreen;
+import net.cn_good_grass.vs_orbit.client.render.gui.electrical_truster.ElectricalTrusterGUIScreen;
 import net.cn_good_grass.vs_orbit.client.render.gui.jump_engine_controller.JumpEngineControllerGUIScreen;
 import net.cn_good_grass.vs_orbit.client.render.gui.mass_generator.MassGeneratorGUIScreen;
 import net.cn_good_grass.vs_orbit.client.render.gui.orbital_projector.OrbitalProjectorGUIScreen;
@@ -22,7 +22,7 @@ public class VSOrbitModScreens {
 		event.enqueueWork(() -> {
 			MenuScreens.register(VSOrbitModMenus.JumpEngineControllerGUI.get(), JumpEngineControllerGUIScreen::new);
 			MenuScreens.register(VSOrbitModMenus.MassGeneratorGUI.get(), MassGeneratorGUIScreen::new);
-			MenuScreens.register(VSOrbitModMenus.ElectromagneticTractorGUI.get(), ElectromagneticTractorGUIScreen::new);
+			MenuScreens.register(VSOrbitModMenus.ElectricalTrusterGUI.get(), ElectricalTrusterGUIScreen::new);
 			MenuScreens.register(VSOrbitModMenus.OrbitalProjectorGUI.get(), OrbitalProjectorGUIScreen::new);
 		});
 	}

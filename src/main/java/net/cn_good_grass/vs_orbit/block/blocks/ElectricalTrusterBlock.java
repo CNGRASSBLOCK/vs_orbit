@@ -2,7 +2,7 @@ package net.cn_good_grass.vs_orbit.block.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.menu.ElectromagneticTractorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.ElectricalTrusterGUIMenu;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterInducedShips;
 import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.thruster.ThrusterData;
 import net.minecraft.core.BlockPos;
@@ -116,8 +116,8 @@ public class ElectricalTrusterBlock extends Block implements EntityBlock {
         super.use(blockstate, world, pos, entity, hand, hit);
 
         if (entity instanceof ServerPlayer serverPlayer) { NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
-                @Override public Component getDisplayName() { return Component.literal("ElectromagneticTractorGUI"); }
-                @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new ElectromagneticTractorGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos)); }
+                @Override public Component getDisplayName() { return Component.literal("ElectricalTrusterGUI"); }
+                @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new ElectricalTrusterGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos)); }
             }, pos); }
 
         return InteractionResult.CONSUME;

@@ -3,7 +3,7 @@ package net.cn_good_grass.vs_orbit.client.render.gui.electrical_truster;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
-import net.cn_good_grass.vs_orbit.gui.menu.ElectromagneticTractorGUIMenu;
+import net.cn_good_grass.vs_orbit.gui.menu.ElectricalTrusterGUIMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -21,14 +21,14 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.HashMap;
 
-public class ElectromagneticTractorGUIScreen extends AbstractContainerScreen<ElectromagneticTractorGUIMenu> {
-	private final static HashMap<String, Object> guistate = ElectromagneticTractorGUIMenu.guistate;
+public class ElectricalTrusterGUIScreen extends AbstractContainerScreen<ElectricalTrusterGUIMenu> {
+	private final static HashMap<String, Object> guistate = ElectricalTrusterGUIMenu.guistate;
 	private final Level world;
 	private final int x, y, z;
 	private final Player entity;
 	private final static HashMap<String, String> textstate = new HashMap<>();
 
-	public ElectromagneticTractorGUIScreen(ElectromagneticTractorGUIMenu container, Inventory inventory, Component text) {
+	public ElectricalTrusterGUIScreen(ElectricalTrusterGUIMenu container, Inventory inventory, Component text) {
 		super(container, inventory, text);
 		this.world = container.world;
 		this.x = container.x;
@@ -93,8 +93,8 @@ public class ElectromagneticTractorGUIScreen extends AbstractContainerScreen<Ele
 		super.containerTick();
 		force.tick();
 		textstate.put("textin:force", force.getValue());
-		VSOrbitMod.PACKET_HANDLER.sendToServer(new ElectromagneticTractorGUIMenu.ElectromagneticTractorGUIOtherMessage(0, x, y, z, textstate));
-		ElectromagneticTractorGUIMenu.ElectromagneticTractorGUIOtherMessage.handleOtherAction(entity, 0, x, y, z, textstate);
+		VSOrbitMod.PACKET_HANDLER.sendToServer(new ElectricalTrusterGUIMenu.ElectricalTrusterGUIOtherMessage(0, x, y, z, textstate));
+		ElectricalTrusterGUIMenu.ElectricalTrusterGUIOtherMessage.handleOtherAction(entity, 0, x, y, z, textstate);
 	}
 
 	@Override

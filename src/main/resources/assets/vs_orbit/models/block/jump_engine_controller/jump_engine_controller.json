@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"texture_size": [17, 16],
+	"render_type": "cutout",
 	"textures": {
 		"particle": "vs_orbit:block/jump_engine_controller/common",
 		"common": "vs_orbit:block/jump_engine_controller/common",
@@ -20,16 +21,16 @@
 			}
 		},
 		{
-			"from": [3, -0.001, 3],
-			"to": [13, -0.001, 13],
+			"from": [3, -0.01, 3],
+			"to": [13, -0.01, 13],
 			"faces": {
 				"up": {"uv": [15.23529, 0.1875, 15.82353, 0.8125], "rotation": 90, "texture": "#light"},
 				"down": {"uv": [15.23529, 0.1875, 15.82353, 0.8125], "texture": "#light"}
 			}
 		},
 		{
-			"from": [3, 16.001, 3],
-			"to": [13, 16.001, 13],
+			"from": [3, 16.01, 3],
+			"to": [13, 16.01, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
 			"faces": {
 				"up": {"uv": [2.82353, 3, 12.23529, 13], "texture": "#light"},

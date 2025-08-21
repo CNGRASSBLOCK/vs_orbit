@@ -5,7 +5,7 @@ import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.ElectricalTrusterBlockEntity;
 import net.cn_good_grass.vs_orbit.gui.VSOrbitModMenus;
 import net.cn_good_grass.vs_orbit.network.NetworkHandler;
-import net.cn_good_grass.vs_orbit.network.gui.SyncElectromagneticTractorGUI;
+import net.cn_good_grass.vs_orbit.network.gui.SyncElectricalTrusterGUI;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
+public class ElectricalTrusterGUIMenu extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
 	public final static HashMap<String, Object> guistate = new HashMap<>();
 	public final Level world;
 	public final Player entity;
@@ -43,8 +43,8 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 	private Entity boundEntity = null;
 	private BlockEntity boundBlockEntity = null;
 
-	public ElectromagneticTractorGUIMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-		super(VSOrbitModMenus.ElectromagneticTractorGUI.get(), id);
+	public ElectricalTrusterGUIMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
+		super(VSOrbitModMenus.ElectricalTrusterGUI.get(), id);
 		this.entity = inv.player;
 		this.world = inv.player.level();
 		this.internal = new ItemStackHandler(0);
@@ -81,11 +81,11 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class ElectromagneticTractorGUIOtherMessage {
+	public static class ElectricalTrusterGUIOtherMessage {
 		private final int mode, x, y, z;
 		private HashMap<String, String> textstate;
 
-		public ElectromagneticTractorGUIOtherMessage(FriendlyByteBuf buffer) {
+		public ElectricalTrusterGUIOtherMessage(FriendlyByteBuf buffer) {
 			this.mode = buffer.readInt();
 			this.x = buffer.readInt();
 			this.y = buffer.readInt();
@@ -93,7 +93,7 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 			this.textstate = readTextState(buffer);
 		}
 
-		public ElectromagneticTractorGUIOtherMessage(int mode, int x, int y, int z, HashMap<String, String> textstate) {
+		public ElectricalTrusterGUIOtherMessage(int mode, int x, int y, int z, HashMap<String, String> textstate) {
 			this.mode = mode;
 			this.x = x;
 			this.y = y;
@@ -101,7 +101,7 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 			this.textstate = textstate;
 		}
 
-		public static void buffer(ElectromagneticTractorGUIOtherMessage message, FriendlyByteBuf buffer) {
+		public static void buffer(ElectricalTrusterGUIOtherMessage message, FriendlyByteBuf buffer) {
 			buffer.writeInt(message.mode);
 			buffer.writeInt(message.x);
 			buffer.writeInt(message.y);
@@ -109,7 +109,7 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 			writeTextState(message.textstate, buffer);
 		}
 
-		public static void handler(ElectromagneticTractorGUIOtherMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+		public static void handler(ElectricalTrusterGUIOtherMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
 			NetworkEvent.Context context = contextSupplier.get();
 			context.enqueueWork(() -> {
 				Player entity = context.getSender();
@@ -125,7 +125,7 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 
 		public static void handleOtherAction(Player entity, int mode, int x, int y, int z, HashMap<String, String> textstate) {
 			Level world = entity.level();
-			HashMap guistate = ElectromagneticTractorGUIMenu.guistate;
+			HashMap guistate = ElectricalTrusterGUIMenu.guistate;
 			for (Map.Entry<String, String> entry : textstate.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
@@ -138,11 +138,11 @@ public class ElectromagneticTractorGUIMenu extends AbstractContainerMenu impleme
 				if (blockEntity == null) return;
 				double force = 0;
 				try { force = Double.parseDouble(((EditBox) guistate.get("vs_orbit:force")).getValue()); } catch (NumberFormatException ignored) {}
-				NetworkHandler.INSTANCE.sendToServer(new SyncElectromagneticTractorGUI(new BlockPos(x, y, z), force));
+				NetworkHandler.INSTANCE.sendToServer(new SyncElectricalTrusterGUI(new BlockPos(x, y, z), force));
 			}
 		}
 
-		@SubscribeEvent public static void registerMessage(FMLCommonSetupEvent event) { VSOrbitMod.addNetworkMessage(ElectromagneticTractorGUIOtherMessage.class, ElectromagneticTractorGUIOtherMessage::buffer, ElectromagneticTractorGUIOtherMessage::new, ElectromagneticTractorGUIOtherMessage::handler); }
+		@SubscribeEvent public static void registerMessage(FMLCommonSetupEvent event) { VSOrbitMod.addNetworkMessage(ElectricalTrusterGUIOtherMessage.class, ElectricalTrusterGUIOtherMessage::buffer, ElectricalTrusterGUIOtherMessage::new, ElectricalTrusterGUIOtherMessage::handler); }
 
 		public static void writeTextState(HashMap<String, String> map, FriendlyByteBuf buffer) {
 			buffer.writeInt(map.size());

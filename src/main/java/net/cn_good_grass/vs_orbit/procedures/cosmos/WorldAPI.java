@@ -22,32 +22,59 @@ public abstract class WorldAPI {
 
         List<JsonElement> CenterData = WorldData.get("center_position").getAsJsonArray().asList();
         if (CenterData.size() != 2) return new Vector3d();
-         String ProjectionMethod = WorldData.get("position_projection_method").getAsString();
-        Vector2d Center = new Vector2d(CenterData.get(0).getAsDouble(), CenterData.get(1).getAsDouble());
-        double Radius = WorldData.get("radius").getAsDouble();
-        double Rotate = WorldData.get("rotate").getAsDouble();
-
         Astronomical astronomical = StarAPI.getAstronomicalFormLevel(world);
         if (astronomical == null) return new Vector3d();
 
-        Vector2d map_pos = new Vector2d(position).sub(Center);
-        map_pos = new Matrix2d().rotate(Math.toRadians(Rotate)).transform(map_pos, new Vector2d());
+        String ProjectionMethod = WorldData.get("position_projection_method").getAsString();
+        Vector2d MapCenter = new Vector2d(CenterData.get(0).getAsDouble(), CenterData.get(1).getAsDouble());
+        double MapRadius = WorldData.get("radius").getAsDouble();
+        double MapRotate = WorldData.get("rotate").getAsDouble();
+        double PlanetRadius = astronomical.Tag.getCompound("CelestialBodyData").getDouble("scale") / 2;
+        double scalar = PlanetRadius / MapRadius;
+
+        Vector2d map_absolute_pos = new Vector2d(position).sub(MapCenter);
+        map_absolute_pos = new Matrix2d().rotate(Math.toRadians(MapRotate)).transform(map_absolute_pos, new Vector2d());
+
+        PlanetRadius = PlanetRadius * 1.25;
 
         Vector3d out_pos = new Vector3d();
+        Vector2d map_relatively_pos;
         if (ProjectionMethod.equals("preset_1")) {
-            double scale = astronomical.Tag.getCompound("CelestialBodyData").getDouble("scale") / 2.0;
-            map_pos.mul(scale / Radius);
-            out_pos = new Vector3d(map_pos.x(), scale, map_pos.y());
-            if (-Radius / 3.0 <= map_pos.x && map_pos.x <= Radius / 3.0 && -Radius / 3.0 <= map_pos.y && map_pos.y <= Radius / 3.0)
-                out_pos = new Quaterniond().transform(out_pos, new Vector3d());  //中心-顶面
-            else if (-Radius / 3.0 <= map_pos.x && map_pos.x <= Radius / 3.0 && Radius / 3.0 <= map_pos.y && map_pos.y <= Radius)
-                out_pos = new Quaterniond(-0.7071, 0, 0, 0.7071).transform(out_pos, new Vector3d()); //上-北
-            else if (-Radius / 3.0 <= map_pos.x && map_pos.x <= Radius / 3.0 && -Radius <= map_pos.y && map_pos.y <= -Radius / 3.0)
-                out_pos = new Quaterniond(0.7071, 0, 0, 0.7071).transform(out_pos, new Vector3d()); //下-南
-            else if (-Radius <= map_pos.x && map_pos.x <= -Radius / 3.0 && -Radius / 3.0 <= map_pos.y && map_pos.y <= Radius / 3.0)
-                out_pos = new Quaterniond(0, 0, 0.7071, 0.7071).transform(out_pos, new Vector3d()); //左-西
-            else if (Radius / 3.0 <= map_pos.x && map_pos.x <= Radius && -Radius / 3.0 <= map_pos.y && map_pos.y <= Radius / 3.0)
-                out_pos = new Quaterniond(0, 0, -0.7071, 0.7071).transform(out_pos, new Vector3d()); //右-东
+            if (-MapRadius / 3.0 <= map_absolute_pos.x && map_absolute_pos.x <= MapRadius / 3.0 && -MapRadius / 3.0 <= map_absolute_pos.y && map_absolute_pos.y <= MapRadius / 3.0) {
+                //中心-顶面
+                map_relatively_pos = new Vector2d(map_absolute_pos);
+                map_relatively_pos.mul(scalar);
+
+                out_pos = new Quaterniond().transform(new Vector3d(map_relatively_pos.x(), PlanetRadius, map_relatively_pos.y()), new Vector3d());
+            } else if (-MapRadius / 3.0 <= map_absolute_pos.x && map_absolute_pos.x <= MapRadius / 3.0 && MapRadius / 3.0 <= map_absolute_pos.y && map_absolute_pos.y <= MapRadius) {
+                //上-北
+                map_relatively_pos = new Vector2d(map_absolute_pos);
+                map_relatively_pos.y -= MapRadius / 1.5;
+                map_relatively_pos.mul(scalar);
+
+                out_pos = new Quaterniond(-0.7071067811865475, 0, 0, 0.7071067811865475).transform(new Vector3d(map_relatively_pos.x(), PlanetRadius, map_relatively_pos.y()), new Vector3d());
+            } else if (-MapRadius / 3.0 <= map_absolute_pos.x && map_absolute_pos.x <= MapRadius / 3.0 && -MapRadius <= map_absolute_pos.y && map_absolute_pos.y <= -MapRadius / 3.0) {
+                //下-南
+                map_relatively_pos = new Vector2d(map_absolute_pos);
+                map_relatively_pos.y += MapRadius / 1.5;
+                map_relatively_pos.mul(scalar);
+
+                out_pos = new Quaterniond(0.7071067811865475, 0, 0, 0.7071067811865475).transform(new Vector3d(map_relatively_pos.x(), PlanetRadius, map_relatively_pos.y()), new Vector3d());
+            } else if (-MapRadius <= map_absolute_pos.x && map_absolute_pos.x <= -MapRadius / 3.0 && -MapRadius / 3.0 <= map_absolute_pos.y && map_absolute_pos.y <= MapRadius / 3.0) {
+                //左-西
+                map_relatively_pos = new Vector2d(map_absolute_pos);
+                map_relatively_pos.x += MapRadius / 1.5;
+                map_relatively_pos.mul(scalar);
+
+                out_pos = new Quaterniond(0, 0, 0.7071067811865475, 0.7071067811865475).transform(new Vector3d(map_relatively_pos.x(), PlanetRadius, map_relatively_pos.y()), new Vector3d());
+            } else if (MapRadius / 3.0 <= map_absolute_pos.x && map_absolute_pos.x <= MapRadius && -MapRadius / 3.0 <= map_absolute_pos.y && map_absolute_pos.y <= MapRadius / 3.0) {
+                //右-东
+                map_relatively_pos = new Vector2d(map_absolute_pos);
+                map_relatively_pos.x -= MapRadius / 1.5;
+                map_relatively_pos.mul(scalar);
+
+                out_pos = new Quaterniond(0, 0, -0.7071067811865475, 0.7071067811865475).transform(new Vector3d(map_relatively_pos.x(), PlanetRadius, map_relatively_pos.y()), new Vector3d());
+            }
             out_pos = astronomical.rotate.transform(out_pos, new Vector3d());
         }
 
