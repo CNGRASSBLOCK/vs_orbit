@@ -146,7 +146,7 @@ public class AstronomicalPool {
 
     public void RotateUpdates(double time) {
         synchronized (astronomicalPool) {
-            for (Astronomical astronomical : astronomicalPool) astronomical.rotate.mul(new Quaterniond().rotateY(astronomical.rotate_speed * time));
+            for (Astronomical astronomical : astronomicalPool) astronomical.rotate.mul(new Quaterniond().rotateY(astronomical.rotate_speed * time)).normalize();
         }
     }
 }

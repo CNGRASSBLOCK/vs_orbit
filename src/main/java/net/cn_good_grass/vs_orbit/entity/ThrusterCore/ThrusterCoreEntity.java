@@ -61,8 +61,7 @@ public class ThrusterCoreEntity extends PathfinderMob implements GeoEntity {
 	@Override public MobType getMobType() { return MobType.UNDEFINED; }
 	@Override public boolean causeFallDamage(float l, float d, DamageSource source) { return false; }
 	@Override public boolean hurt(DamageSource source, float amount) {
-		if (source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL))
-			return super.hurt(source, amount);
+		if (source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL)) return super.hurt(source, amount);
 		return false;
 	}
 

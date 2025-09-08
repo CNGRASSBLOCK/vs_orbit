@@ -109,9 +109,10 @@ public class ServerAction {
             astronomical.rotate = new Quaterniond().rotateXYZ(rotating_shaft.get(0).getAsDouble(), rotating_shaft.get(1).getAsDouble(),rotating_shaft.get(2).getAsDouble());
             astronomical.rotate_speed = 2 * Math.PI / StarJsonObject.getAsJsonObject(StarName).get("rotating_cycle").getAsDouble();
 
-            CompoundTag CelestialBodyData = new CompoundTag();
-            CelestialBodyData.putDouble("scale", compoundTag.getDouble("scale"));
-            astronomical.Tag.put("CelestialBodyData", CelestialBodyData);
+            CompoundTag CosmosData = new CompoundTag();
+            CosmosData.putDouble("scale", compoundTag.getDouble("scale"));
+            CosmosData.putString("travel_to", compoundTag.getString("travel_to"));
+            astronomical.Tag.put("cosmos:data", CosmosData);
 
             newWorld.addAstronomical(astronomical);
         }

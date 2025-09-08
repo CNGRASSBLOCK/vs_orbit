@@ -12,13 +12,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = "vs_orbit", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DisplayLine {
+    public static Map<String, Vector3d> ScreenPos = new HashMap<>();
+
     @SubscribeEvent
     public static void renderLines(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES && Minecraft.getInstance().options.renderDebug) {;
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {;
             RenderSystem.disableDepthTest();
             RenderSystem.setShaderFogStart(2147463647);
             RenderSystem.setShaderFogEnd(2147463647);
@@ -26,12 +32,16 @@ public class DisplayLine {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.level == null) return;
 
-            AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(minecraft.level.dimension().location().toString());
+            AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldIDCilent(minecraft.level.dimension().location().toString(), false);
             if (astronomicalPool == null) return;
             for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) {
                 if (astronomical == null) continue;
-                renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.x_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get()), astronomical.y + (astronomical.y_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get()), astronomical.z + (astronomical.z_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
-                renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.y + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.z + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
+                if (Minecraft.getInstance().options.renderDebug) {
+                    renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.x_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get()), astronomical.y + (astronomical.y_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get()), astronomical.z + (astronomical.z_speed * VSOrbitModClientConfig.SPEED_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 255 << 8 | 0);
+                    renderLine(event, new Vec3(astronomical.x, astronomical.y, astronomical.z), new Vec3(astronomical.x + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.y + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get()), astronomical.z + (astronomical.getAcceleration().x * VSOrbitModClientConfig.ACCELERATION_SHOW_SCALING.get())), 255 << 24 | 255 << 16 | 0 | 0);
+                }
+
+                ScreenPos.put(astronomical.name, WorldPosToScreen.worldToScreen(new Vector3d(astronomical.x, astronomical.y, astronomical.z), event.getPoseStack()));
             }
 
             RenderSystem.enableDepthTest();

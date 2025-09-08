@@ -2,6 +2,8 @@ package net.cn_good_grass.vs_orbit.procedures.cosmos;
 
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.cn_good_grass.vs_orbit.network.SyncDataTick;
+import net.cn_good_grass.vs_orbit.network.data.SyncAstronomicalPoolPacket;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
@@ -263,19 +265,23 @@ public abstract class StarAPI {
     }
 
     @Nullable public static Astronomical getAstronomicalFormLevel(Level world) {
-        for (String WorldId : VSOrbitDataPack.OrbitWorld) {
-            ServerLevel level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
-            if (level == null) continue;
-            ListTag data = StarAPI.getAllStarData(level, false);
-            if (data == null) continue;
-            for (int i = 0; i < data.size(); i++) {
-                CompoundTag StarTag = data.getCompound(i);
-                if (StarTag.getString("travel_to").equals(world.dimension().location().toString())) {
-                    AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldId);
-                    if (astronomicalPool == null) continue;
-                    return astronomicalPool.getAstronomical("CosmosStar-" + StarTag.getString("object_name"));
+        if (!world.isClientSide) {
+            for (String WorldId : VSOrbitDataPack.OrbitWorld) {
+                Level level = world.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(WorldId)));
+                if (level == null) continue;
+                ListTag data = StarAPI.getAllStarData(level, false);
+                if (data == null) continue;
+                for (int i = 0; i < data.size(); i++) {
+                    CompoundTag StarTag = data.getCompound(i);
+                    if (StarTag.getString("travel_to").equals(world.dimension().location().toString())) {
+                        AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldID(WorldId);
+                        if (astronomicalPool == null) continue;
+                        return astronomicalPool.getAstronomical("CosmosStar-" + StarTag.getString("object_name"));
+                    }
                 }
             }
+        } else {
+            for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) if (astronomical.Tag.getCompound("cosmos:data").getString("travel_to").equals(world.dimension().location().toString())) return astronomical;
         }
         return null;
     }
