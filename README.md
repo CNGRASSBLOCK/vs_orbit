@@ -1,5 +1,5 @@
 # VS Orbit
-## Celestial motion for Cosmic Horizons
+## Astrophysics in Minecraft
 Current features:
 1. Real-time simulation of celestial motion
 2. Jump engine is used for long-distance movement
