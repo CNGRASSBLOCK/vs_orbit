@@ -2,8 +2,8 @@ package net.cn_good_grass.vs_orbit.client.render.object.Orbit;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.Vec3;

@@ -1,6 +1,6 @@
 package net.cn_good_grass.vs_orbit.procedures.valkyrienskies.force_applier;
 
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Force;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

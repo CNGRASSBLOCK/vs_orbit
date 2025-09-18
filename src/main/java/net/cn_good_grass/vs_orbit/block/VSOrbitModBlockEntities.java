@@ -35,6 +35,11 @@ public class VSOrbitModBlockEntities {
             () -> BlockEntityType.Builder.of(OrbitalProjectorBlockEntity::new, VSOrbitModBlocks.orbital_projector_block.get()).build(null)
     );
 
+    public static final RegistryObject<BlockEntityType<OrbitalControlConsoleBlockEntity>> orbital_control_console_block_entity = BLOCK_ENTITIES.register(
+            "orbital_control_console_block_entity",
+            () -> BlockEntityType.Builder.of(OrbitalControlConsoleBlockEntity::new, VSOrbitModBlocks.orbital_control_console_block.get()).build(null)
+    );
+
     // 在构造函数中注册到主模组总线
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

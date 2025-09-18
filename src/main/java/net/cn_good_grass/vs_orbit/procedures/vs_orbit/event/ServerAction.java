@@ -1,14 +1,13 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.event;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.AstronomicalThread;
-import net.lointain.cosmos.CosmosMod;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomicals.CosmosAstronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.core.AstronomicalThread;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
@@ -82,7 +81,7 @@ public class ServerAction {
 
         ListTag listtag = StarAPI.getAllStarData(World, true);
         if (listtag == null) {
-            CosmosMod.queueServerWork(20, () -> CreateAstronomicalWorld(World));
+            VSOrbitMod.queueServerWork(20, () -> CreateAstronomicalWorld(World));
             return;
         }
 
@@ -94,9 +93,7 @@ public class ServerAction {
             if (!StarJsonObject.has(StarName)) continue;
             List<JsonElement> pos = StarJsonObject.getAsJsonObject(StarName).get("pos").getAsJsonArray().asList();
             if (pos.size() != 3) continue;
-            String type = "cosmos:planet";
-            if (compoundTag.contains("core_color")) type = "cosmos:star";
-            Astronomical astronomical = new Astronomical(i, "CosmosStar-" + StarName, type, StarJsonObject.getAsJsonObject(StarName).get("astronomical_compute").getAsBoolean(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsDouble(), pos.get(0).getAsDouble(), pos.get(1).getAsDouble(), pos.get(2).getAsDouble());
+            CosmosAstronomical astronomical = new CosmosAstronomical(i, "CosmosStar-" + StarName, StarJsonObject.getAsJsonObject(StarName).get("astronomical_compute").getAsBoolean(), StarJsonObject.getAsJsonObject(StarName).get("mass").getAsDouble(), pos.get(0).getAsDouble(), pos.get(1).getAsDouble(), pos.get(2).getAsDouble(), compoundTag);
 
             List<JsonElement> speed = StarJsonObject.getAsJsonObject(StarName).get("speed").getAsJsonArray().asList();
             if (speed.size() != 3) continue;
@@ -108,11 +105,6 @@ public class ServerAction {
             if (rotating_shaft.size() != 3) continue;
             astronomical.rotate = new Quaterniond().rotateXYZ(rotating_shaft.get(0).getAsDouble(), rotating_shaft.get(1).getAsDouble(),rotating_shaft.get(2).getAsDouble());
             astronomical.rotate_speed = 2 * Math.PI / StarJsonObject.getAsJsonObject(StarName).get("rotating_cycle").getAsDouble();
-
-            CompoundTag CosmosData = new CompoundTag();
-            CosmosData.putDouble("scale", compoundTag.getDouble("scale"));
-            CosmosData.putString("travel_to", compoundTag.getString("travel_to"));
-            astronomical.Tag.put("cosmos:data", CosmosData);
 
             newWorld.addAstronomical(astronomical);
         }

@@ -1,7 +1,6 @@
-package net.cn_good_grass.vs_orbit.mixin;
+package net.cn_good_grass.vs_orbit.mixin.cosmos;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.cn_good_grass.vs_orbit.procedures.cosmos.StarAPI;
 import net.cn_good_grass.vs_orbit.procedures.cosmos.WorldAPI;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.AtmosphericCollisionDetectorProcedure;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -3,9 +3,9 @@ package net.cn_good_grass.vs_orbit.client.render.object.Splinter;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.cosmos.WorldAPI;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomicals.SplinterAstronomical;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
@@ -32,7 +32,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = "vs_orbit", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DisplaySplinter {
-    private static final List<Astronomical> SplinterList = new ArrayList<>();
+    private static final List<SplinterAstronomical> SplinterList = new ArrayList<>();
     private static final Map<String, BlockState> SplinterBlock = new HashMap<>();
 
     @SubscribeEvent
@@ -44,7 +44,7 @@ public class DisplaySplinter {
         RenderSystem.setShaderFogStart(2147463647);
         RenderSystem.setShaderFogEnd(2147463647);
 
-        for (Astronomical astronomical : SplinterList) {
+        for (SplinterAstronomical astronomical : SplinterList) {
             Vector3d rotate = astronomical.rotate.getEulerAnglesXYZ(new Vector3d(0, 0, 0));
             renderBlock(SplinterBlock.get(astronomical.name), astronomical.x, astronomical.y, astronomical.z, (float) Math.toDegrees(rotate.x), (float) Math.toDegrees(rotate.y), (float) Math.toDegrees(rotate.z), (float) (astronomical.mass / 750));
         }
@@ -68,27 +68,14 @@ public class DisplaySplinter {
         if (Minecraft.getInstance().level != null) WorldId = Minecraft.getInstance().level.dimension().location().toString();
         SplinterList.clear();
         if (tick >= 3) SplinterBlock.clear();
-        for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(WorldId)) for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) if (astronomical.type.equals("vs_orbit:splinter")) {
-            SplinterList.add(astronomical);
+        for (AstronomicalPool astronomicalPool : SyncDataTick.New_Gravitation_Core_World_Bus) if (astronomicalPool.WorldId.equals(WorldId)) for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) if (astronomical instanceof SplinterAstronomical splinterAstronomical) {
+            SplinterList.add(splinterAstronomical);
             if (tick >= 3) SplinterBlock.put(astronomical.name, blockStates.get((int) (Math.random() * 6)));
         }
 
         if (tick >= 3) tick = 0;
         tick++;
 
-
-
-//        ResourceLocation textureLoc = new ResourceLocation("cosmos:textures/earth.png");
-//        NativeImage newImage = new NativeImage(1024, 512, false); // 创建16x16空白图像
-//
-//        for (int x = 0; x < 1024; x++) {
-//            for (int y = 0; y < 512; y++) {
-//                newImage.setPixelRGBA(x, y, 0xFF000000 + (int) (Math.random() * 255255));
-//            }
-//        }
-//
-//        DynamicTexture dynamicTexture = new DynamicTexture(newImage);
-//        Minecraft.getInstance().getTextureManager().register(textureLoc, dynamicTexture);
     }
 
     private static RenderLevelStageEvent provider = null;

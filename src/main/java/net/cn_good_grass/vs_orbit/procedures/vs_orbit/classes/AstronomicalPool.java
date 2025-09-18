@@ -1,9 +1,9 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes;
 
 import com.google.gson.JsonObject;
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate.AstronomicalGravitation;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.event.ServerAction;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.core.AstronomicalGravitation;
 import net.minecraft.world.level.Level;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
@@ -50,7 +50,7 @@ public class AstronomicalPool {
 
     @Nullable
     public static AstronomicalPool getFromJsonObject(JsonObject json) {
-        String WorldId = "";
+        String WorldId;
         if (json.has("WorldID")) WorldId = json.get("WorldID").getAsString(); else return null;
         AstronomicalPool newWorld = new AstronomicalPool(WorldId);
 
@@ -88,11 +88,13 @@ public class AstronomicalPool {
         }
     }
 
+    @Nullable
     public Astronomical getAstronomical(int id) {
         for (Astronomical astronomical1 : astronomicalPool) if (astronomical1.id == id) return astronomical1;
         return null;
     }
 
+    @Nullable
     public Astronomical getAstronomical(String name) {
         for (Astronomical astronomical1 : astronomicalPool) if (astronomical1.name.equals(name)) return astronomical1;
         return null;

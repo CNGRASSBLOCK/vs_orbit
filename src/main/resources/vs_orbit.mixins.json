@@ -5,14 +5,15 @@
   "refmap": "vs_orbit.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SpaceJoinPlayer",
-    "SpaceJoinShip",
-    "PlayerStarCollision",
-    "ShipStarCollision",
-    "NoVoidDamage"
+    "cosmos.SpaceJoinPlayer",
+    "starlance.SpaceJoinShip",
+    "cosmos.PlayerStarCollision",
+    "starlance.ShipStarCollision",
+    "cosmos.NoVoidDamage"
   ],
   "client": [
-    "StarRender"
+    "cosmos.StarRender",
+    "cosmos.FixShaderCloudsFlip"
   ],
   "injectors": {
     "defaultRequire": 1

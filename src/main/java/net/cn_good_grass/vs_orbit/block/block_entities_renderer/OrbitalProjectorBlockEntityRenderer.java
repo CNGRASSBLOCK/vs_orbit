@@ -3,8 +3,9 @@ package net.cn_good_grass.vs_orbit.block.block_entities_renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.block.block_entities.OrbitalProjectorBlockEntity;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomicals.CosmosAstronomical;
 import net.jcm.vsch.api.resource.ModelTextures;
 import net.jcm.vsch.api.resource.TextureLocation;
 import net.jcm.vsch.client.RenderUtil;
@@ -38,15 +39,16 @@ public class OrbitalProjectorBlockEntityRenderer implements BlockEntityRenderer<
 
         AstronomicalPool astronomicalPool = AstronomicalPool.getFromWorldIDCilent(blockEntity.data_world, false);
         if (astronomicalPool != null) for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) {
-            Vector3d pos = new Vector3d(astronomical.x, astronomical.y, astronomical.z);
+            if (!(astronomical instanceof CosmosAstronomical cosmosAstronomical)) return;
+            Vector3d pos = new Vector3d(cosmosAstronomical.x, cosmosAstronomical.y, cosmosAstronomical.z);
             if (center.distance(pos) <= blockEntity.data_radius) {
                 Vector3d pos_data = pos.mul(0.0000025);
-                if (astronomical.type.equals("cosmos:star")) {
+                if (cosmosAstronomical.getType().equals("cosmos:star")) {
                     StarSizeList.put(pos_data, 0.1f);
-                    StarRotateList.put(pos_data, new Quaternionf(astronomical.rotate));
-                } else if (astronomical.type.equals("cosmos:planet")) {
+                    StarRotateList.put(pos_data, new Quaternionf(cosmosAstronomical.rotate));
+                } else if (cosmosAstronomical.getType().equals("cosmos:planet")) {
                     PlanetSizeList.put(pos_data, 0.1f);
-                    PlanetRotateList.put(pos_data, new Quaternionf(astronomical.rotate));
+                    PlanetRotateList.put(pos_data, new Quaternionf(cosmosAstronomical.rotate));
                 }
             }
         }

@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.mixin;
+package net.cn_good_grass.vs_orbit.mixin.cosmos;
 
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.minecraft.world.damagesource.DamageSource;

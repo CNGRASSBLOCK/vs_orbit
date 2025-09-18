@@ -1,4 +1,4 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.event;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;

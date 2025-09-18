@@ -40,6 +40,11 @@ public class VSOrbitModBlocks {
             "orbital_projector",
             OrbitalProjectorBlock::new
     );
+
+    public static final RegistryObject<Block> orbital_control_console_block = BLOCKS.register(
+            "orbital_control_console",
+            OrbitalControlConsoleBlock::new
+    );
     // 在构造函数中注册到主模组总线
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

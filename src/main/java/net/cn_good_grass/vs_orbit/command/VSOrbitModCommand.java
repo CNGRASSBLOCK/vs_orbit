@@ -4,10 +4,11 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core.AstronomicalThread;
+import net.cn_good_grass.vs_orbit.procedures.valkyrienskies.ShipTick;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.core.AstronomicalThread;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.jcm.vsch.config.VSCHConfig;
 import net.minecraft.commands.CommandSourceStack;
@@ -51,6 +52,7 @@ public class VSOrbitModCommand {
         //核心-暂停
         main_command.then(Commands.literal("core").then(Commands.literal("pause").executes(arguments -> {
             AstronomicalThread.pause = !AstronomicalThread.pause;
+            ShipTick.ship_speed_update = true;
 
             Entity entity = arguments.getSource().getEntity();
 
@@ -63,9 +65,13 @@ public class VSOrbitModCommand {
         })));
         //核心-速度
         main_command.then(Commands.literal("core").then(Commands.literal("speed").then(Commands.literal("set").then(Commands.argument("zoom", DoubleArgumentType.doubleArg()).executes(arguments -> {
-            AstronomicalThread.core_tick_time = VSOrbitModConfig.Core_TICK_TIME.get() * DoubleArgumentType.getDouble(arguments, "zoom");
-
             Entity entity = arguments.getSource().getEntity();
+
+            if (DoubleArgumentType.getDouble(arguments, "zoom") == 0) if ((entity != null)) { if (entity instanceof Player player && !player.level().isClientSide()) { player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.speed_set.not_zero").getString()), false); } }
+
+            AstronomicalThread.core_tick_time = VSOrbitModConfig.Core_TICK_TIME.get() * DoubleArgumentType.getDouble(arguments, "zoom");
+            ShipTick.ship_speed_update = true;
+
             if ((entity != null)) { if (entity instanceof Player player && !player.level().isClientSide()) { player.displayClientMessage(Component.literal("[VS_Orbit] [Command] " + Component.translatable("message.vs_orbit.core.speed_set").getString()), false); } }
 
             if ((AstronomicalThread.core_tick_time / VSOrbitModConfig.Core_TICK_TIME.get()) > 2 && VSOrbitModConfig.ValkyrienSkies_SYNC_MODE.get() && VSOrbitModConfig.ValkyrienSkies_ENABLE.get()) {

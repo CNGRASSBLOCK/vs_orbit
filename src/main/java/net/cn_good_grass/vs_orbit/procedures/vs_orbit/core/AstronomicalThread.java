@@ -1,9 +1,9 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.core;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.core;
 
 import net.cn_good_grass.vs_orbit.VSOrbitMod;
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.event.ServerAction;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -42,6 +42,8 @@ public abstract class AstronomicalThread {
                 boolean run = !pause;
                 if (ServerLifecycleHooks.getCurrentServer() != null) if (ServerLifecycleHooks.getCurrentServer().isSingleplayer()) if (Minecraft.getInstance().isPaused()) run = false;
 
+                if (core_tick_time == 0) core_tick_time = 1;
+
                 if (run) {
                     synchronized (ServerAction.Astronomical_Core_World_Bus) {
                         for (AstronomicalPool gravitationPool : ServerAction.Astronomical_Core_World_Bus) {
@@ -49,7 +51,6 @@ public abstract class AstronomicalThread {
                             gravitationPool.ForceUpdate(core_tick_time);
                             gravitationPool.SpeedUpdates(core_tick_time);
                             gravitationPool.LocationUpdates(core_tick_time);
-
                             gravitationPool.RotateUpdates(core_tick_time);
                         }
                     }

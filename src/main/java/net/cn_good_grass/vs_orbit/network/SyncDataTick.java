@@ -3,7 +3,8 @@ package net.cn_good_grass.vs_orbit.network;
 import net.cn_good_grass.vs_orbit.client.render.object.PlanetEngine.PlanetEngineFire;
 import net.cn_good_grass.vs_orbit.network.data.SyncAstronomicalPoolPacket;
 import net.cn_good_grass.vs_orbit.network.data.SyncPlanetEngineDataPacket;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.jcm.vsch.mixin.cosmos.MixinRayrendererProcedure;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -14,7 +15,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.event.ServerAction.Astronomical_Core_World_Bus;
+import static net.cn_good_grass.vs_orbit.procedures.vs_orbit.event.ServerAction.Astronomical_Core_World_Bus;
 
 @Mod.EventBusSubscriber
 public class SyncDataTick {
@@ -28,14 +29,12 @@ public class SyncDataTick {
 
         if (player instanceof ServerPlayer serverPlayer) {
             //引力数据
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
+            if (!Astronomical_Core_World_Bus.isEmpty()) NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SyncAstronomicalPoolPacket(Astronomical_Core_World_Bus, System.currentTimeMillis()));
 
             //行星发动机火焰数据
             StringBuilder planetfirelist = new StringBuilder();
             for (PlanetEngineFire planetEngineFire : PlanetEngineFire.fires_server) {
-                if (!planetfirelist.isEmpty()) {
-                    planetfirelist.append("断");
-                }
+                if (!planetfirelist.isEmpty()) planetfirelist.append("断");
                 planetfirelist.append(planetEngineFire.toString());
             }
             final String planetfirelistDataPack = planetfirelist.toString();

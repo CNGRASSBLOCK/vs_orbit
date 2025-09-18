@@ -1,7 +1,8 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.event;
 
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomicals.PhysicalBodyAstronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
 import net.cn_good_grass.vs_orbit.procedures.vs_orbit.VSOrbitDataPack;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-public class AstronomicalClear {
+public class PhysicalBodyAstronomicalClear {
     @SubscribeEvent
     public static void onWorldTick(TickEvent.ServerTickEvent event) { //质点打扫
         if (!(event.phase == TickEvent.Phase.START)) return;
@@ -37,7 +38,7 @@ public class AstronomicalClear {
         for (Ship ship : VSGameUtilsKt.getAllShips(level)) { if (("minecraft:dimension:" + astronomicalPool.WorldId).equals(ship.getChunkClaimDimension())) { shipIds.add(ship.getId()); } }
 
         for (Astronomical astronomical : astronomicalPool.getAllAstronomical()) {
-            if (!astronomical.type.equals("valkyrienskies:ship")) continue;
+            if (!(astronomical instanceof PhysicalBodyAstronomical)) continue;
 
             long ShipId = Long.parseLong(astronomical.name.substring(7));
             if (!shipIds.contains(ShipId)) astronomicalPool.removeAstronomical(astronomical.id);

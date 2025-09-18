@@ -1,9 +1,9 @@
-package net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.gameupdate;
+package net.cn_good_grass.vs_orbit.procedures.vs_orbit.core;
 
 import net.cn_good_grass.vs_orbit.config.VSOrbitModConfig;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Force;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.Astronomical;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Force;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.Astronomical;
 import org.joml.Vector3d;
 
 import static java.lang.Double.NaN;

@@ -1,7 +1,7 @@
 package net.cn_good_grass.vs_orbit.client.render.object.Orbit;
 
 import net.cn_good_grass.vs_orbit.network.SyncDataTick;
-import net.cn_good_grass.vs_orbit.procedures.vs_orbit.gravitation.classes.AstronomicalPool;
+import net.cn_good_grass.vs_orbit.procedures.vs_orbit.classes.AstronomicalPool;
 
 import java.util.ArrayList;
 import java.util.List;

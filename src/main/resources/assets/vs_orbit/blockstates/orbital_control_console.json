@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_orbit:block/orbital_control_console/orbital_control_console",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "vs_orbit:block/orbital_control_console/orbital_control_console",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "vs_orbit:block/orbital_control_console/orbital_control_console",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vs_orbit:block/orbital_control_console/orbital_control_console",
+      "y": 270
+    }
+  }
+}
