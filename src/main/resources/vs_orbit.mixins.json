@@ -8,7 +8,6 @@
     "cosmos.SpaceJoinPlayer",
     "starlance.SpaceJoinShip",
     "cosmos.PlayerStarCollision",
-    "starlance.ShipStarCollision",
     "cosmos.NoVoidDamage"
   ],
   "client": [

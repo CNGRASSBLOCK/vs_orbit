@@ -16,10 +16,14 @@ import java.util.List;
 public class PhysicalBodyAstronomical extends Astronomical {
     public long shipID;
 
-    public PhysicalBodyAstronomical(int id, String name, boolean compute, double mass, double x, double y, double z, @Nullable Ship ship) {
+    public PhysicalBodyAstronomical(int id, String name, boolean compute, double mass, double x, double y, double z,
+            @Nullable Ship ship) {
         super(id, name, compute, mass, x, y, z);
 
-        if (ship == null) this.shipID = 0; else this.shipID = ship.getId();
+        if (ship == null)
+            this.shipID = 0;
+        else
+            this.shipID = ship.getId();
     }
 
     @Override
@@ -47,26 +51,37 @@ public class PhysicalBodyAstronomical extends Astronomical {
         astronomical.shipID = jsonObject.get("ShipID").getAsLong();
 
         List<JsonElement> speed = jsonObject.get("speed").getAsJsonArray().asList();
-        if (speed.size() != 3) return astronomical;
+        if (speed.size() != 3)
+            return astronomical;
         astronomical.x_speed = speed.get(0).getAsDouble();
         astronomical.y_speed = speed.get(1).getAsDouble();
         astronomical.z_speed = speed.get(2).getAsDouble();
 
         List<JsonElement> rotate = jsonObject.get("rotate").getAsJsonArray().asList();
-        if (rotate.size() != 4) return astronomical;
-        astronomical.rotate = new Quaterniond(rotate.get(0).getAsDouble(), rotate.get(1).getAsDouble(), rotate.get(2).getAsDouble(), rotate.get(3).getAsDouble());
+        if (rotate.size() != 4)
+            return astronomical;
+        astronomical.rotate = new Quaterniond(rotate.get(0).getAsDouble(), rotate.get(1).getAsDouble(),
+                rotate.get(2).getAsDouble(), rotate.get(3).getAsDouble());
         astronomical.rotate_speed = jsonObject.get("rotate_speed").getAsDouble();
 
         JsonObject Force_json = jsonObject.get("force").getAsJsonObject();
         for (String key : Force_json.keySet()) {
             Force force = Force.getFromJsonObject(Force_json.getAsJsonObject(key));
-            if (force != null) astronomical.addForce(force);
+            if (force != null)
+                astronomical.addForce(force);
         }
 
-        try { astronomical.Tag = TagParser.parseTag(jsonObject.get("tag").getAsString()); } catch (Exception ignored) { }
+        try {
+            astronomical.Tag = TagParser.parseTag(jsonObject.get("tag").getAsString());
+        } catch (Exception ignored) {
+        }
 
         return astronomical;
     }
 
-    public Ship getShip() { if (ValkyrienSkiesMod.getCurrentServer() == null) return null; return VSGameUtilsKt.getShipObjectWorld(ValkyrienSkiesMod.getCurrentServer()).getAllShips().getById(shipID); }
+    public Ship getShip() {
+        if (ValkyrienSkiesMod.getCurrentServer() == null)
+            return null;
+        return VSGameUtilsKt.getShipObjectWorld(ValkyrienSkiesMod.getCurrentServer()).getAllShips().getById(shipID);
+    }
 }
